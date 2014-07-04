@@ -152,40 +152,94 @@ $(document).ready(function() {
 
     }
 
-    function swipe() {
-        if (help.children.length < 50) {
-            var pt = new THREE.Mesh(new THREE.SphereGeometry(4),
-                    new THREE.MeshPhongMaterial());
-            pt.material.color.setHex(0x880000);
-            pt.translateY(100);
-            pt.translateX(-250 + help.children.length * 10);
-            help.add(pt);
-            render();
-            requestAnimationFrame(swipe);
-        }else{
-            while(help.children.length > 0){
-                help.remove(help.children[0]);
-            }
-            render();
-        }
-    }
-
     function ui() {
-        $("#btn_clear").button()
-                .click(function(event) {
-                    event.preventDefault();
-                    gesturePoints.forEach(function(point) {
-                        pointVis.remove(point);
-                    });
-
-                    gesturePoints = [];
-                    renderer.render(scene, camera);
-                });
-
         $(".btn").button();
+        $("#btn-clear").click(function(event) {
+            event.preventDefault();
+            gesturePoints.forEach(function(point) {
+                pointVis.remove(point);
+            });
+
+            gesturePoints = [];
+            renderer.render(scene, camera);
+        });
+
+        $("#btn-reset").click(function(event) {
+            event.preventDefault();
+            controls.reset();
+            render();
+        });
+
+
         $("#btn-swipe-right").click(function(event) {
             event.preventDefault();
-            swipe();
+            helpGestureAnimator(
+                    50,
+                    function(i) {
+                        var point = [];
+                        point[0] = -250 + i * 10;
+                        point[1] = 200;
+                        point[2] = 0;
+                        return point;
+                    });
         });
+
+        $("#btn-swipe-left").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(
+                    50,
+                    function(i) {
+                        var point = [];
+                        point[0] = 250 - i * 10;
+                        point[1] = 200;
+                        point[2] = 0;
+                        return point;
+                    });
+        });
+
+        $("#btn-circle").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(
+                    100,
+                    function(i) {
+                        var r = 200;
+                        var alpha = (2 * Math.PI / 100) * i;
+                        var point = [];
+                        point[0] = Math.cos(alpha) * r;
+                        point[1] = Math.sin(alpha) * r + 200;
+                        point[2] = 0;
+                        return point;
+                    });
+        });
+    }
+
+    function helpGestureAnimator(duration, position) {
+        var _position = position;
+        var pause = 30;
+        var i = duration + pause;
+        requestAnimationFrame(frame);
+
+        function frame() {
+            if (i > pause) {
+                var pt = new THREE.Mesh(new THREE.SphereGeometry(4),
+                        new THREE.MeshPhongMaterial());
+                pt.material.color.setHex(0xff0000);
+                pt.position.fromArray(_position(duration - i + pause));
+                help.add(pt);
+                render();
+
+            }
+
+            if (i === 0) {
+                while (help.children.length > 0) {
+                    help.remove(help.children[0]);
+                }
+                render();
+                return;
+            }
+
+            i--;
+            requestAnimationFrame(frame);
+        }
     }
 });

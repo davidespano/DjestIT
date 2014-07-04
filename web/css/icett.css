@@ -67,23 +67,29 @@ footer{
 }
 
 #container {
-    margin-left: 252px;
+    margin-left: 250px;
+    border-left: 2px solid #3d3f7c;
     
 }
 
 #menu {
     display: block;
     float:left;
-    border-right: 2px solid #3d3f7c;
     width: 250px;
     
 }
 
 .clear{
     clear: both;
+    border-bottom: 2px solid #3d3f7c;
 }
 
 #btn_bar{
     margin: auto;
-    width:250px;
+    width:500px;
+}
+
+.btn{
+    margin-top: 10px;
+    width: 200px;
 }

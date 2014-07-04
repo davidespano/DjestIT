@@ -24,15 +24,15 @@ function HandMesh() {
     };
 
     var _baseObject = new THREE.Object3D();
-    
-    this.mesh = function(){
+
+    this.mesh = function() {
         return _baseObject;
     };
-    
+
     var _boneMeshes = [];
     var _jointMeshes = [];
     var _palmMeshes = [];
-    
+
     this.newHand = function(hand) {
         _palmMeshes[hand.id] = [];
         _boneMeshes[hand.id] = [];
@@ -205,7 +205,7 @@ function HandMesh() {
         emitUpdate();
     };
 
-    
+
 
     this.lostHand = function(hand) {
         hand.fingers.forEach(function(finger) {
@@ -220,7 +220,7 @@ function HandMesh() {
             jointMeshes.forEach(function(mesh) {
                 _baseObject.remove(mesh);
             });
-            
+
             _boneMeshes[hand.id][finger.id] = undefined;
             _jointMeshes[hand.id][finger.id] = undefined;
 
@@ -238,13 +238,15 @@ function HandMesh() {
     };
 
     var _updateListener = [];
-    this.onUpdate = function(f){
+    this.onUpdate = function(f) {
         _updateListener.push(f);
     };
-    
-    var emitUpdate = function(){
-        _updateListener.forEach(function(f){
-           f(); 
+
+    var emitUpdate = function() {
+        _updateListener.forEach(function(f) {
+            f();
         });
     };
 }
+
+
