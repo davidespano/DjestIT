@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-function HandMesh(renderer, scene, camera) {
+function HandMesh() {
 
     var _baseBoneRotation = (new THREE.Quaternion).setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
 
@@ -23,36 +23,12 @@ function HandMesh(renderer, scene, camera) {
         return true;
     };
 
-    var _renderer = renderer;
-
-    this.setRenderer = function(renderer) {
-        _renderer = renderer;
+    var _baseObject = new THREE.Object3D();
+    
+    this.mesh = function(){
+        return _baseObject;
     };
-
-    this.getRenderer = function() {
-        return _renderer;
-    };
-
-    var _scene = scene;
-
-    this.setScene = function(scene) {
-        _scene = scene;
-    };
-
-    this.getScene = function() {
-        return _scene;
-    };
-
-    var _camera = camera;
-
-    this.setCamera = function(camera) {
-        _camera = camera;
-    };
-
-    this.getCamera = function() {
-        return _camera;
-    };
-
+    
     var _boneMeshes = [];
     var _jointMeshes = [];
     var _palmMeshes = [];
@@ -87,15 +63,15 @@ function HandMesh(renderer, scene, camera) {
             line.scale.set(1, 1, length);
             line.translateZ(0.5 * length);
             _palmMeshes[hand.id].push(line);
-            _scene.add(line);
+            _baseObject.add(line);
         }
         var pinkyCarp = new THREE.Mesh(new THREE.SphereGeometry(8),
                 new THREE.MeshPhongMaterial()
                 );
         pinkyCarp.material.color.setHex(0x0088ce);
 
-        _scene.add(palmMesh);
-        _scene.add(pinkyCarp);
+        _baseObject.add(palmMesh);
+        _baseObject.add(pinkyCarp);
         _palmMeshes[hand.id].push(palmMesh);
         _palmMeshes[hand.id].push(pinkyCarp);
 
@@ -120,7 +96,7 @@ function HandMesh(renderer, scene, camera) {
                             );
 
                     boneMesh.material.color.setHex(0xffffff);
-                    _scene.add(boneMesh);
+                    _baseObject.add(boneMesh);
                     boneMeshes.push(boneMesh);
                 }
             });
@@ -137,7 +113,7 @@ function HandMesh(renderer, scene, camera) {
                             );
 
                     jointMesh.material.color.setHex(0x0088ce);
-                    _scene.add(jointMesh);
+                    _baseObject.add(jointMesh);
                     jointMeshes.push(jointMesh);
 
                 }
@@ -226,7 +202,7 @@ function HandMesh(renderer, scene, camera) {
                     
             });
         }
-        _renderer.render(_scene, _camera);
+        emitUpdate();
     };
 
     
@@ -238,11 +214,11 @@ function HandMesh(renderer, scene, camera) {
             var jointMeshes = _jointMeshes[hand.id][finger.id];
 
             boneMeshes.forEach(function(mesh) {
-                scene.remove(mesh);
+                _baseObject.remove(mesh);
             });
 
             jointMeshes.forEach(function(mesh) {
-                scene.remove(mesh);
+                _baseObject.remove(mesh);
             });
             
             _boneMeshes[hand.id][finger.id] = undefined;
@@ -253,12 +229,22 @@ function HandMesh(renderer, scene, camera) {
         var palmMeshes = _palmMeshes[hand.id];
         palmMeshes.forEach(function(mesh) {
 
-            scene.remove(mesh);
+            _baseObject.remove(mesh);
         });
 
         _palmMeshes[hand.id] = undefined;
 
-        _renderer.render(_scene, _camera);
+        emitUpdate();
     };
 
+    var _updateListener = [];
+    this.onUpdate = function(f){
+        _updateListener.push(f);
+    };
+    
+    var emitUpdate = function(){
+        _updateListener.forEach(function(f){
+           f(); 
+        });
+    };
 }

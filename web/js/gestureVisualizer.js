@@ -8,7 +8,7 @@
 $(document).ready(function() {
     var container;
 
-    var camera, controls, scene, renderer;
+    var camera, controls, scene, renderer, hands, pointVis, help;
     var gesturePoints = [];
 
     var config = {
@@ -20,7 +20,8 @@ $(document).ready(function() {
     ui();
 
 
-    var hands = new HandMesh(renderer, scene, camera);
+
+
     Leap.loop({background: true}, {
         hand: function(hand) {
 
@@ -31,7 +32,7 @@ $(document).ready(function() {
                 point.material.color.setHex(0x00cc00);
                 point.position.fromArray(hand.indexFinger.bones[3].nextJoint);
                 gesturePoints.push(point);
-                scene.add(point);
+                pointVis.add(point);
             }
         }})
             // these two LeapJS plugins, handHold and handEntry are available from leapjs-plugins, included above.
@@ -52,7 +53,7 @@ $(document).ready(function() {
 
         //camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
         camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 3, 2000);
-        camera.position.fromArray([0, 200, 800]);
+        camera.position.fromArray([0, 50, 650]);
         camera.lookAt(new THREE.Vector3(0, 200, 600));
 
         controls = new THREE.TrackballControls(camera);
@@ -102,7 +103,18 @@ $(document).ready(function() {
         plane.position.set(0, 0, 0);
         scene.add(plane);
 
-        //
+        hands = new HandMesh();
+        hands.onUpdate(render);
+        hands.mesh().translateY(-200);
+        scene.add(hands.mesh());
+
+        pointVis = new THREE.Object3D();
+        pointVis.translateY(-200);
+        scene.add(pointVis);
+
+        help = new THREE.Object3D();
+        help.translateY(-200);
+        scene.add(help);
 
         window.addEventListener('resize', onWindowResize, false);
 
@@ -140,23 +152,40 @@ $(document).ready(function() {
 
     }
 
+    function swipe() {
+        if (help.children.length < 50) {
+            var pt = new THREE.Mesh(new THREE.SphereGeometry(4),
+                    new THREE.MeshPhongMaterial());
+            pt.material.color.setHex(0x880000);
+            pt.translateY(100);
+            pt.translateX(-250 + help.children.length * 10);
+            help.add(pt);
+            render();
+            requestAnimationFrame(swipe);
+        }else{
+            while(help.children.length > 0){
+                help.remove(help.children[0]);
+            }
+            render();
+        }
+    }
+
     function ui() {
         $("#btn_clear").button()
                 .click(function(event) {
                     event.preventDefault();
                     gesturePoints.forEach(function(point) {
-                        scene.remove(point);
+                        pointVis.remove(point);
                     });
 
                     gesturePoints = [];
                     renderer.render(scene, camera);
                 });
 
-        $("#btn_translate").button()
-                .click(function(event) {
-                    event.preventDefault();
-                    scene.translateY(-2000);
-                    render();
-                });
+        $(".btn").button();
+        $("#btn-swipe-right").click(function(event) {
+            event.preventDefault();
+            swipe();
+        });
     }
 });
