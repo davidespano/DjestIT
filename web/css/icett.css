@@ -86,10 +86,19 @@ footer{
 
 #btn_bar{
     margin: auto;
-    width:500px;
+    width:80%;
 }
 
 .btn{
     margin-top: 10px;
     width: 200px;
+}
+
+.btn2{
+    background: #9e1616;
+    color: white;
+}
+
+.distance{
+    margin-left:50px;
 }

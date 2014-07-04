@@ -31,6 +31,7 @@ $(document).ready(function() {
                         new THREE.MeshPhongMaterial());
                 point.material.color.setHex(0x00cc00);
                 point.position.fromArray(hand.indexFinger.bones[3].nextJoint);
+                point._timestamp = Date.now();
                 gesturePoints.push(point);
                 pointVis.add(point);
             }
@@ -170,6 +171,18 @@ $(document).ready(function() {
             render();
         });
 
+        $("#btn-save")
+                .addClass("distance")
+                .addClass("btn2")
+                .click(function(event) {
+                    var series = [];
+                    gesturePoints.forEach(function(p){
+                       series.push([p.position.x, p.position.y, p.position.z, p._timestamp]); 
+                    });
+                    console.log(series);
+                    // da inviare al server
+                });
+
 
         $("#btn-swipe-right").click(function(event) {
             event.preventDefault();
@@ -200,10 +213,10 @@ $(document).ready(function() {
         $("#btn-circle").click(function(event) {
             event.preventDefault();
             helpGestureAnimator(
-                    100,
+                    75,
                     function(i) {
-                        var r = 200;
-                        var alpha = (2 * Math.PI / 100) * i;
+                        var r = 100;
+                        var alpha = (2 * Math.PI / 75) * i;
                         var point = [];
                         point[0] = Math.cos(alpha) * r;
                         point[1] = Math.sin(alpha) * r + 200;
