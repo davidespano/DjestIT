@@ -1,0 +1,89 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12-giu-2014, 18.03.36
+    Author     : davide
+*/
+
+body{
+    font-family: Roboto, verdana;
+}
+
+footer{
+    display:block;
+    height: 70px;
+}
+
+#logo {
+    height: 55px;
+    padding-left: 90px;
+    padding-top: 25px;
+    margin-bottom: 15px;
+    font-family: verdana;
+    color: #3d3f7c;
+    font-size: 14px;
+    background-image: url(../img/logo.png);
+    background-position: top left;
+    background-repeat: no-repeat;
+    float: left;
+}
+
+
+#title{
+    margin-left: 30px;
+    color: #3d3f7c;
+    float: left;
+}
+
+#title h1{
+    color: #3d3f7c;
+    margin: 0px;
+}
+
+#stripes{
+    height:0px;
+    width: 100%;
+    border-top: 10px solid #9e1616;
+    border-bottom: 10px solid #3d3f7c;
+    clear: both;
+}
+
+#select-model{
+    float:right;
+}
+
+#depth {
+    margin-right: 10px;
+}
+
+.ui-menu { position: absolute; max-width: 300px; z-index: 1000;}
+
+.tip-title{
+    border: 1px solid black;
+    background-color: white;
+}
+
+#container {
+    margin-left: 252px;
+    
+}
+
+#menu {
+    display: block;
+    float:left;
+    border-right: 2px solid #3d3f7c;
+    width: 250px;
+    
+}
+
+.clear{
+    clear: both;
+}
+
+#btn_bar{
+    margin: auto;
+    width:250px;
+}
