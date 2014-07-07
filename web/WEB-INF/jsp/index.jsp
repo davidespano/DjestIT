@@ -1,186 +1,53 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
-
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
     <head>
-        <title>Bone Hands - Leap</title>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.js"></script>
-        <script src="//js.leapmotion.com/leap-0.6.0-beta3.min.js"></script>
-        <script src="//js.leapmotion.com/leap-plugins-0.1.6.min.js"></script>
-        <script src="//js.leapmotion.com/leap.rigged-hand-0.1.4.min.js"></script>
-    </head>
+        <title>Leap Canvas</title>
+        <link rel="stylesheet" href="css/blitzer/jquery-ui-1.10.4.custom.css">
+        <link rel="stylesheet" href="css/dropit.css">
+        <link rel="stylesheet" href="css/icett.css">
+        <script type="text/javascript" src="js/lib/three.js"></script>
+        <script type="text/javascript" src="js/lib/leap.min.js"></script>
+        <script type="text/javascript" src="js/lib/leap-plugins.min.js"></script>
+        <script type="text/javascript" src="js/lib/leap.rigged-hand.min.js"></script>
+        <script type="text/javascript" src="js/lib/leap.rigged-hand.min.js"></script>
+        <script type="text/javascript" src="js/lib/TrackballControls.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-ui-1.10.3.min.js"></script>
+        <script src="js/handMesh.js"></script>
+        <script type="text/javascript" src="js/gestureVisualizer.js"></script>
     <body>
+        <header>
+            <div id='logo'>Universit&agrave; di Cagliari</div>
+            <div id='title'>
+                <h1>Leap Canvas</h1>
+                <p>Gesture recorder</p>
+            </div>
 
+
+            <div id='stripes'></div>
+        </header>
+        <div id="main">
+            <nav id="menu">
+                <h2>Gestures</h2>
+                 <button class="btn" type="submit" id="btn-swipe-right" name="btn_swipe_right">Right swipe</button>
+                 <button class="btn" type="submit" id="btn-swipe-left" name="btn_swipe_left">Left swipe</button>
+                 <button class="btn" type="submit" id="btn-circle" name="circle">Circle</button>
+            </nav>
+            <div id="container"></div>
+            <div class="clear"></div>
+        </div>
+        <footer>
+            <div id="btn_bar">
+                <button class="btn" type="submit" id="btn-clear" name="clear">Clear</button>
+                <button class="btn" type="submit" id="btn-reset" name="clear">Reset Camera</button>
+                <button class="btn" type="submit" id="btn-save" name="clear">Save</button>
+            </div>
+        </footer>
     </body>
-
-    <script>
-        var baseBoneRotation = (new THREE.Quaternion).setFromEuler(
-                new THREE.Euler(Math.PI / 2, 0, 0)
-                );
-
-        Leap.loop({background: true}, {
-            hand: function(hand) {
-
-                hand.fingers.forEach(function(finger) {
-
-                    // This is the meat of the example - Positioning `the cylinders on every frame:
-                    finger.data('boneMeshes').forEach(function(mesh, i) {
-                        var bone = finger.bones[i];
-
-                        mesh.position.fromArray(bone.center());
-
-                        mesh.setRotationFromMatrix(
-                                (new THREE.Matrix4).fromArray(bone.matrix())
-                                );
-
-                        mesh.quaternion.multiply(baseBoneRotation);
-                    });
-
-                    finger.data('jointMeshes').forEach(function(mesh, i) {
-                        var bone = finger.bones[i];
-
-                        if (bone) {
-                            mesh.position.fromArray(bone.prevJoint);
-                        } else {
-                            // special case for the finger tip joint sphere:
-                            bone = finger.bones[i - 1];
-                            mesh.position.fromArray(bone.nextJoint);
-                        }
-
-                    });
-
-                });
-
-                renderer.render(scene, camera);
-
-            }})
-                // these two LeapJS plugins, handHold and handEntry are available from leapjs-plugins, included above.
-                // handHold provides hand.data
-                // handEntry provides handFound/handLost events.
-                .use('handHold')
-                .use('handEntry')
-                .on('handFound', function(hand) {
-
-                    hand.fingers.forEach(function(finger) {
-
-                        var boneMeshes = [];
-                        var jointMeshes = [];
-
-                        finger.bones.forEach(function(bone) {
-
-                            // create joints
-
-                            // CylinderGeometry(radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded)
-                            var boneMesh = new THREE.Mesh(
-                                    new THREE.CylinderGeometry(5, 5, bone.length),
-                                    new THREE.MeshPhongMaterial()
-                                    );
-
-                            boneMesh.material.color.setHex(0xffffff);
-                            scene.add(boneMesh);
-                            boneMeshes.push(boneMesh);
-                        });
-                        
-                        
-
-                        for (var i = 0; i < finger.bones.length + 1; i++) {
-
-                            var jointMesh = new THREE.Mesh(
-                                    new THREE.SphereGeometry(8),
-                                    new THREE.MeshPhongMaterial()
-                                    );
-
-                            jointMesh.material.color.setHex(0x0088ce);
-                            scene.add(jointMesh);
-                            jointMeshes.push(jointMesh);
-
-                        }
-
-
-                        finger.data('boneMeshes', boneMeshes);
-                        finger.data('jointMeshes', jointMeshes);
-
-                    });
-
-                })
-                .on('handLost', function(hand) {
-
-                    hand.fingers.forEach(function(finger) {
-
-                        var boneMeshes = finger.data('boneMeshes');
-                        var jointMeshes = finger.data('jointMeshes');
-
-                        boneMeshes.forEach(function(mesh) {
-                            scene.remove(mesh);
-                        });
-
-                        jointMeshes.forEach(function(mesh) {
-                            scene.remove(mesh);
-                        });
-
-                        finger.data({
-                            boneMeshes: null,
-                            boneMeshes: null
-                        });
-
-                    });
-
-                    renderer.render(scene, camera);
-
-                })
-                .use('playback', {
-                    // This is a compressed JSON file of preprecorded frame data
-                    recording: './scroll-and-swipe-100fps.json.lz',
-                    // How long, in ms, between repeating the recording.
-                    timeBetweenLoops: 2000,
-                    pauseOnHand: true
-                })
-                .connect();
-                
-                
-
-        // all units in mm
-        var initScene = function() {
-            window.scene = new THREE.Scene();
-            window.renderer = new THREE.WebGLRenderer({
-                alpha: true
-            });
-
-            window.renderer.setClearColor(0x000000, 0);
-            window.renderer.setSize(window.innerWidth, window.innerHeight);
-
-            window.renderer.domElement.style.position = 'fixed';
-            window.renderer.domElement.style.top = 0;
-            window.renderer.domElement.style.left = 0;
-            window.renderer.domElement.style.width = '100%';
-            window.renderer.domElement.style.height = '100%';
-
-            document.body.appendChild(window.renderer.domElement);
-
-            var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(0, 0.5, 1);
-            window.scene.add(directionalLight);
-
-            window.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-            window.camera.position.fromArray([0, 150, 700]);
-            window.camera.lookAt(new THREE.Vector3(0, 160, 0));
-
-            window.addEventListener('resize', function() {
-
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.render(scene, camera);
-
-            }, false);
-
-            scene.add(camera);
-
-
-            renderer.render(scene, camera);
-        };
-
-        initScene();
-    </script>
 </html>

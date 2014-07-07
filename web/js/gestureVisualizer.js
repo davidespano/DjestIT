@@ -176,11 +176,20 @@ $(document).ready(function() {
                 .addClass("btn2")
                 .click(function(event) {
                     var series = [];
-                    gesturePoints.forEach(function(p){
-                       series.push([p.position.x, p.position.y, p.position.z, p._timestamp]); 
+                    gesturePoints.forEach(function(p) {
+                        series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
                     });
-                    console.log(series);
-                    // da inviare al server
+                    $.ajax({
+                        url: "record.json",
+                        type: 'POST',
+                        data:{
+                          name: "prova",
+                          points: series
+                        },
+                        success: function(data) {
+                            alert("Ok");
+                        }
+                    });
                 });
 
 
