@@ -183,7 +183,7 @@ $(document).ready(function() {
                         points: series
                     };
                     $.ajax({
-                        url: "record.json",
+                        url: "save.json",
                         type: 'POST',
                         dataType: 'json',
                         contentType: 'application/json',
@@ -195,6 +195,30 @@ $(document).ready(function() {
                     });
                 });
 
+        $("#btn-load")
+                .click(function(event) {
+                    $.ajax({
+                        url: "load.json",
+                        type: "GET",
+                        data: {
+                            name: "test"
+                        },
+                        success: function(data) {
+                            data.points.forEach(function(p) {
+                                var point = new THREE.Mesh(new THREE.SphereGeometry(2),
+                                        new THREE.MeshPhongMaterial());
+                                point.material.color.setHex(0x00cc00);
+                                point.position.setX(p[0]);
+                                point.position.setY(p[1]);
+                                point.position.setZ(p[2]);
+                                point._timestamp = p[3];
+                                gesturePoints.push(point);
+                                pointVis.add(point);
+                            });
+                            render();
+                        }
+                    });
+                });
 
         $("#btn-swipe-right").click(function(event) {
             event.preventDefault();

@@ -45,8 +45,9 @@ and open the template in the editor.
         <footer>
             <div id="btn_bar">
                 <button class="btn" type="submit" id="btn-clear" name="clear">Clear</button>
-                <button class="btn" type="submit" id="btn-reset" name="clear">Reset Camera</button>
-                <button class="btn" type="submit" id="btn-save" name="clear">Save</button>
+                <button class="btn" type="submit" id="btn-reset" name="reset">Reset Camera</button>
+                <button class="btn" type="submit" id="btn-load" name="load">Load</button>
+                <button class="btn" type="submit" id="btn-save" name="save">Save</button>
             </div>
         </footer>
     </body>
