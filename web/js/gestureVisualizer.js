@@ -179,13 +179,16 @@ $(document).ready(function() {
                     gesturePoints.forEach(function(p) {
                         series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
                     });
+                    var test = {
+                        points: series
+                    };
                     $.ajax({
                         url: "record.json",
                         type: 'POST',
-                        data:{
-                          name: "prova",
-                          points: series
-                        },
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        mimeType: 'application/json',
+                        data: JSON.stringify(test),
                         success: function(data) {
                             alert("Ok");
                         }
