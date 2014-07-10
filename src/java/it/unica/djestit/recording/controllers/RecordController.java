@@ -26,14 +26,13 @@ public class RecordController {
 
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String index() {
-
         return "index";
     }
 
     @RequestMapping(value = "save.json", method = RequestMethod.POST)
     public String save(@RequestBody Gesture gesture) {
         File base = new File(servletContext.getRealPath("/gestures"));
-        File file = new File(base, "test.csv");
+        File file = new File(base, gesture.getName() + ".csv");
         gesture.toCSV(file.getAbsolutePath());
         return "save";
     }
@@ -42,7 +41,7 @@ public class RecordController {
     public String load(ModelMap map,
             @RequestParam(value = "name", required = true) String name) {
         File base = new File(servletContext.getRealPath("/gestures"));
-        File file = new File(base, "test.csv");
+        File file = new File(base, name + ".csv");
         Gesture gesture = new Gesture();
         gesture.fromCSV(file.getAbsolutePath());
         Gson gson = new Gson();

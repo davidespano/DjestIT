@@ -175,49 +175,12 @@ $(document).ready(function() {
                 .addClass("distance")
                 .addClass("btn2")
                 .click(function(event) {
-                    var series = [];
-                    gesturePoints.forEach(function(p) {
-                        series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
-                    });
-                    var test = {
-                        points: series
-                    };
-                    $.ajax({
-                        url: "save.json",
-                        type: 'POST',
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        mimeType: 'application/json',
-                        data: JSON.stringify(test),
-                        success: function(data) {
-                            alert("Ok");
-                        }
-                    });
+                    $("#save-form").dialog("open");
                 });
 
         $("#btn-load")
                 .click(function(event) {
-                    $.ajax({
-                        url: "load.json",
-                        type: "GET",
-                        data: {
-                            name: "test"
-                        },
-                        success: function(data) {
-                            data.points.forEach(function(p) {
-                                var point = new THREE.Mesh(new THREE.SphereGeometry(2),
-                                        new THREE.MeshPhongMaterial());
-                                point.material.color.setHex(0x00cc00);
-                                point.position.setX(p[0]);
-                                point.position.setY(p[1]);
-                                point.position.setZ(p[2]);
-                                point._timestamp = p[3];
-                                gesturePoints.push(point);
-                                pointVis.add(point);
-                            });
-                            render();
-                        }
-                    });
+                    $("#load-form").dialog("open");
                 });
 
         $("#btn-swipe-right").click(function(event) {
@@ -259,6 +222,97 @@ $(document).ready(function() {
                         point[2] = 0;
                         return point;
                     });
+        });
+
+        $("#save-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Save": save,
+                Cancel: function() {
+                    $("#save-form").dialog("close");
+                }
+            },
+            close: function() {
+
+
+            }
+        });
+
+        $("#load-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Load": load,
+                Cancel: function() {
+                    $("#load-form").dialog("close");
+                }
+            },
+            close: function() {
+
+
+            }
+        });
+
+        $('#jstree').jstree();
+
+        $('#jstree').on("changed.jstree", function(e, data) {
+            console.log(data.selected);
+        });
+
+
+    }
+
+    function save() {
+        var series = [];
+        gesturePoints.forEach(function(p) {
+            series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
+        });
+
+        var filename = $("#save-name").val();
+        var test = {
+            points: series,
+            name: filename
+        };
+        $.ajax({
+            url: "save.json",
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            data: JSON.stringify(test),
+            success: function(data) {
+                $("#save-form").dialog("close");
+            }
+        });
+    }
+
+
+    function load() {
+        $.ajax({
+            url: "load.json",
+            type: "GET",
+            data: {
+                name: "load-param"
+            },
+            success: function(data) {
+                data.points.forEach(function(p) {
+                    var point = new THREE.Mesh(new THREE.SphereGeometry(2),
+                            new THREE.MeshPhongMaterial());
+                    point.material.color.setHex(0x00cc00);
+                    point.position.setX(p[0]);
+                    point.position.setY(p[1]);
+                    point.position.setZ(p[2]);
+                    point._timestamp = p[3];
+                    gesturePoints.push(point);
+                    pointVis.add(point);
+                });
+                render();
+            }
         });
     }
 

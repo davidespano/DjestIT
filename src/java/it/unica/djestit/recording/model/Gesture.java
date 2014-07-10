@@ -28,6 +28,7 @@ public class Gesture implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<double[]> points;
+    private String name;
 
     public Gesture() {
         this.points = new ArrayList<>();
@@ -38,6 +39,17 @@ public class Gesture implements Serializable {
         this.setPoints(points);
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public String getName(){
+        if(name == null){
+            return "default";
+        }
+        return name;
+    }
+    
     public final List<double[]> getPoints() {
         return points;
     }
