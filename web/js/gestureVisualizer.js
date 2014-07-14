@@ -225,40 +225,25 @@ $(document).ready(function() {
                     });
         });
 
-        $("#save-form").dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                "Save": save,
-                Cancel: function() {
-                    $("#save-form").dialog("close");
-                }
-            },
-            close: function() {
-
-
-            }
+        $("#btn-save").click(function(){
+            save();
         });
 
-        $("#load-form").dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                "Load": load,
-                Cancel: function() {
-
-                    $("#load-form").dialog("close");
-                }
-            },
-            close: function() {
-
-
+        $("#load-form").click(function(){
+            load();
+        });
+        
+        $(".file-view > li > ul").hide();
+        $(".file-view > li > a").click(function(event){
+            event.preventDefault();
+            var list = $(this).next();
+            if($(this).next().is(":visible")){
+                list.hide();
+            }else{
+                list.show();
             }
         });
+        
 
         $('#jstree').jstree({
             'core': {

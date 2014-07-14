@@ -89,16 +89,11 @@ footer{
     width:80%;
 }
 
-.btn{
-    margin-top: 10px;
-    width: 200px;
-}
-
-.btn2{
-    background: #9e1616;
-    color: white;
-}
-
 .distance{
     margin-left:50px;
+}
+
+.file-view{
+    max-height: 350px;
+    overflow: scroll;
 }

@@ -47,7 +47,7 @@ and open the template in the editor.
         </div>
 
         <!-- Save Modal form -->
-        <div class="modal fade" id="save-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="save-form" tabindex="-1" role="dialog" aria-labelledby="save form" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -73,9 +73,92 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-
-        <div id="load-form" title="Load gesture">
-            <div id="jstree">
+        
+        <!-- Save Modal form -->
+        <div class="modal fade" id="load-form" tabindex="-1" role="dialog" aria-labelledby="load form" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Load gesture data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="file-view">
+                            <li>
+                                <a href="#sel">Folder 1</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 2</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                    <li>File 4</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 1</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 2</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                    <li>File 4</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 1</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 2</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                    <li>File 4</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 1</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#sel">Folder 2</a>
+                                <ul>
+                                    <li>File 1</li>
+                                    <li>File 2</li>
+                                    <li>File 3</li>
+                                    <li>File 4</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="btn-load" class="btn btn-primary">Load</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -83,7 +166,7 @@ and open the template in the editor.
             <div id="btn_bar">
                 <button class="btn btn-default" type="submit" id="btn-clear" name="clear">Clear</button>
                 <button class="btn btn-default" type="submit" id="btn-reset" name="reset">Reset Camera</button>
-                <button class="btn btn-default" type="submit" id="btn-load" name="load">Load</button>
+                <button class="btn btn-default" type="submit" id="btn-load" name="load" data-toggle="modal" data-target="#load-form">Load</button>
                 <button class="btn btn-success" type="submit" name="save" data-toggle="modal" data-target="#save-form">Save</button>
             </div>
         </footer>
