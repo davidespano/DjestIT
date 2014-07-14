@@ -57,7 +57,8 @@ $(document).ready(function() {
         camera.position.fromArray([0, 50, 650]);
         camera.lookAt(new THREE.Vector3(0, 200, 600));
 
-        controls = new THREE.TrackballControls(camera);
+        $("#container").height(window.innerHeight - config.titleHeight);
+        controls = new THREE.TrackballControls(camera, $("#container")[0]);
 
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -73,6 +74,7 @@ $(document).ready(function() {
 
         controls.addEventListener('change', render);
 
+        controls.handleResize();
         // world
 
         scene = new THREE.Scene();
@@ -90,7 +92,6 @@ $(document).ready(function() {
 
         renderer = new THREE.WebGLRenderer({antialias: false});
         renderer.setClearColor(scene.fog.color, 1);
-        $("#container").height(window.innerHeight - config.titleHeight);
         renderer.setSize($("#container").width(), $("#container").height());
 
         container = document.getElementById('container');
@@ -180,6 +181,7 @@ $(document).ready(function() {
 
         $("#btn-load")
                 .click(function(event) {
+                    $("#jstree").jstree(true).refresh();
                     $("#load-form").dialog("open");
                 });
 
@@ -249,6 +251,7 @@ $(document).ready(function() {
             buttons: {
                 "Load": load,
                 Cancel: function() {
+
                     $("#load-form").dialog("close");
                 }
             },
@@ -258,11 +261,42 @@ $(document).ready(function() {
             }
         });
 
-        $('#jstree').jstree();
+        $('#jstree').jstree({
+            'core': {
+                "animation": 0,
+                "check_callback": true,
+                "themes": {"stripes": true},
+                'data': {
+                    'url': function(node) {
+                        return 'file.json'
+                    },
+                    'data': function(node) {
+                        return {'id': node.id};
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    mimeType: 'application/json'
+                }
 
-        $('#jstree').on("changed.jstree", function(e, data) {
-            console.log(data.selected);
+
+            },
+            "types": {
+                "#": {
+                    "valid_children": ["default", "file"]
+                },
+                "default": {
+                    "valid_children": ["default", "file"]
+                },
+                "file": {
+                    "icon": "img/file.png",
+                    "valid_children": []
+                }
+            },
+            "plugins": [
+                "types", "wholerow"
+            ]
         });
+
 
 
     }
@@ -289,31 +323,37 @@ $(document).ready(function() {
                 $("#save-form").dialog("close");
             }
         });
+
     }
 
 
     function load() {
-        $.ajax({
-            url: "load.json",
-            type: "GET",
-            data: {
-                name: "load-param"
-            },
-            success: function(data) {
-                data.points.forEach(function(p) {
-                    var point = new THREE.Mesh(new THREE.SphereGeometry(2),
-                            new THREE.MeshPhongMaterial());
-                    point.material.color.setHex(0x00cc00);
-                    point.position.setX(p[0]);
-                    point.position.setY(p[1]);
-                    point.position.setZ(p[2]);
-                    point._timestamp = p[3];
-                    gesturePoints.push(point);
-                    pointVis.add(point);
-                });
-                render();
-            }
+        var selected = $("#jstree").jstree(true).get_selected();
+        selected.forEach(function(sel) {
+            $.ajax({
+                url: "load.json",
+                type: "GET",
+                data: {
+                    name: sel
+                },
+                success: function(data) {
+                    var color = Math.random()*0xFFFFFF<<0
+                    data.points.forEach(function(p) {
+                        var point = new THREE.Mesh(new THREE.SphereGeometry(2),
+                                new THREE.MeshPhongMaterial());
+                        point.material.color.setHex(color);
+                        point.position.setX(p[0]);
+                        point.position.setY(p[1]);
+                        point.position.setZ(p[2]);
+                        point._timestamp = p[3];
+                        gesturePoints.push(point);
+                        pointVis.add(point);
+                    });
+                    render();
+                }
+            });
         });
+        $("#load-form").dialog("close");
     }
 
     function helpGestureAnimator(duration, position) {

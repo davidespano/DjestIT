@@ -20,7 +20,7 @@ and open the template in the editor.
         <script type="text/javascript" src="js/lib/TrackballControls.js"></script>
         <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="js/lib/jquery-ui-1.10.3.min.js"></script>
-        <script type="text/javascript" src="js/lib/jsTree/jstree.min.js"></script>
+        <script type="text/javascript" src="js/lib/jsTree/jstree.js"></script>
         <script src="js/handMesh.js"></script>
         <script type="text/javascript" src="js/gestureVisualizer.js"></script>
     <body>
@@ -59,18 +59,7 @@ and open the template in the editor.
         </div>
         <div id="load-form" title="Load gesture">
             <div id="jstree">
-                <!-- in this example the tree is populated from inline HTML -->
-                <ul>
-                    <li>Root node 1
-                        <ul>
-                            <li id="child_node_1">Child node 1</li>
-                            <li>Child node 2</li>
-                        </ul>
-                    </li>
-                    <li>Root node 2</li>
-                </ul>
             </div>
-            <button>demo button</button>
         </div>
 
         <footer>

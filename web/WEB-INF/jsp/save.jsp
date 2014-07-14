@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="application/json; charset=UTF-8"
+<%@ page language="java" contentType="application/json"
     pageEncoding="UTF-8"%>
 {
     "status" : "ok"
