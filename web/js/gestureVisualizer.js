@@ -155,7 +155,7 @@ $(document).ready(function() {
     }
 
     function ui() {
-        $(".btn").button();
+       // $(".btn").button();
         $("#btn-clear").click(function(event) {
             event.preventDefault();
             gesturePoints.forEach(function(point) {
@@ -174,7 +174,6 @@ $(document).ready(function() {
 
         $("#btn-save")
                 .addClass("distance")
-                .addClass("btn2")
                 .click(function(event) {
                     $("#save-form").dialog("open");
                 });
@@ -296,7 +295,6 @@ $(document).ready(function() {
                 "types", "wholerow"
             ]
         });
-
 
 
     }

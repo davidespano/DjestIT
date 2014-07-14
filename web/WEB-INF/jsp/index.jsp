@@ -8,10 +8,11 @@ and open the template in the editor.
 <html>
     <head>
         <title>Leap Canvas</title>
-        <link rel="stylesheet" href="css/blitzer/jquery-ui-1.10.4.custom.css">
-        <link rel="stylesheet" href="css/dropit.css">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/icett.css">
-        <link rel="stylesheet" href="js/lib/jsTree/themes/default/style.min.css" />
+
         <script type="text/javascript" src="js/lib/three.js"></script>
         <script type="text/javascript" src="js/lib/leap.min.js"></script>
         <script type="text/javascript" src="js/lib/leap-plugins.min.js"></script>
@@ -19,8 +20,8 @@ and open the template in the editor.
         <script type="text/javascript" src="js/lib/leap.rigged-hand.min.js"></script>
         <script type="text/javascript" src="js/lib/TrackballControls.js"></script>
         <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="js/lib/jquery-ui-1.10.3.min.js"></script>
         <script type="text/javascript" src="js/lib/jsTree/jstree.js"></script>
+        <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
         <script src="js/handMesh.js"></script>
         <script type="text/javascript" src="js/gestureVisualizer.js"></script>
     <body>
@@ -37,26 +38,42 @@ and open the template in the editor.
         <div id="main">
             <nav id="menu">
                 <h2>Gestures</h2>
-                <button class="btn" type="submit" id="btn-swipe-right" name="btn_swipe_right">Right swipe</button>
-                <button class="btn" type="submit" id="btn-swipe-left" name="btn_swipe_left">Left swipe</button>
-                <button class="btn" type="submit" id="btn-circle" name="circle">Circle</button>
+                <button class="btn btn-primary" type="submit" id="btn-swipe-right" name="btn_swipe_right">Right swipe</button>
+                <button class="btn btn-primary" type="submit" id="btn-swipe-left" name="btn_swipe_left">Left swipe</button>
+                <button class="btn btn-primary" type="submit" id="btn-circle" name="circle">Circle</button>
             </nav>
             <div id="container"></div>
             <div class="clear"></div>
         </div>
-        <div id="save-form" title="Save gesture">
-            <p class="validateTips">All form fields are required.</p>
 
-            <form>
+        <!-- Save Modal form -->
+        <div class="modal fade" id="save-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Save gesture data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please, specify the gesture name</p>
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" name="save-name" id="save-name" value="" placeholder="Enter gesture name">
+                            </div>
+                            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 
-                <label for="name">Name</label>
-                <input type="text" name="save-name" id="save-name" value="" class="text ui-widget-content ui-corner-all">
-
-                <!-- Allow form submission with keyboard without duplicating the dialog button -->
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-
-            </form>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div id="load-form" title="Load gesture">
             <div id="jstree">
             </div>
@@ -64,10 +81,10 @@ and open the template in the editor.
 
         <footer>
             <div id="btn_bar">
-                <button class="btn" type="submit" id="btn-clear" name="clear">Clear</button>
-                <button class="btn" type="submit" id="btn-reset" name="reset">Reset Camera</button>
-                <button class="btn" type="submit" id="btn-load" name="load">Load</button>
-                <button class="btn" type="submit" id="btn-save" name="save">Save</button>
+                <button class="btn btn-default" type="submit" id="btn-clear" name="clear">Clear</button>
+                <button class="btn btn-default" type="submit" id="btn-reset" name="reset">Reset Camera</button>
+                <button class="btn btn-default" type="submit" id="btn-load" name="load">Load</button>
+                <button class="btn btn-success" type="submit" name="save" data-toggle="modal" data-target="#save-form">Save</button>
             </div>
         </footer>
     </body>
