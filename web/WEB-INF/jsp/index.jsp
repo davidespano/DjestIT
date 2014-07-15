@@ -34,6 +34,14 @@ and open the template in the editor.
 
 
             <div id='stripes'></div>
+            <div class="btn-toolbar" role="navigation">
+                <div class="btn-group">
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-clear" name="clear">Clear</button>
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-reset" name="reset">Reset Camera</button>
+                </div>
+                <button class="btn btn-default" type="submit" id="btn-load" name="load" data-toggle="modal" data-target="#load-form">Load</button>
+                <button class="btn btn-success" type="submit" name="save" data-toggle="modal" data-target="#save-form">Save</button>
+            </div>
         </header>
         <div id="main">
             <nav id="menu">
@@ -73,7 +81,7 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-        
+
         <!-- Save Modal form -->
         <div class="modal fade" id="load-form" tabindex="-1" role="dialog" aria-labelledby="load form" aria-hidden="true">
             <div class="modal-dialog">
@@ -164,10 +172,7 @@ and open the template in the editor.
 
         <footer>
             <div id="btn_bar">
-                <button class="btn btn-default" type="submit" id="btn-clear" name="clear">Clear</button>
-                <button class="btn btn-default" type="submit" id="btn-reset" name="reset">Reset Camera</button>
-                <button class="btn btn-default" type="submit" id="btn-load" name="load" data-toggle="modal" data-target="#load-form">Load</button>
-                <button class="btn btn-success" type="submit" name="save" data-toggle="modal" data-target="#save-form">Save</button>
+
             </div>
         </footer>
     </body>
