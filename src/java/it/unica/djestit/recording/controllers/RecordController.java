@@ -10,9 +10,12 @@ import com.google.gson.GsonBuilder;
 import it.unica.djestit.recording.model.Gesture;
 import it.unica.djestit.recording.model.GestureNode;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import json.LoginMsg;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,16 +24,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
+@SessionAttributes({"user"})
 public class RecordController {
 
     @Autowired
     ServletContext servletContext;
+    
 
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
-    public String index() {
-        return "index";
+    public String index(HttpSession session) {
+        if(session.getAttribute("user") == null){
+             return "login";
+        }else{
+            return "index";
+        }
+       
     }
 
     @RequestMapping(value = "save.json", method = RequestMethod.POST)
@@ -50,7 +61,7 @@ public class RecordController {
             path = "";
         }
         // gesture
-        File base =new File(servletContext.getRealPath("/gestures"));
+        File base = new File(servletContext.getRealPath("/gestures"));
         File folder = new File(servletContext.getRealPath("/gestures/" + path));
         if (folder.exists()) {
             File[] listOfFiles = folder.listFiles();
@@ -85,6 +96,53 @@ public class RecordController {
         } else {
             return "[]";
         }
+    }
+
+    @RequestMapping(value = "login.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String login(HttpSession session, @RequestParam(value = "username", required = true) String name) {
+        LoginMsg msg = new LoginMsg();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (name.length() == 0) {
+
+            msg.setStatus("error");
+            msg.setLoginError("Please, specify a username");
+            return gson.toJson(msg);
+        }
+
+        if (name.contains(File.pathSeparator)) {
+            msg.setStatus("error");
+            msg.setLoginError("Please, specify a valid username");
+            return gson.toJson(msg);
+        }
+
+        File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
+        try {
+            gestureFolder.getCanonicalPath();
+        } catch (IOException e) {
+
+            msg.setStatus("error");
+            msg.setLoginError("Please, specify a valid username");
+            return gson.toJson(msg);
+        }
+
+        if (gestureFolder.exists()) {
+            msg.setStatus("error");
+            msg.setLoginError("The username is already in use, please select another one");
+            return gson.toJson(msg);
+        } else {
+            if (gestureFolder.mkdir()) {
+                msg.setStatus("ok");
+                session.setAttribute("user", name);
+            } else {
+                msg.setStatus("error");
+                msg.setLoginError("It is not possible to login right now, try again later");
+                return gson.toJson(msg);
+            }
+        }
+
+        return gson.toJson(msg);
+
     }
 
 }

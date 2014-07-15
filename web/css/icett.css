@@ -10,7 +10,10 @@ and open the template in the editor.
 
 body{
     font-family: Roboto, verdana;
+    
 }
+
+
 
 footer{
     display:block;
@@ -66,17 +69,17 @@ footer{
     background-color: white;
 }
 
-#container {
-    margin-left: 250px;
-    border-left: 2px solid #3d3f7c;
-    
+#cmd-bar{
+    position: fixed;
+    top:0px;
+    left: 10px;
 }
 
 #menu {
-    display: block;
+    display: none;
     float:left;
     width: 250px;
-    
+
 }
 
 .clear{
@@ -95,5 +98,68 @@ footer{
 
 .file-view{
     max-height: 350px;
-    overflow: scroll;
+    overflow-y: auto;
+}
+
+.file-view {
+    list-style: none;
+
+}
+
+.file-view > li.folder-open:before{
+    font-family: 'Glyphicons Halflings';
+    content: "\e118";
+    margin-right: 5px;
+}
+
+.file-view > li.folder-close:before{
+    font-family: 'Glyphicons Halflings';
+    content: "\e117";
+    margin-right: 10px;
+}
+
+.folder-open  li { 
+    list-style: none;
+    padding: 0px;
+}
+
+.folder-open ul{
+    padding-left: 20px;
+}
+
+.folder-open  li:before{
+    font-family: 'Glyphicons Halflings';
+    content: "\e022";
+    margin-right: 10px;
+}
+
+.file a:link, .file a:visited, .file a:hover{
+    color: black;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.file-selected a:link, .file-selected a:visited, .file-selected a:hover{
+    color: white;
+    background-color: #428bca;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#login-form{
+    width: 350px;
+    margin: auto;
+    margin-top: 30px;
+}
+
+#login-error{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display:none;
+    
+}
+
+.btn-center{
+    margin: auto;
+    display: block;
 }

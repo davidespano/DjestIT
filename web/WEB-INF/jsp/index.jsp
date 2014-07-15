@@ -20,38 +20,53 @@ and open the template in the editor.
         <script type="text/javascript" src="js/lib/leap.rigged-hand.min.js"></script>
         <script type="text/javascript" src="js/lib/TrackballControls.js"></script>
         <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="js/lib/jsTree/jstree.js"></script>
         <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
         <script src="js/handMesh.js"></script>
         <script type="text/javascript" src="js/gestureVisualizer.js"></script>
     <body>
         <header>
-            <div id='logo'>Universit&agrave; di Cagliari</div>
+            <!--<div id='logo'>Universit&agrave; di Cagliari</div>
             <div id='title'>
                 <h1>Leap Canvas</h1>
                 <p>Gesture recorder</p>
             </div>
 
 
-            <div id='stripes'></div>
-            <div class="btn-toolbar" role="navigation">
+            <div id='stripes'></div>-->
+            <div class="btn-toolbar" role="navigation" id="cmd-bar">
                 <div class="btn-group">
-                    <button class="btn btn-default navbar-btn" type="submit" id="btn-clear" name="clear">Clear</button>
-                    <button class="btn btn-default navbar-btn" type="submit" id="btn-reset" name="reset">Reset Camera</button>
+                    <button  id="btn-menu" type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-th-list"></span>
+                        Gestures <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a id="btn-swipe-right" href="#">Right Swipe</a></li>
+                        <li><a id="btn-swipe-left" href="#">Left Swipe</a></li>
+                        <li><a id="btn-circle" href="#">Circle</a></li>
+                    </ul>
                 </div>
-                <button class="btn btn-default" type="submit" id="btn-load" name="load" data-toggle="modal" data-target="#load-form">Load</button>
-                <button class="btn btn-success" type="submit" name="save" data-toggle="modal" data-target="#save-form">Save</button>
+                <div class="btn-group">
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-load" name="load" title="Load gesture">
+                        <span class="glyphicon glyphicon-floppy-open"></span>
+                    </button>
+                    <button class="btn btn-default navbar-btn" type="submit" name="save" data-toggle="modal" data-target="#save-form" title="Save gesture">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-clear" name="clear" title="Clear">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-reset" name="reset" title="Reset Camera">
+                        <span class="glyphicon glyphicon-screenshot"></span>
+                    </button>
+                </div>
+
             </div>
         </header>
         <div id="main">
-            <nav id="menu">
-                <h2>Gestures</h2>
-                <button class="btn btn-primary" type="submit" id="btn-swipe-right" name="btn_swipe_right">Right swipe</button>
-                <button class="btn btn-primary" type="submit" id="btn-swipe-left" name="btn_swipe_left">Left swipe</button>
-                <button class="btn btn-primary" type="submit" id="btn-circle" name="circle">Circle</button>
-            </nav>
             <div id="container"></div>
-            <div class="clear"></div>
+
         </div>
 
         <!-- Save Modal form -->
@@ -82,7 +97,7 @@ and open the template in the editor.
             </div>
         </div>
 
-        <!-- Save Modal form -->
+        <!-- Load Modal form -->
         <div class="modal fade" id="load-form" tabindex="-1" role="dialog" aria-labelledby="load form" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -91,89 +106,16 @@ and open the template in the editor.
                         <h4 class="modal-title" id="myModalLabel">Load gesture data</h4>
                     </div>
                     <div class="modal-body">
-                        <ul class="file-view">
-                            <li>
-                                <a href="#sel">Folder 1</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 2</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                    <li>File 4</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 1</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 2</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                    <li>File 4</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 1</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 2</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                    <li>File 4</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 1</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#sel">Folder 2</a>
-                                <ul>
-                                    <li>File 1</li>
-                                    <li>File 2</li>
-                                    <li>File 3</li>
-                                    <li>File 4</li>
-                                </ul>
-                            </li>
+                        <ul id="file-list" class="file-view">
+
                         </ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" id="btn-load" class="btn btn-primary">Load</button>
+                        <button type="button" id="btn-load-confirm" class="btn btn-primary">Load</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <footer>
-            <div id="btn_bar">
-
-            </div>
-        </footer>
     </body>
 </html>

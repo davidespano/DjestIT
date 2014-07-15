@@ -8,18 +8,12 @@ and open the template in the editor.
 <html>
     <head>
         <title>Leap Canvas</title>
-        <link rel="stylesheet" href="css/blitzer/jquery-ui-1.10.4.custom.css">
-       
-        <link rel="stylesheet" href="js/lib/jsTree/themes/default/style.min.css" />
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-         <link rel="stylesheet" href="css/icett.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/icett.css">
+        <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
     <body>
         <header>
             <div id='logo'>Universit&agrave; di Cagliari</div>
@@ -33,6 +27,17 @@ and open the template in the editor.
         </header>
         <div id="main">
 
+            <form role="form" id="login-form">
+
+                <div class="form-group" id="login-group">
+                    <label for="username" class="control-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Select a username">
+                    <div id="login-error" class="alert alert-danger" role="alert">The username is already in use. <br/>
+                        Please, select another one</div>
+                </div>
+
+                <button id="btn-login" type="submit" class="btn btn-primary btn-center">Start</button>
+            </form>
         </div>
     </body>
 </html>

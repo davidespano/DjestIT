@@ -12,7 +12,7 @@ $(document).ready(function() {
     var gesturePoints = [];
 
     var config = {
-        titleHeight: 186
+        titleHeight: 0
     };
 
     init();
@@ -155,7 +155,6 @@ $(document).ready(function() {
     }
 
     function ui() {
-       // $(".btn").button();
         $("#btn-clear").click(function(event) {
             event.preventDefault();
             gesturePoints.forEach(function(point) {
@@ -172,16 +171,32 @@ $(document).ready(function() {
             render();
         });
 
-        $("#btn-save")
-                .addClass("distance")
-                .click(function(event) {
-                    $("#save-form").dialog("open");
-                });
-
         $("#btn-load")
                 .click(function(event) {
-                    $("#jstree").jstree(true).refresh();
-                    $("#load-form").dialog("open");
+                    $.ajax({
+                        url: "file.json",
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        mimeType: 'application/json',
+                        data: {id: "#"},
+                        success: function(data) {
+                            var list = $("#file-list");
+                            list.empty();
+                            var template = $("<li><a href=\"#\"></a><ul></ul></li>");
+                            template.addClass("folder-close");
+                            template.on("click", "a", folderNode);
+                            data.forEach(function(file) {
+                                var fileElement = template.clone(true);
+                                fileElement.children().first().text(file.text);
+                                fileElement.attr("data-path", file.id);
+                                list.append(fileElement);
+                            });
+                            $("#btn-load-confirm").prop("disabled", true);
+                            $("#load-form").modal();
+                        }
+                    });
+
                 });
 
         $("#btn-swipe-right").click(function(event) {
@@ -225,62 +240,13 @@ $(document).ready(function() {
                     });
         });
 
-        $("#btn-save").click(function(){
+        $("#btn-save").click(function() {
             save();
         });
 
-        $("#load-form").click(function(){
+        $("#btn-load-confirm").click(function() {
             load();
         });
-        
-        $(".file-view > li > ul").hide();
-        $(".file-view > li > a").click(function(event){
-            event.preventDefault();
-            var list = $(this).next();
-            if($(this).next().is(":visible")){
-                list.hide();
-            }else{
-                list.show();
-            }
-        });
-        
-
-        $('#jstree').jstree({
-            'core': {
-                "animation": 0,
-                "check_callback": true,
-                "themes": {"stripes": true},
-                'data': {
-                    'url': function(node) {
-                        return 'file.json'
-                    },
-                    'data': function(node) {
-                        return {'id': node.id};
-                    },
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    mimeType: 'application/json'
-                }
-
-
-            },
-            "types": {
-                "#": {
-                    "valid_children": ["default", "file"]
-                },
-                "default": {
-                    "valid_children": ["default", "file"]
-                },
-                "file": {
-                    "icon": "img/file.png",
-                    "valid_children": []
-                }
-            },
-            "plugins": [
-                "types", "wholerow"
-            ]
-        });
-
 
     }
 
@@ -303,7 +269,8 @@ $(document).ready(function() {
             mimeType: 'application/json',
             data: JSON.stringify(test),
             success: function(data) {
-                $("#save-form").dialog("close");
+                $("#save-form").modal("hide");
+
             }
         });
 
@@ -311,16 +278,16 @@ $(document).ready(function() {
 
 
     function load() {
-        var selected = $("#jstree").jstree(true).get_selected();
-        selected.forEach(function(sel) {
+        $(".file-selected").each(function(sel) {
+            var path = $(this).attr("data-path"); 
             $.ajax({
                 url: "load.json",
                 type: "GET",
                 data: {
-                    name: sel
+                    name: path
                 },
                 success: function(data) {
-                    var color = Math.random()*0xFFFFFF<<0
+                    var color = Math.random() * 0xFFFFFF << 0;
                     data.points.forEach(function(p) {
                         var point = new THREE.Mesh(new THREE.SphereGeometry(2),
                                 new THREE.MeshPhongMaterial());
@@ -336,7 +303,56 @@ $(document).ready(function() {
                 }
             });
         });
-        $("#load-form").dialog("close");
+        $("#load-form").modal("hide");
+    }
+
+    function folderNode(event) {
+
+        event.preventDefault();
+        var folder = $(event.delegateTarget);
+        var list = folder.children("ul");
+        if ($(event.delegateTarget).hasClass("folder-open")) {
+            folder.addClass("folder-close");
+            folder.removeClass("folder-open");
+            list.hide();
+        } else {
+            folder.addClass("folder-open");
+            folder.removeClass("folder-close");
+            var id = folder.attr("data-path");
+            $.ajax({
+                url: "file.json",
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data: {"id": id},
+                success: function(data) {
+                    list.empty();
+                    var template = $("<li><a href=\"#\"></a></li>");
+                    template.addClass("file");
+                    template.on("click", "a", fileSelect);
+                    data.forEach(function(file) {
+                        var fileElement = template.clone(true);
+                        fileElement.children().first().text(file.text);
+                        fileElement.attr("data-path", file.id);
+                        list.append(fileElement);
+                    });
+                    list.show();
+                }
+            });
+
+        }
+
+    }
+
+    function fileSelect(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!event.shiftKey) {
+            $("#file-list .file-selected").removeClass("file-selected").addClass("file");
+        }
+        $(event.delegateTarget).addClass("file-selected");
+        $("#btn-load-confirm").prop("disabled", false);
     }
 
     function helpGestureAnimator(duration, position) {
