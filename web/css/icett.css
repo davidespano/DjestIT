@@ -10,7 +10,7 @@ and open the template in the editor.
 
 body{
     font-family: Roboto, verdana;
-    
+
 }
 
 
@@ -21,7 +21,7 @@ footer{
 }
 
 #logo {
-    height: 55px;
+    height: 75px;
     padding-left: 90px;
     padding-top: 25px;
     margin-bottom: 15px;
@@ -67,33 +67,6 @@ footer{
 .tip-title{
     border: 1px solid black;
     background-color: white;
-}
-
-#cmd-bar{
-    position: fixed;
-    top:0px;
-    left: 10px;
-}
-
-#menu {
-    display: none;
-    float:left;
-    width: 250px;
-
-}
-
-.clear{
-    clear: both;
-    border-bottom: 2px solid #3d3f7c;
-}
-
-#btn_bar{
-    margin: auto;
-    width:80%;
-}
-
-.distance{
-    margin-left:50px;
 }
 
 .file-view{
@@ -144,22 +117,4 @@ footer{
     background-color: #428bca;
     padding-left: 2px;
     padding-right: 2px;
-}
-
-#login-form{
-    width: 350px;
-    margin: auto;
-    margin-top: 30px;
-}
-
-#login-error{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    display:none;
-    
-}
-
-.btn-center{
-    margin: auto;
-    display: block;
 }

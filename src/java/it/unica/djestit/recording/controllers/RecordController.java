@@ -7,12 +7,17 @@ package it.unica.djestit.recording.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.unica.djestit.recording.model.Db;
 import it.unica.djestit.recording.model.Gesture;
 import it.unica.djestit.recording.model.GestureNode;
+import it.unica.djestit.recording.model.User;
+import it.unica.djestit.recording.model.UserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import json.LoginMsg;
@@ -32,16 +37,20 @@ public class RecordController {
 
     @Autowired
     ServletContext servletContext;
-    
 
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String index(HttpSession session) {
-        if(session.getAttribute("user") == null){
-             return "login";
-        }else{
+        if (session.getAttribute("user") == null) {
+            return "login";
+        } else {
             return "index";
         }
-       
+
+    }
+
+    @RequestMapping(value = "/register.html")
+    public String register() {
+        return "register";
     }
 
     @RequestMapping(value = "save.json", method = RequestMethod.POST)
@@ -100,49 +109,50 @@ public class RecordController {
 
     @RequestMapping(value = "login.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String login(HttpSession session, @RequestParam(value = "username", required = true) String name) {
+    String login(HttpSession session,
+            @RequestParam(value = "username", required = true) String name,
+            @RequestParam(value = "password", required = true) String password) {
         LoginMsg msg = new LoginMsg();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (name.length() == 0) {
 
-            msg.setStatus("error");
-            msg.setLoginError("Please, specify a username");
+            msg.setStatus(1);
+            msg.setError("username", "Please, specify a username");
             return gson.toJson(msg);
         }
 
-        if (name.contains(File.pathSeparator)) {
-            msg.setStatus("error");
-            msg.setLoginError("Please, specify a valid username");
-            return gson.toJson(msg);
-        }
+        Db db = Db.getInstance();
+        db.setPath(getDbPath());
+        User user = UserFactory.getInstance().getUser(db, name, password);
 
-        File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
-        try {
-            gestureFolder.getCanonicalPath();
-        } catch (IOException e) {
-
-            msg.setStatus("error");
-            msg.setLoginError("Please, specify a valid username");
-            return gson.toJson(msg);
-        }
-
-        if (gestureFolder.exists()) {
-            msg.setStatus("error");
-            msg.setLoginError("The username is already in use, please select another one");
+        if (user == null) {
+            msg.setStatus(1);
+            msg.setError("password", "Invalid username or password");
             return gson.toJson(msg);
         } else {
-            if (gestureFolder.mkdir()) {
-                msg.setStatus("ok");
-                session.setAttribute("user", name);
-            } else {
-                msg.setStatus("error");
-                msg.setLoginError("It is not possible to login right now, try again later");
-                return gson.toJson(msg);
+            File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
+            if (!gestureFolder.exists()) {
+                gestureFolder.mkdir();
             }
+            msg.setStatus(0);
+            session.setAttribute("user", name);
         }
-
         return gson.toJson(msg);
+    }
 
+    @RequestMapping(value = "logout.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String logout(HttpSession session) {
+        session.invalidate();
+        LoginMsg msg = new LoginMsg();
+        msg.setStatus(0);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(msg);
+    }
+
+    private String getDbPath() {
+        File gestureFile = new File(servletContext.getRealPath("/db/db.sqlite"));
+        return gestureFile.getAbsolutePath();
     }
 
 }

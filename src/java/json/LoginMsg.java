@@ -7,29 +7,47 @@
 package json;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author davide
  */
 public class LoginMsg implements Serializable {
-    private String status;
-    private String loginError;
+    private int status;
+    private Map<String, String> errors;
     
-    public String getStatus(){
+    public LoginMsg(){
+        errors = new HashMap<>();
+    }
+    
+    public int getStatus(){
         return status;
     }
     
-    public void setStatus(String status){
+    public void setStatus(int status){
         this.status = status;
     }
     
-    public String getLoginError(){
-        return loginError;
+    public Map<String, String> getErrors(){
+        return errors;
     }
     
-    public void setLoginError(String loginError){
-        this.loginError = loginError;
+    public void setErrors(Map<String, String> errors){
+        this.errors = errors;
+    }
+    
+    public String getError(String error){
+        if(!errors.containsKey(error)){
+            return null;
+        }
+        
+        return this.errors.get(error);
+    }
+    
+    public void setError(String key, String value){
+        errors.put(key, value);
     }
     
     

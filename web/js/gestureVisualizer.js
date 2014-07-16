@@ -248,6 +248,22 @@ $(document).ready(function() {
             load();
         });
 
+        $("#btn-logout").click(function() {
+            $.ajax({
+                url: "logout.json",
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data: {},
+                success: function(data) {
+                    if (data.status === 0) {
+                        location.reload();
+                    }
+                }
+            });
+        });
+
     }
 
     function save() {
@@ -279,7 +295,7 @@ $(document).ready(function() {
 
     function load() {
         $(".file-selected").each(function(sel) {
-            var path = $(this).attr("data-path"); 
+            var path = $(this).attr("data-path");
             $.ajax({
                 url: "load.json",
                 type: "GET",

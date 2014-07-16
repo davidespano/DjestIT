@@ -12,6 +12,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/icett.css">
+        <link rel="stylesheet" href="css/index.css">
 
         <script type="text/javascript" src="js/lib/three.js"></script>
         <script type="text/javascript" src="js/lib/leap.min.js"></script>
@@ -25,14 +26,6 @@ and open the template in the editor.
         <script type="text/javascript" src="js/gestureVisualizer.js"></script>
     <body>
         <header>
-            <!--<div id='logo'>Universit&agrave; di Cagliari</div>
-            <div id='title'>
-                <h1>Leap Canvas</h1>
-                <p>Gesture recorder</p>
-            </div>
-
-
-            <div id='stripes'></div>-->
             <div class="btn-toolbar" role="navigation" id="cmd-bar">
                 <div class="btn-group">
                     <button  id="btn-menu" type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
@@ -62,6 +55,13 @@ and open the template in the editor.
                     </button>
                 </div>
 
+            </div>
+            <div class="btn-toolbar" role="navigation" id="user-bar">
+                 <div class="btn-group">
+                    <button class="btn btn-default navbar-btn" type="submit" id="btn-logout" name="logout" title="Logout">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Logout
+                    </button>
             </div>
         </header>
         <div id="main">
