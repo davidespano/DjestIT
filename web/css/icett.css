@@ -13,7 +13,10 @@ body{
 
 }
 
-
+h3{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 
 footer{
     display:block;
@@ -118,3 +121,10 @@ footer{
     padding-left: 2px;
     padding-right: 2px;
 }
+
+.btn-center{
+    width: 100px;
+    margin: auto;
+    display: block;
+}
+

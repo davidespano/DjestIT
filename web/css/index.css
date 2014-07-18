@@ -8,14 +8,58 @@ and open the template in the editor.
     Author     : davide
 */
 
-#cmd-bar{
-    position: fixed;
-    top:0px;
-    left: 10px;
+.left-bar{
+    margin-left: 10px;
+    float: left;
 }
 
-#user-bar{
+.right-bar{
+    margin-right: 10px;
+    float: right;
+}
+
+.center-bar{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+#up-bar{
     position: fixed;
-    top:0px;
-    right: 10px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+#test-bar{
+    display: none;
+}
+
+.help-msg{
+    text-align: justify;
+}
+
+.help-msg p{
+    margin-bottom: 5px;
+}
+
+.btn-group-tutorial{
+    margin-top: 20px;
+    display: table;
+    width: 100%;
+}
+
+.btn-group-tutorial-row{
+    display: table-row;
+    width: 100%;
+}
+.btn-group-tutorial-cell{
+    display: table-cell;
+    width: 33.33%;
+}
+
+.countdown{
+    text-align:  center;
+    font-size: 30pt;
 }

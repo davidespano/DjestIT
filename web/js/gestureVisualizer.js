@@ -15,10 +15,12 @@ $(document).ready(function() {
         titleHeight: 0
     };
 
+    var record;
     init();
     animate();
     ui();
-
+    //user_test();
+    startTest();
 
 
 
@@ -26,7 +28,7 @@ $(document).ready(function() {
         hand: function(hand) {
 
             hands.updateHand(hand);
-            if (hand.indexFinger.bones[3].nextJoint[2] < 0) {
+            if (record && record(hand)) {
                 var point = new THREE.Mesh(new THREE.SphereGeometry(2),
                         new THREE.MeshPhongMaterial());
                 point.material.color.setHex(0x00cc00);
@@ -98,12 +100,12 @@ $(document).ready(function() {
         container.appendChild(renderer.domElement);
 
 
-        var geometry = new THREE.PlaneGeometry(1000, 700);
-
-        var material = new THREE.MeshBasicMaterial({color: 0xcccccc, side: THREE.DoubleSide, opacity: .4, transparent: true});
-        var plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0, 0, 0);
-        scene.add(plane);
+        /*var geometry = new THREE.PlaneGeometry(1000, 700);
+         
+         var material = new THREE.MeshBasicMaterial({color: 0xcccccc, side: THREE.DoubleSide, opacity: .4, transparent: true});
+         var plane = new THREE.Mesh(geometry, material);
+         plane.position.set(0, 0, 0);
+         scene.add(plane);*/
 
         hands = new HandMesh();
         hands.onUpdate(render);
@@ -121,6 +123,9 @@ $(document).ready(function() {
         window.addEventListener('resize', onWindowResize, false);
 
         //
+        record = function(hand) {
+            hand.indexFinger.bones[3].nextJoint[2] < 0
+        };
         render();
 
     }
@@ -157,12 +162,7 @@ $(document).ready(function() {
     function ui() {
         $("#btn-clear").click(function(event) {
             event.preventDefault();
-            gesturePoints.forEach(function(point) {
-                pointVis.remove(point);
-            });
-
-            gesturePoints = [];
-            renderer.render(scene, camera);
+            clear();
         });
 
         $("#btn-reset").click(function(event) {
@@ -202,42 +202,18 @@ $(document).ready(function() {
         $("#btn-swipe-right").click(function(event) {
             event.preventDefault();
             helpGestureAnimator(
-                    50,
-                    function(i) {
-                        var point = [];
-                        point[0] = -250 + i * 10;
-                        point[1] = 200;
-                        point[2] = 0;
-                        return point;
-                    });
+                    50, gestureAnimation_RightSwipe);
         });
 
         $("#btn-swipe-left").click(function(event) {
             event.preventDefault();
             helpGestureAnimator(
-                    50,
-                    function(i) {
-                        var point = [];
-                        point[0] = 250 - i * 10;
-                        point[1] = 200;
-                        point[2] = 0;
-                        return point;
-                    });
+                    50, gestureAnimation_LeftSwipe);
         });
 
         $("#btn-circle").click(function(event) {
             event.preventDefault();
-            helpGestureAnimator(
-                    75,
-                    function(i) {
-                        var r = 100;
-                        var alpha = (2 * Math.PI / 75) * i;
-                        var point = [];
-                        point[0] = Math.cos(alpha) * r;
-                        point[1] = Math.sin(alpha) * r + 200;
-                        point[2] = 0;
-                        return point;
-                    });
+            helpGestureAnimator(75, gestureAnimation_Circle);
         });
 
         $("#btn-save").click(function() {
@@ -266,13 +242,24 @@ $(document).ready(function() {
 
     }
 
-    function save() {
-        var series = [];
-        gesturePoints.forEach(function(p) {
-            series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
+    function clear() {
+        gesturePoints.forEach(function(point) {
+            pointVis.remove(point);
         });
 
-        var filename = $("#save-name").val();
+        gesturePoints = [];
+        renderer.render(scene, camera);
+    }
+
+    function save(filename) {
+        if (!filename) {
+            var series = [];
+            gesturePoints.forEach(function(p) {
+                series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
+            });
+
+            filename = $("#save-name").val();
+        }
         var test = {
             points: series,
             name: filename
@@ -371,9 +358,10 @@ $(document).ready(function() {
         $("#btn-load-confirm").prop("disabled", false);
     }
 
-    function helpGestureAnimator(duration, position) {
+    function helpGestureAnimator(duration, position, onComplete) {
         var _position = position;
-        var pause = 30;
+        var _complete = onComplete;
+        var pause = 60;
         var i = duration + pause;
         requestAnimationFrame(frame);
 
@@ -393,11 +381,275 @@ $(document).ready(function() {
                     help.remove(help.children[0]);
                 }
                 render();
+                if (_complete) {
+                    _complete();
+                }
                 return;
             }
 
             i--;
             requestAnimationFrame(frame);
+
         }
     }
+
+
+    // user-test related functionalities
+    function user_test() {
+        $(".help-msg > span").hide();
+
+        var actions = [
+            {show: $(".help-msg span")[0]},
+            {show: $(".help-msg span")[1]},
+            {show: $(".help-msg span")[2]},
+            {show: $(".help-msg span")[3]},
+            {
+                show: $(".help-msg span")[4],
+                interactive: false,
+                animation: function(onComplete) {
+                    var msg = $("#countdown").show();
+                    msg.text("-3");
+
+                    var timer = new TimerManager([
+                        {time: 1000, action: function() {
+                                msg.text("-2");
+                            }},
+                        {time: 1000, action: function() {
+                                msg.text("-1");
+                            }},
+                        {time: 1000, action: function() {
+                                msg.text("Azione!");
+                            }},
+                        {time: 1000, action: function() {
+                                helpGestureAnimator(
+                                        75,
+                                        gestureAnimation_Circle,
+                                        onComplete);
+                            }}
+                    ]);
+
+                    timer.start();
+                }
+            },
+            {show: $(".help-msg span")[5]},
+            {show: $(".help-msg span")[6]}
+        ];
+
+        var tutorial = new TutorialSequence(
+                actions,
+                $("#btn-tutorial-next"),
+                $("#btn-tutorial-prev"),
+                startTest);
+        tutorial.next();
+        $("#btn-tutorial-prev").click(function(event) {
+            event.preventDefault();
+            tutorial.previous();
+        });
+        $("#btn-tutorial-next").click(function(event) {
+            event.preventDefault();
+            tutorial.next();
+        });
+    }
+
+    function startTest() {
+        $("#help-bar").hide();
+        $(".test-msg > span").hide();
+        $("#test-bar").show();
+        var oldRecord = record;
+
+        var startRecord = function() {
+            return true;
+        };
+        var stopRecord = function() {
+            return false;
+        };
+
+        record = stopRecord;
+
+        function recordGesture(onComplete, duration) {
+            $("#btn-test-repeat").hide();
+            var msg = $("#test-count").show();
+            msg.text("-3");
+            var timer = new TimerManager([
+                {time: 1000, action: function() {
+                        msg.text("-2");
+                    }},
+                {time: 1000, action: function() {
+                        msg.text("-1");
+                    }},
+                {time: 1000, action: function() {
+                        msg.text("Azione !");
+                        record = startRecord;
+                    }},
+                {time: duration, action: function() {
+                        record = stopRecord;
+                        onComplete();
+                    }}
+            ]);
+            timer.start();
+        }
+        ;
+
+
+        var actions = [
+            // benvenuto
+            {
+                show: $(".test-msg span")[2],
+                animation: function() {
+                    $("#btn-test-repeat").hide();
+                }
+            },
+            //************************************
+            // RIGHT SWIPE
+            //************************************
+            // right swipe: dimostrazione
+            {
+                show: $(".test-msg span")[3],
+                interactive: true,
+                animation: function(onComplete) {
+                    $("#btn-test-repeat").show();
+                    helpGestureAnimator(
+                            60,
+                            gestureAnimation_RightSwipe,
+                            onComplete);
+                }
+            },
+            // right swipe: registrazione
+            {
+                show: $(".test-msg span")[0],
+                interactive: false,
+                animation: function(onComplete) {
+                    recordGesture(onComplete, 2000);
+                }
+            },
+            // right swipe: salvataggio
+            {
+                show: $(".test-msg span")[1],
+                animation: function() {
+                    $("#btn-test-repeat").hide();
+
+                }
+            },
+            
+            //************************************
+            // LEFT SWIPE
+            //************************************
+            // left swipe: dimostrazione
+            {
+                show: $(".test-msg span")[4],
+                interactive: true,
+                animation: function(onComplete) {
+                    save("right-swipe");
+                    clear();
+                    $("#btn-test-repeat").show();
+                    helpGestureAnimator(
+                            60,
+                            gestureAnimation_LeftSwipe,
+                            onComplete);
+                }
+            },
+            // left swipe: registrazione
+            {
+                show: $(".test-msg span")[0],
+                interactive: false,
+                animation: function(onComplete) {
+                    recordGesture(onComplete, 2000);
+                }
+            },
+             // left swipe: conferma
+            {
+                show: $(".test-msg span")[1],
+                animation: function() {
+                    $("#btn-test-repeat").hide();
+
+                }
+            },
+            
+            //************************************
+            // CIRCLE
+            //************************************
+            
+            // circle: dimostrazione
+            {
+                show: $(".test-msg span")[5],
+                interactive: true,
+                animation: function(onComplete) {
+                    save("left-swipe");
+                    clear();
+                    $("#btn-test-repeat").show();
+                    helpGestureAnimator(
+                            75,
+                            gestureAnimation_Circle,
+                            onComplete);
+                }
+            },
+            
+            // circle: registrazione
+            {
+                show: $(".test-msg span")[0],
+                interactive: false,
+                animation: function(onComplete) {
+                    recordGesture(onComplete, 2000);
+                }
+            },
+            {
+                show: $(".test-msg span")[6],
+                animation: function() {
+                    save("circle");
+                    clear();
+                }
+            }
+        ];
+        var tutorial = new TutorialSequence(
+                actions,
+                $("#btn-test-next"),
+                $("#btn-test-prev"),
+                normalEditor);
+        tutorial.next();
+        $("#btn-test-prev").click(function(event) {
+            event.preventDefault();
+            tutorial.previous();
+        });
+        $("#btn-test-next").click(function(event) {
+            event.preventDefault();
+            tutorial.next();
+        });
+        $("#btn-test-repeat").click(function(event) {
+            event.preventDefault();
+            tutorial.repeat();
+        });
+    }
+
+    function normalEditor() {
+        $("#help-bar").hide();
+        $("#test-bar").hide();
+    }
+
 });
+
+function gestureAnimation_Circle(i) {
+    var r = 100;
+    var alpha = (2 * Math.PI / 75) * i;
+    var point = [];
+    point[0] = Math.cos(alpha) * r;
+    point[1] = Math.sin(alpha) * r + 200;
+    point[2] = 0;
+    return point;
+}
+
+function gestureAnimation_LeftSwipe(i) {
+    var point = [];
+    point[0] = 250 - i * 10;
+    point[1] = 200;
+    point[2] = 0;
+    return point;
+
+}
+
+function gestureAnimation_RightSwipe(i) {
+    var point = [];
+    point[0] = -250 + i * 10;
+    point[1] = 200;
+    point[2] = 0;
+    return point;
+}
