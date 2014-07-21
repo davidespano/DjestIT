@@ -14,11 +14,11 @@ import java.util.Map;
  *
  * @author davide
  */
-public class LoginMsg implements Serializable {
+public class CommandMsg implements Serializable {
     private int status;
     private Map<String, String> errors;
     
-    public LoginMsg(){
+    public CommandMsg(){
         errors = new HashMap<>();
     }
     

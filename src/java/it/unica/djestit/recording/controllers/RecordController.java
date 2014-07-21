@@ -13,14 +13,11 @@ import it.unica.djestit.recording.model.GestureNode;
 import it.unica.djestit.recording.model.User;
 import it.unica.djestit.recording.model.UserFactory;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import json.LoginMsg;
+import json.CommandMsg;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,12 +32,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes({"user"})
 public class RecordController {
 
+    private static final String user = "user";
+
     @Autowired
     ServletContext servletContext;
 
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String index(HttpSession session) {
-        if (session.getAttribute("user") == null) {
+        if (session.getAttribute(RecordController.user) == null) {
             return "login";
         } else {
             return "index";
@@ -54,11 +53,25 @@ public class RecordController {
     }
 
     @RequestMapping(value = "save.json", method = RequestMethod.POST)
-    public String save(@RequestBody Gesture gesture) {
-        File base = new File(servletContext.getRealPath("/gestures"));
-        File file = new File(base, gesture.getName() + ".csv");
-        gesture.toCSV(file.getAbsolutePath());
-        return "save";
+    public @ResponseBody
+    String save(HttpSession session,
+            @RequestBody Gesture gesture) {
+        CommandMsg msg = new CommandMsg();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (session.getAttribute(RecordController.user) == null) {
+            msg.setError("save", "Your session is expired");
+            msg.setStatus(1);
+        } else {
+            String name = session.getAttribute(RecordController.user).toString();
+            File gestureFolder = new File(servletContext.getRealPath("/gestures/"+ name));
+            if (!gestureFolder.exists()) {
+                gestureFolder.mkdir();
+            }
+            File file = new File(gestureFolder, gesture.getName() + ".csv");
+            gesture.toCSV(file.getAbsolutePath());
+            msg.setStatus(0);
+        }
+        return gson.toJson(msg);
     }
 
     @RequestMapping(value = "file.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
@@ -112,7 +125,7 @@ public class RecordController {
     String login(HttpSession session,
             @RequestParam(value = "username", required = true) String name,
             @RequestParam(value = "password", required = true) String password) {
-        LoginMsg msg = new LoginMsg();
+        CommandMsg msg = new CommandMsg();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (name.length() == 0) {
 
@@ -135,7 +148,7 @@ public class RecordController {
                 gestureFolder.mkdir();
             }
             msg.setStatus(0);
-            session.setAttribute("user", name);
+            session.setAttribute(RecordController.user, name);
         }
         return gson.toJson(msg);
     }
@@ -144,7 +157,7 @@ public class RecordController {
     public @ResponseBody
     String logout(HttpSession session) {
         session.invalidate();
-        LoginMsg msg = new LoginMsg();
+        CommandMsg msg = new CommandMsg();
         msg.setStatus(0);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(msg);
