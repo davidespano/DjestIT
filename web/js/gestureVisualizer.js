@@ -518,6 +518,7 @@ $(document).ready(function() {
             {
                 show: $(".test-msg span")[0],
                 interactive: false,
+                skipOnPrevious: true,
                 animation: function(onComplete) {
                     recordGesture(onComplete, 2000);
                 }
@@ -552,6 +553,7 @@ $(document).ready(function() {
             {
                 show: $(".test-msg span")[0],
                 interactive: false,
+                skipOnPrevious: true,
                 animation: function(onComplete) {
                     recordGesture(onComplete, 2000);
                 }
@@ -588,6 +590,7 @@ $(document).ready(function() {
             {
                 show: $(".test-msg span")[0],
                 interactive: false,
+                skipOnPrevious: true,
                 animation: function(onComplete) {
                     recordGesture(onComplete, 2000);
                 }

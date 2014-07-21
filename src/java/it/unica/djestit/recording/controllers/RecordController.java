@@ -65,7 +65,7 @@ public class RecordController {
             String name = session.getAttribute(RecordController.user).toString();
             File gestureFolder = new File(servletContext.getRealPath("/gestures/"+ name));
             if (!gestureFolder.exists()) {
-                gestureFolder.mkdir();
+                gestureFolder.mkdirs();
             }
             File file = new File(gestureFolder, gesture.getName() + ".csv");
             gesture.toCSV(file.getAbsolutePath());
@@ -145,7 +145,7 @@ public class RecordController {
         } else {
             File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
             if (!gestureFolder.exists()) {
-                gestureFolder.mkdir();
+                gestureFolder.mkdirs();
             }
             msg.setStatus(0);
             session.setAttribute(RecordController.user, name);

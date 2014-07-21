@@ -37,7 +37,10 @@ function TutorialSequence(
         if (_position < _actions.length) {
             $(_actions[_position].show).hide();
         }
-        _position--;
+        do{
+            _position--;
+        }while(_position < _actions.length && _actions[_position].skipOnPrevious);
+        
         update(false);
     };
 
