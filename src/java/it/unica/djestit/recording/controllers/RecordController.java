@@ -117,9 +117,14 @@ public class RecordController {
 
     @RequestMapping(value = "file.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String fileList(
+    String fileList(HttpSession session,
             @RequestParam(value = "id", required = true) String name) {
         String path = name;
+        Db db = Db.getInstance();
+        db.setPath(getDbPath());
+        String username = session.getAttribute(RecordController.user) == null ?
+                "" : session.getAttribute(RecordController.user).toString();
+        User usr = UserFactory.getInstance().getUser(db, username);
         if (path.equals("#")) {
             path = "";
         }
@@ -127,9 +132,17 @@ public class RecordController {
         File base = new File(servletContext.getRealPath("/gestures"));
         File folder = new File(servletContext.getRealPath("/gestures/" + path));
         if (folder.exists()) {
-            File[] listOfFiles = folder.listFiles();
+            File[] listOfFiles;
+            // hide other users' data for the default role
+            if(usr.getRole() == User.DEFAULT && path.length() == 0){
+                listOfFiles = new File[1];
+                listOfFiles[0] = new File(servletContext.getRealPath("/gestures/" + username));
+            }else{
+                listOfFiles = folder.listFiles();
+            }
             List<GestureNode> nodes = new ArrayList<>(listOfFiles.length);
             for (File file : listOfFiles) {
+                  // hide folders to default users
                 GestureNode node = new GestureNode();
                 String relPath = base.toURI().relativize(file.toURI()).getPath();
                 node.setId(relPath);
