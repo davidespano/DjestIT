@@ -30,6 +30,8 @@ public class UserFactory {
     private UserFactory() {
 
     }
+    
+   
 
     public User getUser(Db db, String username, String password) {
         Connection conn = db.getConnection();

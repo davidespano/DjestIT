@@ -52,6 +52,25 @@ public class RecordController {
         return "register";
     }
 
+    @RequestMapping(value = "register.json", method = RequestMethod.POST)
+    public @ResponseBody
+    String newAccount(
+            @RequestParam(value = "username", required = true) String username,
+            @RequestParam(value = "password", required = true) String password,
+            @RequestParam(value = "confirm", required = true) String confirm) {
+        CommandMsg msg = new CommandMsg();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (username.length() == 0 || !username.matches("[a-zA-Z0-9\\._\\-]{3,}")) {
+            msg.setStatus(1);
+            msg.setError("username", "The username must be longer than 3 characters and must not contain spaces or punctuation");
+        }
+        Db db = Db.getInstance();
+        db.setPath(getDbPath());
+        //User usr = UserFactory.getInstance().getUser(db, username);
+
+        return gson.toJson(msg);
+    }
+
     @RequestMapping(value = "save.json", method = RequestMethod.POST)
     public @ResponseBody
     String save(HttpSession session,
@@ -63,7 +82,7 @@ public class RecordController {
             msg.setStatus(1);
         } else {
             String name = session.getAttribute(RecordController.user).toString();
-            File gestureFolder = new File(servletContext.getRealPath("/gestures/"+ name));
+            File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
             if (!gestureFolder.exists()) {
                 gestureFolder.mkdirs();
             }
@@ -136,9 +155,9 @@ public class RecordController {
 
         Db db = Db.getInstance();
         db.setPath(getDbPath());
-        User user = UserFactory.getInstance().getUser(db, name, password);
+        User usr = UserFactory.getInstance().getUser(db, name, password);
 
-        if (user == null) {
+        if (usr == null) {
             msg.setStatus(1);
             msg.setError("password", "Invalid username or password");
             return gson.toJson(msg);
