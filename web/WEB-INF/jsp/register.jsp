@@ -22,7 +22,7 @@
         <div id="main">
             <h2>Create an account</h2>
             <form role="form" id="login-form">
-
+                <div id="login-ok" class="alert alert-success msg-error" role="alert">Account created successfully</div>
                 <div class="form-group" id="registration-group">
                     <label for="username" class="control-label">Username</label>
                     <input type="text" class="form-control" id="username" placeholder="Enter your username">
@@ -35,7 +35,7 @@
                     <div id="password-error" class="alert alert-danger msg-error" role="alert">Error placeholder</div>
                 </div>
                 
-                <div class="form-group" id="password-group">
+                <div class="form-group" id="confirm-group">
                     <label for="confirm" class="control-label">Confirm Password</label>
                     <input type="password" class="form-control" id="confirm" placeholder="Confirm your password">
                     <div id="password-error" class="alert alert-danger msg-error" role="alert">Error placeholder</div>
@@ -44,7 +44,7 @@
                 <button id="btn-login" type="submit" class="btn btn-primary btn-center">Register</button>
                 
             </form>
-            <a id="btn-new-account" href="index.html">Login with an existing account</a>
+            <a id="btn-new-account" href="index.html">Sign in with an existing account</a>
         </div>
     </body>
 </html>

@@ -14,7 +14,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/login.css">
         <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/register.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
     <body>
         <header>
             <div id='logo'>Universit&agrave; di Cagliari</div>

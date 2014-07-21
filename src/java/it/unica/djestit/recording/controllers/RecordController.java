@@ -54,20 +54,42 @@ public class RecordController {
 
     @RequestMapping(value = "register.json", method = RequestMethod.POST)
     public @ResponseBody
-    String newAccount(
+    String newAccount(HttpSession session,
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "confirm", required = true) String confirm) {
         CommandMsg msg = new CommandMsg();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        msg.setStatus(0);
         if (username.length() == 0 || !username.matches("[a-zA-Z0-9\\._\\-]{3,}")) {
             msg.setStatus(1);
             msg.setError("username", "The username must be longer than 3 characters and must not contain spaces or punctuation");
         }
         Db db = Db.getInstance();
         db.setPath(getDbPath());
-        //User usr = UserFactory.getInstance().getUser(db, username);
-
+        User usr = UserFactory.getInstance().getUser(db, username);
+        if (usr != null) {
+            msg.setStatus(1);
+            msg.setError("username", "The specified username is already in use");
+        }
+        if(!password.equals(confirm)){
+            msg.setStatus(1);
+            msg.setError("password", "The passwords do not match");
+        }
+        
+        if(msg.getStatus() == 0){
+            // creo il nuovo utente
+            usr = new User();
+            usr.setRole(User.DEFAULT);
+            usr.setUsername(username);
+            usr.setPassword(password);
+            if(!UserFactory.getInstance().createUser(db, usr)){
+                msg.setStatus(1);
+                msg.setError("username", "Impossible to create a new user, try again later");
+            }else{
+                session.setAttribute(RecordController.user, usr.getUsername());
+            }
+        }
         return gson.toJson(msg);
     }
 
