@@ -4,16 +4,17 @@
  * and open the template in the editor.
  */
 
-
+var config = {
+    titleHeight: 0,
+    translateY: 200
+};
 $(document).ready(function() {
     var container;
 
     var camera, controls, scene, renderer, hands, pointVis, help;
     var gesturePoints = [];
 
-    var config = {
-        titleHeight: 0
-    };
+
 
     var record;
     init();
@@ -109,15 +110,15 @@ $(document).ready(function() {
 
         hands = new HandMesh();
         hands.onUpdate(render);
-        hands.mesh().translateY(-200);
+        hands.mesh().translateY(-config.translateY);
         scene.add(hands.mesh());
 
         pointVis = new THREE.Object3D();
-        pointVis.translateY(-200);
+        pointVis.translateY(-config.translateY);
         scene.add(pointVis);
 
         help = new THREE.Object3D();
-        help.translateY(-200);
+        help.translateY(-config.translateY);
         scene.add(help);
 
         window.addEventListener('resize', onWindowResize, false);
@@ -211,9 +212,49 @@ $(document).ready(function() {
                     50, gestureAnimation_LeftSwipe);
         });
 
+        $("#btn-triangle").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(75, gestureAnimation_Triangle);
+        });
+
+        $("#btn-x").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(75, gestureAnimation_X);
+        });
+
+        $("#btn-rectangle").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(80, gestureAnimation_Rectangle);
+        });
+
         $("#btn-circle").click(function(event) {
             event.preventDefault();
             helpGestureAnimator(75, gestureAnimation_Circle);
+        });
+
+        $("#btn-check").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(40, gestureAnimation_Check);
+        });
+
+        $("#btn-caret").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(40, gestureAnimation_Caret);
+        });
+
+        $("#btn-lft-sqr-brk").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(40, gestureAnimation_LftSqrBrk);
+        });
+        
+        $("#btn-rgt-sqr-brk").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(40, gestureAnimation_RgtSqrBrk);
+        });
+        
+        $("#btn-v").click(function(event) {
+            event.preventDefault();
+            helpGestureAnimator(40, gestureAnimation_V);
         });
 
         $("#btn-save").click(function() {
@@ -370,7 +411,7 @@ $(document).ready(function() {
                 var pt = new THREE.Mesh(new THREE.SphereGeometry(4),
                         new THREE.MeshPhongMaterial());
                 pt.material.color.setHex(0xff0000);
-                pt.position.fromArray(_position(duration - i + pause));
+                pt.position.fromArray(_position(duration - i + pause, duration));
                 help.add(pt);
                 render();
 
@@ -531,7 +572,6 @@ $(document).ready(function() {
 
                 }
             },
-            
             //************************************
             // LEFT SWIPE
             //************************************
@@ -558,7 +598,7 @@ $(document).ready(function() {
                     recordGesture(onComplete, 2000);
                 }
             },
-             // left swipe: conferma
+            // left swipe: conferma
             {
                 show: $(".test-msg span")[1],
                 animation: function() {
@@ -566,11 +606,10 @@ $(document).ready(function() {
 
                 }
             },
-            
             //************************************
             // CIRCLE
             //************************************
-            
+
             // circle: dimostrazione
             {
                 show: $(".test-msg span")[5],
@@ -585,7 +624,6 @@ $(document).ready(function() {
                             onComplete);
                 }
             },
-            
             // circle: registrazione
             {
                 show: $(".test-msg span")[0],
@@ -630,12 +668,14 @@ $(document).ready(function() {
 
 });
 
+
+
 function gestureAnimation_Circle(i) {
     var r = 100;
     var alpha = (2 * Math.PI / 75) * i;
     var point = [];
     point[0] = Math.cos(alpha) * r;
-    point[1] = Math.sin(alpha) * r + 200;
+    point[1] = Math.sin(alpha) * r + config.translateY;
     point[2] = 0;
     return point;
 }
@@ -643,7 +683,7 @@ function gestureAnimation_Circle(i) {
 function gestureAnimation_LeftSwipe(i) {
     var point = [];
     point[0] = 250 - i * 10;
-    point[1] = 200;
+    point[1] = config.translateY;
     point[2] = 0;
     return point;
 
@@ -652,7 +692,287 @@ function gestureAnimation_LeftSwipe(i) {
 function gestureAnimation_RightSwipe(i) {
     var point = [];
     point[0] = -250 + i * 10;
-    point[1] = 200;
+    point[1] = config.translateY;
     point[2] = 0;
+    return point;
+}
+
+function gestureAnimation_Triangle(i, max) {
+    var scale = 400;
+    var point = [];
+
+    var n = 1.0 * max / 3.0;
+    var l = 2 * Math.cos(Math.PI / 3);
+    var h = Math.sin(Math.PI / 3);
+    var m1 = Math.tan(Math.PI / 3);
+    var m2 = Math.tan(2 * Math.PI / 3);
+
+
+    if (i < n) {
+
+        point[0] = -(l / (2 * n)) * i;
+        point[1] = (point[0] * m1 + h) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i < 2 * n) {
+        point[0] = (-(l / 2) + (l / n) * (i - n)) * scale;
+        point[1] = 0;
+        point[2] = 0;
+    }
+
+    if (i >= 2 * n && i < 3 * n) {
+        point[0] = (l / 2) - ((i - 2 * n) * l / (2 * n));
+        point[1] = (point[0] * m2 + h) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+    return point;
+}
+
+function gestureAnimation_X(i, max) {
+    var scale = 400;
+    var point = [];
+
+    var n = 1.0 * max / 3.0;
+    var l = Math.cos(Math.PI / 4);
+
+    var m1 = Math.tan(Math.PI / 4);
+    var m2 = Math.tan(3 * Math.PI / 4);
+    if (i < n) {
+        point[0] = -(l / 2) + i * (l / n);
+        point[1] = (point[0] * m1 + l / 2) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i < 2 * n) {
+        point[0] = (l / 2);
+        point[1] = (l - ((i - n) * (l / n))) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= 2 * n && i < 3 * n) {
+        point[0] = (l / 2) - (i - 2 * n) * (l / n);
+        point[1] = (point[0] * m2 + l / 2) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    return point;
+}
+
+function gestureAnimation_Check(i, max) {
+    var scale = 100;
+    var point = [];
+
+    var n = 1.0 * max / 3.0;
+    var h = Math.sin(Math.PI / 3);
+    var l = 2 * Math.cos(Math.PI / 3);
+    var m1 = Math.tan(2 * Math.PI / 3);
+    var m2 = Math.tan(Math.PI / 3);
+
+    if (i < n) {
+        point[0] = -l / 2 + i * (l / (2 * n));
+        point[1] = (point[0] * m1) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i < 3 * n) {
+        point[0] = (i - n) * l / n;
+        point[1] = (point[0] * m2) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    return point;
+}
+
+function gestureAnimation_Rectangle(i, max) {
+    var scale = 200;
+    var n = max / 4;
+    var point = [];
+    var lm = 1;
+    var lM = 2;
+
+    if (i < n) {
+        point[0] = -lM / 2 * scale;
+        point[1] = (lm / 2 - i * lm / n) * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= n && i < 2 * n) {
+        point[0] = (-lM / 2 + (i - n) * lM / n) * scale;
+        point[1] = -lm / 2 * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= 2 * n && i < 3 * n) {
+        point[0] = lM / 2 * scale;
+        point[1] = (-lm / 2 + (i - 2 * n) * lm / n) * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= 3 * n && i < 4 * n) {
+        point[0] = (lM / 2 - (i - 3 * n) * lM / n) * scale;
+        point[1] = lm / 2 * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    return point;
+}
+
+function gestureAnimation_Caret(i, max) {
+    var scale = 200;
+    var point = [];
+
+    var n = 1.0 * max / 2.0;
+    var l = 2 * Math.cos(Math.PI / 3);
+    var h = Math.sin(Math.PI / 3);
+    var m1 = Math.tan(Math.PI / 3);
+    var m2 = Math.tan(2 * Math.PI / 3);
+
+
+    if (i < n) {
+
+        point[0] = -l / 2 + i * l / (2 * n);
+        point[1] = (point[0] * m1 + h) * scale + config.translateY / 2;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i <= 2 * n) {
+        point[0] = l / (2 * n) * (i - n);
+        point[1] = (point[0] * m2 + h) * scale + config.translateY / 2;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+
+    return point;
+}
+
+function gestureAnimation_X(i, max) {
+    var scale = 400;
+    var point = [];
+
+    var n = 1.0 * max / 3.0;
+    var l = Math.cos(Math.PI / 4);
+
+    var m1 = Math.tan(Math.PI / 4);
+    var m2 = Math.tan(3 * Math.PI / 4);
+    if (i < n) {
+        point[0] = -(l / 2) + i * (l / n);
+        point[1] = (point[0] * m1 + l / 2) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i < 2 * n) {
+        point[0] = (l / 2);
+        point[1] = (l - ((i - n) * (l / n))) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= 2 * n && i < 3 * n) {
+        point[0] = (l / 2) - (i - 2 * n) * (l / n);
+        point[1] = (point[0] * m2 + l / 2) * scale;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    return point;
+}
+
+function gestureAnimation_LftSqrBrk(i, max) {
+    var scale = 100;
+    var point = [];
+
+    var lm = 1;
+    var lM = 3;
+    var n = 1.0 * max / 4.0;
+
+    if (i < n) {
+        point[0] = (-i * lm / n) * scale;
+        point[1] = (lM / 2) * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= n && i < 3 * n) {
+        point[0] = -lm * scale;
+        point[1] = (lM/2.0 - (lM/(2*n) * (i -n))) *scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= 3 * n) {
+        point[0] = (- lm + (i - 3 * n ) * lm / n) * scale;
+        point[1] = (-lM / 2) * scale + config.translateY;
+        point[2] = 0;
+    }
+    
+    return point;
+
+}
+
+function gestureAnimation_RgtSqrBrk(i, max) {
+    var scale = 100;
+    var point = [];
+
+    var lm = 1;
+    var lM = 3;
+    var n = 1.0 * max / 4.0;
+
+    if (i < n) {
+        point[0] = (i * lm / n) * scale;
+        point[1] = (lM / 2) * scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= n && i < 3 * n) {
+        point[0] = lm * scale;
+        point[1] = (lM/2.0 - (lM/(2*n) * (i -n))) *scale + config.translateY;
+        point[2] = 0;
+    }
+
+    if (i >= 3 * n) {
+        point[0] = (lm - (i - 3 * n ) * lm / n) * scale;
+        point[1] = (-lM / 2) * scale + config.translateY;
+        point[2] = 0;
+    }
+    
+    return point;
+
+}
+
+function gestureAnimation_V(i, max) {
+    var scale = 200;
+    var point = [];
+
+    var n = 1.0 * max / 2.0;
+    var l = 2 * Math.cos(Math.PI / 3);
+    var m1 = Math.tan(Math.PI / 3);
+    var m2 = Math.tan(2 * Math.PI / 3);
+
+
+    if (i < n) {
+
+        point[0] = -l / 2 + i * l / (2 * n);
+        point[1] = (point[0] * m2) * scale + config.translateY / 2;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+    if (i >= n && i <= 2) {
+        point[0] = l / (2 * n) * (i - n);
+        point[1] = (point[0] * m1) * scale + config.translateY / 2;
+        point[2] = 0;
+        point[0] = point[0] * scale;
+    }
+
+
     return point;
 }

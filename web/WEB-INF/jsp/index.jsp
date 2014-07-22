@@ -37,7 +37,15 @@ and open the template in the editor.
                         <ul class="dropdown-menu" role="menu">
                             <li><a id="btn-swipe-right" href="#">Right Swipe</a></li>
                             <li><a id="btn-swipe-left" href="#">Left Swipe</a></li>
+                            <li><a id="btn-triangle" href="#">Triangle</a></li>
+                            <li><a id="btn-x" href="#">X</a></li>
+                            <li><a id="btn-rectangle" href="#">Rectangle</a></li>
                             <li><a id="btn-circle" href="#">Circle</a></li>
+                            <li><a id="btn-check" href="#">Check</a></li>
+                            <li><a id="btn-caret" href="#">Caret</a></li>
+                            <li><a id="btn-lft-sqr-brk" href="#">Left square bracket</a></li>
+                            <li><a id="btn-rgt-sqr-brk" href="#">Right square bracket</a></li>
+                            <li><a id="btn-v" href="#">V</a></li>
                         </ul>
                     </div>
                     <div class="btn-group">
