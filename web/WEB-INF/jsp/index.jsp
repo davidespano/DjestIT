@@ -25,6 +25,7 @@ and open the template in the editor.
         <script src="js/handMesh.js"></script>
         <script type="text/javascript" src="js/gestureVisualizer.js"></script>
         <script type="text/javascript" src="js/tutorialSequence.js"></script>
+        <script type="text/javascript" src="js/gestureAnimator.js"></script>
     <body>
         <header>
             <div id="up-bar">
@@ -34,7 +35,7 @@ and open the template in the editor.
                             <span class="glyphicon glyphicon-th-list"></span>
                             Gestures <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul id="gesture-menu" class="dropdown-menu" role="menu">
                             <li><a id="btn-swipe-right" href="#">Right Swipe</a></li>
                             <li><a id="btn-swipe-left" href="#">Left Swipe</a></li>
                             <li><a id="btn-triangle" href="#">Triangle</a></li>
@@ -46,6 +47,10 @@ and open the template in the editor.
                             <li><a id="btn-lft-sqr-brk" href="#">Left square bracket</a></li>
                             <li><a id="btn-rgt-sqr-brk" href="#">Right square bracket</a></li>
                             <li><a id="btn-v" href="#">V</a></li>
+                            <li><a id="btn-pigtail" href="#">Pigtail</a></li>
+                            <li><a id="btn-lft-crl-brk" href="#">Left curly bracket</a></li>
+                            <li><a id="btn-lft-rgt-brk" href="#">Right curly bracket</a></li>
+                            <li><a id="btn-lft-rgt-brk" href="#">Star</a></li>
                         </ul>
                     </div>
                     <div class="btn-group">
