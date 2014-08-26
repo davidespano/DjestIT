@@ -8,6 +8,7 @@ var config = {
     titleHeight: 0,
     translateY: 200
 };
+
 $(document).ready(function() {
     var container;
 

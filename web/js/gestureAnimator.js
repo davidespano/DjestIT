@@ -485,41 +485,67 @@ function GestureAnimator(config) {
     };
 
     GestureAnimator.prototype.star = function(i, max) {
-        var scale = 200;
+        var scale = 375;
         var point = [];
 
         var n = 1.0 * max / 5.0;
-       
+
+        // I'll draw a golden pentagram
         var l3 = Math.sin(1.26);
-        var h1 = Math.cos(0.94);
-        var h3 = Math.sin(0.94)- Math.sin(0.63);
-        var m1 = Math.tan(1.26);
-        var m2 = Math.tan(1.88);
-        var m3 = Math.tan(2.51);
-       
 
-        if (i <= n) {
+        // the variables names are explained here
+        // http://mathworld.wolfram.com/Pentagram.html
+        var x = 0.309017;
+        var R = 0.200811;
+        var a = 0.381966;
+        var b = 0.236068;
+        var r = 0.16246;
+        var rho = 0.525731;
+        
+        var m1 = Math.tan(1.257); // 72
+        var m2 = Math.tan(1.885); // 104
+        var m3 = Math.tan(2.51);  // 144
+        var m4 = Math.tan(0.628); // 36
+        var j = 0;
 
-            point[0] = -h1 + h1 / n * i;
-            point[1] = (point[0] * m1 + 1) * scale +config.translateY;
+        if (i < n) {
+
+            point[0] = -x + x / n * i;
+            point[1] = (point[0] * m1 + rho) * scale + config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
-        if (i > n && i <= 2 * n) {
-            var j = i - n;
-            point[0] = j * h1 / n;
-            point[1] = (point[0] * m2 + 1) * scale +config.translateY;
+        if (i >= n && i < 2 * n) {
+            j = i - n + 1;
+            point[0] = j * x / n;
+            point[1] = (point[0] * m2 + rho) * scale + config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
-        if (i > 2 * n && i <= 3 * n) {
-            var j = i - 2 * n;
-            point[0] = h1 - j * ((l3 + h1) / n);
-            point[1] = (point[0] * m3 - h3) * scale +config.translateY;
+        if (i >= 2 * n && i < 3 * n) {
+            j = i - 2 * n + 1;
+            point[0] = x - j * ((x + 0.5) / n);
+            point[1] = (point[0] * m3 - R) * scale + config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
+        }
+
+        if (i >= 3 * n &&  i < 4 * n) {
+            j = i - 3 * n;
+            point[0] = -a - 0.5 * b + j * (1 / n);
+            point[1] = r * scale + config.translateY;
+            point[2] = 0;
+            point[0] = point[0] * scale;
+        }
+        
+        if( i >= 4 * n && i < 5 * n){
+            j = i - 4 * n;
+            point[0] = 0.5 - j * ((x + 0.5) / n);
+            point[1] = (point[0] * m4 - R) * scale + config.translateY;
+            point[2] = 0;
+            point[0] = point[0] * scale;    
         }
 
         return point;
