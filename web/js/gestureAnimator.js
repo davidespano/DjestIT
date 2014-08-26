@@ -3,72 +3,91 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+(function(gestureAnimator, undefined) {
 
-function GestureAnimator(config) {
+    var config;
+    gestureAnimator.config = config;
 
-    this.config = config;
+    var animations = [
+        {duration: 50, gesture: "right-swipe"},
+        {duration: 50, gesture: "left-swipe"},
+        {duration: 75, gesture: "triangle"},
+        {duration: 75, gesture: "x"},
+        {duration: 80, gesture: "rectangle"},
+        {duration: 75, gesture: "circle"},
+        {duration: 40, gesture: "check"},
+        {duration: 40, gesture: "caret"},
+        {duration: 40, gesture: "square-braket-left"},
+        {duration: 40, gesture: "square-braket-right"},
+        {duration: 40, gesture: "v"},
+        {duration: 40, gesture: "pigtail"},
+        {duration: 40, gesture: "curly-braket-left"},
+        {duration: 40, gesture: "curly-braket-right"},
+        {duration: 125, gesture: "star"}
+    ];
+    
+    gestureAnimator.animations = animations;
 
 
-
-    this.render = function() {
+    var render = function() {
 
     };
+    gestureAnimator.render = render;
 
-    this.helpMesh = new THREE.Mesh();
+    gestureAnimator.helpMesh = new THREE.Mesh();
 
-    GestureAnimator.prototype.requestAnimation = function(duration, position, complete) {
-        var self = this;
+    var requestAnimation = function(duration, position, complete) {
         var _requestAnimation = function(duration, position, onComplete) {
             var _position = function() {
             };
             switch (position) {
                 case "right-swipe" :
-                    _position = self.rightSwipe;
+                    _position = gestureAnimator.rightSwipe;
                     break;
                 case "left-swipe" :
-                    _position = self.leftSwipe;
+                    _position = gestureAnimator.leftSwipe;
                     break;
                 case "triangle":
-                    _position = self.triangle;
+                    _position = gestureAnimator.triangle;
                     break;
                 case "x":
-                    _position = self.x;
+                    _position = gestureAnimator.x;
                     break;
                 case "rectangle":
-                    _position = self.rectangle;
+                    _position = gestureAnimator.rectangle;
                     break;
                 case "circle":
-                    _position = self.circle;
+                    _position = gestureAnimator.circle;
                     break;
                 case "check":
-                    _position = self.check;
+                    _position = gestureAnimator.check;
                     break;
                 case "caret":
-                    _position = self.caret;
+                    _position = gestureAnimator.caret;
                     break;
                 case "square-braket-left":
-                    _position = self.squareBracketLeft;
+                    _position = gestureAnimator.squareBracketLeft;
                     break;
                 case "square-braket-right":
-                    _position = self.squareBracketRight;
+                    _position = gestureAnimator.squareBracketRight;
                     break;
                 case "v":
-                    _position = self.v;
+                    _position = gestureAnimator.v;
                     break;
                 case "pigtail":
-                    _position = self.pigtail;
+                    _position = gestureAnimator.pigtail;
                     duration = pigtailPoints.length;
                     break;
                 case "curly-braket-left":
-                    _position = self.curlyBracketLeft;
+                    _position = gestureAnimator.curlyBracketLeft;
                     duration = leftCurlyPoints.length;
                     break;
                 case "curly-braket-right":
-                    _position = self.curlyBracketRight;
+                    _position = gestureAnimator.curlyBracketRight;
                     duration = leftCurlyPoints.length;
                     break;
                 case "star":
-                    _position = self.star;
+                    _position = gestureAnimator.star;
                     break;
             }
 
@@ -83,16 +102,16 @@ function GestureAnimator(config) {
                             new THREE.MeshPhongMaterial());
                     pt.material.color.setHex(0xff0000);
                     pt.position.fromArray(_position(duration - i + pause, duration));
-                    self.helpMesh.add(pt);
-                    self.render();
+                    gestureAnimator.helpMesh.add(pt);
+                    gestureAnimator.render();
 
                 }
 
                 if (i === 0) {
-                    while (self.helpMesh.children.length > 0) {
-                        self.helpMesh.remove(self.helpMesh.children[0]);
+                    while (gestureAnimator.helpMesh.children.length > 0) {
+                        gestureAnimator.helpMesh.remove(gestureAnimator.helpMesh.children[0]);
                     }
-                    self.render();
+                    gestureAnimator.render();
                     if (_complete) {
                         _complete();
                     }
@@ -108,37 +127,44 @@ function GestureAnimator(config) {
         return _requestAnimation(duration, position, complete);
     };
 
+    gestureAnimator.requestAnimation = requestAnimation;
 
 
 
-    GestureAnimator.prototype.circle = function(i) {
+    var circle = function(i) {
         var r = 150;
         var alpha = (2 * Math.PI / 75) * i;
         var point = [];
         point[0] = Math.cos(alpha) * r;
-        point[1] = Math.sin(alpha) * r + config.translateY;
+        point[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY;
         point[2] = 0;
         return point;
     };
 
-    GestureAnimator.prototype.leftSwipe = function(i) {
+    gestureAnimator.circle = circle;
+
+    var leftSwipe = function(i) {
         var point = [];
         point[0] = 250 - i * 10;
-        point[1] = config.translateY;
+        point[1] = gestureAnimator.config.translateY;
         point[2] = 0;
         return point;
 
     };
 
-    GestureAnimator.prototype.rightSwipe = function(i) {
+    gestureAnimator.leftSwipe = leftSwipe;
+
+    var rightSwipe = function(i) {
         var point = [];
         point[0] = -250 + i * 10;
-        point[1] = config.translateY;
+        point[1] = gestureAnimator.config.translateY;
         point[2] = 0;
         return point;
     };
 
-    GestureAnimator.prototype.triangle = function(i, max) {
+    gestureAnimator.rightSwipe = rightSwipe;
+
+    var triangle = function(i, max) {
         var scale = 400;
         var point = [];
 
@@ -172,7 +198,9 @@ function GestureAnimator(config) {
         return point;
     };
 
-    GestureAnimator.prototype.x = function(i, max) {
+    gestureAnimator.triangle = triangle;
+
+    var x = function(i, max) {
         var scale = 400;
         var point = [];
 
@@ -205,7 +233,9 @@ function GestureAnimator(config) {
         return point;
     };
 
-    GestureAnimator.prototype.check = function(i, max) {
+    gestureAnimator.x = x;
+
+    var check = function(i, max) {
         var scale = 100;
         var point = [];
 
@@ -232,7 +262,9 @@ function GestureAnimator(config) {
         return point;
     };
 
-    GestureAnimator.prototype.rectangle = function(i, max) {
+    gestureAnimator.check = check;
+
+    var rectangle = function(i, max) {
         var scale = 200;
         var n = max / 4;
         var point = [];
@@ -241,32 +273,34 @@ function GestureAnimator(config) {
 
         if (i <= n) {
             point[0] = -lM / 2 * scale;
-            point[1] = (lm / 2 - i * lm / n) * scale + config.translateY;
+            point[1] = (lm / 2 - i * lm / n) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > n && i <= 2 * n) {
             point[0] = (-lM / 2 + (i - n) * lM / n) * scale;
-            point[1] = -lm / 2 * scale + config.translateY;
+            point[1] = -lm / 2 * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > 2 * n && i <= 3 * n) {
             point[0] = lM / 2 * scale;
-            point[1] = (-lm / 2 + (i - 2 * n) * lm / n) * scale + config.translateY;
+            point[1] = (-lm / 2 + (i - 2 * n) * lm / n) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > 3 * n && i <= 4 * n) {
             point[0] = (lM / 2 - (i - 3 * n) * lM / n) * scale;
-            point[1] = lm / 2 * scale + config.translateY;
+            point[1] = lm / 2 * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         return point;
     };
 
-    GestureAnimator.prototype.caret = function(i, max) {
+    gestureAnimator.rectangle = rectangle;
+
+    var caret = function(i, max) {
         var scale = 200;
         var point = [];
 
@@ -280,14 +314,14 @@ function GestureAnimator(config) {
         if (i <= n) {
 
             point[0] = -l / 2 + i * l / (2 * n);
-            point[1] = (point[0] * m1 + h) * scale + config.translateY / 2;
+            point[1] = (point[0] * m1 + h) * scale + gestureAnimator.config.translateY / 2;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
         if (i > n && i <= 2 * n) {
             point[0] = l / (2 * n) * (i - n);
-            point[1] = (point[0] * m2 + h) * scale + config.translateY / 2;
+            point[1] = (point[0] * m2 + h) * scale + gestureAnimator.config.translateY / 2;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
@@ -296,9 +330,9 @@ function GestureAnimator(config) {
         return point;
     };
 
+    gestureAnimator.caret = caret;
 
-
-    GestureAnimator.prototype.squareBracketLeft = function(i, max) {
+    var squareBracketLeft = function(i, max) {
         var scale = 100;
         var point = [];
 
@@ -308,19 +342,19 @@ function GestureAnimator(config) {
 
         if (i < n) {
             point[0] = (-i * lm / n) * scale;
-            point[1] = (lM / 2) * scale + config.translateY;
+            point[1] = (lM / 2) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > n && i <= 3 * n) {
             point[0] = -lm * scale;
-            point[1] = (lM / 2.0 - (lM / (2 * n) * (i - n))) * scale + config.translateY;
+            point[1] = (lM / 2.0 - (lM / (2 * n) * (i - n))) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i >= 3 * n) {
             point[0] = (-lm + (i - 3 * n) * lm / n) * scale;
-            point[1] = (-lM / 2) * scale + config.translateY;
+            point[1] = (-lM / 2) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
@@ -328,7 +362,9 @@ function GestureAnimator(config) {
 
     };
 
-    GestureAnimator.prototype.squareBracketRight = function(i, max) {
+    gestureAnimator.squareBracketLeft = squareBracketLeft;
+
+    var squareBracketRight = function(i, max) {
         var scale = 100;
         var point = [];
 
@@ -338,27 +374,28 @@ function GestureAnimator(config) {
 
         if (i <= n) {
             point[0] = (i * lm / n) * scale;
-            point[1] = (lM / 2) * scale + config.translateY;
+            point[1] = (lM / 2) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > n && i <= 3 * n) {
             point[0] = lm * scale;
-            point[1] = (lM / 2.0 - (lM / (2 * n) * (i - n))) * scale + config.translateY;
+            point[1] = (lM / 2.0 - (lM / (2 * n) * (i - n))) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         if (i > 3 * n + 1) {
             point[0] = (lm - (i - 3 * n) * lm / n) * scale;
-            point[1] = (-lM / 2) * scale + config.translateY;
+            point[1] = (-lM / 2) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
         }
 
         return point;
 
     };
+    gestureAnimator.squareBracketRight = squareBracketRight;
 
-    GestureAnimator.prototype.v = function(i, max) {
+    var v = function(i, max) {
         var scale = 200;
         var point = [];
 
@@ -371,14 +408,14 @@ function GestureAnimator(config) {
         if (i <= n) {
 
             point[0] = -l / 2 + i * l / (2 * n);
-            point[1] = (point[0] * m2) * scale + config.translateY / 2;
+            point[1] = (point[0] * m2) * scale + gestureAnimator.config.translateY / 2;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
         if (i > n && i <= 2 * n) {
             point[0] = l / (2 * n) * (i - n);
-            point[1] = (point[0] * m1) * scale + config.translateY / 2;
+            point[1] = (point[0] * m1) * scale + gestureAnimator.config.translateY / 2;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
@@ -386,6 +423,8 @@ function GestureAnimator(config) {
 
         return point;
     };
+
+    gestureAnimator.v = v;
 
     var pigtailPoints = [
         /*   0*/ [384.58915000, 449.32557262, 0],
@@ -433,7 +472,7 @@ function GestureAnimator(config) {
         /*  42*/ [472.75254000, 448.82605262, 0]
     ];
 
-    GestureAnimator.prototype.pigtail = function(i) {
+    var pigtail = function(i) {
         var point = [];
         var scale = 2.8;
         point[0] = (pigtailPoints[i][0] - 450) * scale;
@@ -442,6 +481,8 @@ function GestureAnimator(config) {
 
         return point;
     };
+
+    gestureAnimator.pigtail = pigtail;
 
     var leftCurlyPoints = [
         /*   0*/ [408.10163000, 711.14739262, 0],
@@ -462,7 +503,7 @@ function GestureAnimator(config) {
         /*  15*/ [407.09148000, 459.11433262, 0]
     ];
 
-    GestureAnimator.prototype.curlyBracketLeft = function(i) {
+    var curlyBracketLeft = function(i) {
 
         var point = [];
         var scale = 1;
@@ -473,7 +514,9 @@ function GestureAnimator(config) {
         return point;
     };
 
-    GestureAnimator.prototype.curlyBracketRight = function(i) {
+    gestureAnimator.curlyBracketLeft = curlyBracketLeft;
+
+    var curlyBracketRight = function(i) {
 
         var point = [];
         var scale = 1;
@@ -484,7 +527,9 @@ function GestureAnimator(config) {
         return point;
     };
 
-    GestureAnimator.prototype.star = function(i, max) {
+    gestureAnimator.curlyBracketRight = curlyBracketRight;
+
+    var star = function(i, max) {
         var scale = 375;
         var point = [];
 
@@ -501,7 +546,7 @@ function GestureAnimator(config) {
         var b = 0.236068;
         var r = 0.16246;
         var rho = 0.525731;
-        
+
         var m1 = Math.tan(1.257); // 72
         var m2 = Math.tan(1.885); // 104
         var m3 = Math.tan(2.51);  // 144
@@ -511,7 +556,7 @@ function GestureAnimator(config) {
         if (i < n) {
 
             point[0] = -x + x / n * i;
-            point[1] = (point[0] * m1 + rho) * scale + config.translateY;
+            point[1] = (point[0] * m1 + rho) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
@@ -519,7 +564,7 @@ function GestureAnimator(config) {
         if (i >= n && i < 2 * n) {
             j = i - n + 1;
             point[0] = j * x / n;
-            point[1] = (point[0] * m2 + rho) * scale + config.translateY;
+            point[1] = (point[0] * m2 + rho) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
@@ -527,28 +572,30 @@ function GestureAnimator(config) {
         if (i >= 2 * n && i < 3 * n) {
             j = i - 2 * n + 1;
             point[0] = x - j * ((x + 0.5) / n);
-            point[1] = (point[0] * m3 - R) * scale + config.translateY;
+            point[1] = (point[0] * m3 - R) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
-        if (i >= 3 * n &&  i < 4 * n) {
+        if (i >= 3 * n && i < 4 * n) {
             j = i - 3 * n;
             point[0] = -a - 0.5 * b + j * (1 / n);
-            point[1] = r * scale + config.translateY;
+            point[1] = r * scale + gestureAnimator.config.translateY;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
-        
-        if( i >= 4 * n && i < 5 * n){
+
+        if (i >= 4 * n && i < 5 * n) {
             j = i - 4 * n;
             point[0] = 0.5 - j * ((x + 0.5) / n);
-            point[1] = (point[0] * m4 - R) * scale + config.translateY;
+            point[1] = (point[0] * m4 - R) * scale + gestureAnimator.config.translateY;
             point[2] = 0;
-            point[0] = point[0] * scale;    
+            point[0] = point[0] * scale;
         }
 
         return point;
     };
-}
 
+    gestureAnimator.star = star;
+
+}(window.gestureAnimator = window.gestureAnimator || {}, undefined));

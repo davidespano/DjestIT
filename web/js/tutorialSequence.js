@@ -11,7 +11,7 @@ function TutorialSequence(
         onComplete) {
 
     var _position = -1;
-    var _actions = actions ? actions : [];
+    var _steps = actions ? actions : [];
     var _nextButton = next;
     var _previousButton = previous;
     var _onComplete = onComplete;
@@ -19,12 +19,12 @@ function TutorialSequence(
 
     TutorialSequence.prototype.next = function() {
         if (_position >= 0) {
-            $(_actions[_position].show).hide();
+            $(_steps[_position].show).hide();
         }
 
 
         _position++;
-        if (_position === _actions.length) {
+        if (_position === _steps.length) {
             if (_onComplete)
                 _onComplete();
         } else {
@@ -34,12 +34,12 @@ function TutorialSequence(
     };
 
     TutorialSequence.prototype.previous = function() {
-        if (_position < _actions.length) {
-            $(_actions[_position].show).hide();
+        if (_position < _steps.length) {
+            $(_steps[_position].show).hide();
         }
         do{
             _position--;
-        }while(_position < _actions.length && _actions[_position].skipOnPrevious);
+        }while(_position < _steps.length && _steps[_position].skipOnPrevious);
         
         update(false);
     };
@@ -57,9 +57,9 @@ function TutorialSequence(
             $(_previousButton).hide();
         }
 
-        var action = _actions[_position];
+        var step = _steps[_position];
         var onComplete;
-        if (action.interactive !== undefined && !action.interactive) {
+        if (step.interactive !== undefined && !step.interactive) {
             $(_nextButton).hide();
             $(_previousButton).hide();
             if (next) {
@@ -69,11 +69,11 @@ function TutorialSequence(
             }
         }
 
-        if (action.show) {
-            $(action.show).show();
+        if (step.show) {
+            $(step.show).show();
         }
-        if (action.animation) {
-            action.animation(onComplete);
+        if (step.action) {
+            step.action(onComplete);
         }
 
 

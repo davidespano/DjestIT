@@ -168,7 +168,103 @@ and open the template in the editor.
                             </p>
                         </span>
                         <span>
-                            <h3>3 - Cerchio dimostrazione</h3>
+                            <h3>3 - Triangolo dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>4 - X dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>5 - Rettangolo dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>6 - Cerchio dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>7 - Check dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                         <span>
+                            <h3>8 - Carte dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>9 - Quadra sinistra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>10 - Quadra destra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>11 - V dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>12 - Pigtail dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>13 - Graffa sinistra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>14 - Graffa destra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>15 - Stella dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
                                 Premi "Continua" per eseguirlo o "Ripeti" per 

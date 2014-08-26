@@ -10,14 +10,14 @@ var config = {
 };
 
 $(document).ready(function() {
+    // TODO: insert these variabiles into a single object
     var container;
-
-    var camera, controls, scene, renderer, hands, pointVis, help;
+    var camera, controls, scene, renderer, hands, pointVis, help, record;
     var gesturePoints = [];
 
 
 
-    var record;
+
     init();
     animate();
     ui();
@@ -201,33 +201,18 @@ $(document).ready(function() {
 
                 });
 
-        var gestureAnimator = new GestureAnimator(config);
+
         gestureAnimator.render = render;
         gestureAnimator.helpMesh = help;
+        gestureAnimator.config = config;
 
-        var animations = [
-            {duration: 50, gesture: "right-swipe"},
-            {duration: 50, gesture: "left-swipe"},
-            {duration: 75, gesture: "triangle"},
-            {duration: 75, gesture: "x"},
-            {duration: 80, gesture: "rectangle"},
-            {duration: 75, gesture: "circle"},
-            {duration: 40, gesture: "check"},
-            {duration: 40, gesture: "caret"},
-            {duration: 40, gesture: "square-braket-left"},
-            {duration: 40, gesture: "square-braket-right"},
-            {duration: 40, gesture: "v"},
-            {duration: 40, gesture: "pigtail"},
-            {duration: 40, gesture: "curly-braket-left"},
-            {duration: 40, gesture: "curly-braket-right"},
-            {duration: 125, gesture: "star"}
-        ];
+
 
         $("#gesture-menu li a").click(function(event) {
             var index = $(this).parent().prevAll().length;
             gestureAnimator.requestAnimation(
-                    animations[index].duration,
-                    animations[index].gesture);
+                    gestureAnimator.animations[index].duration,
+                    gestureAnimator.animations[index].gesture);
         });
 
         $("#btn-save").click(function() {
@@ -400,9 +385,9 @@ $(document).ready(function() {
                                 msg.text("Azione!");
                             }},
                         {time: 1000, action: function() {
-                                requestAnimation(
+                                gestureAnimator.requestAnimation(
                                         75,
-                                        gestureAnimation_Circle,
+                                        "circle",
                                         onComplete);
                             }}
                     ]);
@@ -466,127 +451,77 @@ $(document).ready(function() {
                     }}
             ]);
             timer.start();
+        };
+        
+
+        var steps = [];
+        var stepsPerIteration = 2;
+        for (var i = 0; i < gestureAnimator.animations.length; i++) {
+            // demo step
+            var demo = {};
+            demo.show = $(".test-msg span")[i + 3];
+            demo.interactive = true;
+            demo.name = gestureAnimator.animations[i].gesture;
+            demo.d = gestureAnimator.animations[i].duration;
+            demo.index = i;
+            demo.action = function(onComplete) {
+                if (this.index > 0) {
+                    save(steps[(this.index - 1) * stepsPerIteration].name);
+                    clear();
+                }
+                $("#btn-test-repeat").show();
+                gestureAnimator.requestAnimation(
+                        this.d,
+                        this.name,
+                        onComplete);
+            };
+            steps.push(demo);
+
+            // gesture performance
+            var performance = {};
+            performance.show = $(".test-msg span")[0];
+            performance.interactive = false;
+            performance.skipOnPrevious = true;
+            performance.action = function(onComplete) {
+                recordGesture(onComplete, 2000);
+            };
+            steps.push(performance);
+
+            // feedback
+            var feedback = {};
+            feedback.show = $(".test-msg span")[1];
+            feedback.action = function() {
+                $("#btn-test-repeat").hide();
+            };
+            steps.push(feedback);
+
+
         }
-        ;
 
-
-        var actions = [
-            // benvenuto
-            {
-                show: $(".test-msg span")[2],
-                animation: function() {
-                    $("#btn-test-repeat").hide();
-                }
-            },
-            //************************************
-            // RIGHT SWIPE
-            //************************************
-            // right swipe: dimostrazione
-            {
-                show: $(".test-msg span")[3],
-                interactive: true,
-                animation: function(onComplete) {
-                    $("#btn-test-repeat").show();
-                    requestAnimation(
-                            60,
-                            gestureAnimation_RightSwipe,
-                            onComplete);
-                }
-            },
-            // right swipe: registrazione
-            {
-                show: $(".test-msg span")[0],
-                interactive: false,
-                skipOnPrevious: true,
-                animation: function(onComplete) {
-                    recordGesture(onComplete, 2000);
-                }
-            },
-            // right swipe: salvataggio
-            {
-                show: $(".test-msg span")[1],
-                animation: function() {
-                    $("#btn-test-repeat").hide();
-
-                }
-            },
-            //************************************
-            // LEFT SWIPE
-            //************************************
-            // left swipe: dimostrazione
-            {
-                show: $(".test-msg span")[4],
-                interactive: true,
-                animation: function(onComplete) {
-                    save("right-swipe");
-                    clear();
-                    $("#btn-test-repeat").show();
-                    requestAnimation(
-                            60,
-                            gestureAnimation_LeftSwipe,
-                            onComplete);
-                }
-            },
-            // left swipe: registrazione
-            {
-                show: $(".test-msg span")[0],
-                interactive: false,
-                skipOnPrevious: true,
-                animation: function(onComplete) {
-                    recordGesture(onComplete, 2000);
-                }
-            },
-            // left swipe: conferma
-            {
-                show: $(".test-msg span")[1],
-                animation: function() {
-                    $("#btn-test-repeat").hide();
-
-                }
-            },
-            //************************************
-            // CIRCLE
-            //************************************
-
-            // circle: dimostrazione
-            {
-                show: $(".test-msg span")[5],
-                interactive: true,
-                animation: function(onComplete) {
-                    save("left-swipe");
-                    clear();
-                    $("#btn-test-repeat").show();
-                    requestAnimation(
-                            75,
-                            gestureAnimation_Circle,
-                            onComplete);
-                }
-            },
-            // circle: registrazione
-            {
-                show: $(".test-msg span")[0],
-                interactive: false,
-                skipOnPrevious: true,
-                animation: function(onComplete) {
-                    recordGesture(onComplete, 2000);
-                }
-            },
-            {
-                show: $(".test-msg span")[6],
-                animation: function() {
-                    save("circle");
-                    clear();
-                }
+        steps.splice(0, 0, {
+            show: $(".test-msg span")[2],
+            animation: function() {
+                $("#btn-test-repeat").hide();
             }
-        ];
+        });
+
+        steps.push({
+            show: $(".test-msg span")[gestureAnimator.animations.length + 2],
+            action: function() {
+                save(gestureAnimator.animations[gestureAnimator.animations.length - 1].gesture);
+                clear();
+            }
+        });
+
         var tutorial = new TutorialSequence(
-                actions,
+                steps,
                 $("#btn-test-next"),
                 $("#btn-test-prev"),
                 normalEditor);
         tutorial.next();
         $("#btn-test-prev").click(function(event) {
             event.preventDefault();
+            clear();
             tutorial.previous();
         });
         $("#btn-test-next").click(function(event) {
