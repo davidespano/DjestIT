@@ -21,8 +21,8 @@ $(document).ready(function() {
     init();
     animate();
     ui();
-    //user_test();
-    startTest();
+    user_test();
+    //startTest();
 
 
 
@@ -126,7 +126,7 @@ $(document).ready(function() {
 
         //
         record = function(hand) {
-            hand.indexFinger.bones[3].nextJoint[2] < 0
+            hand.indexFinger.bones[3].nextJoint[2] < 0;
         };
         render();
 
@@ -358,18 +358,33 @@ $(document).ready(function() {
 
 
     // user-test related functionalities
+    var startRecord = function() {
+        return true;
+    };
+    var stopRecord = function() {
+        return false;
+    };
+
     function user_test() {
         $(".help-msg > span").hide();
-
+        
+        
         var actions = [
             {show: $(".help-msg span")[0]},
             {show: $(".help-msg span")[1]},
-            {show: $(".help-msg span")[2]},
+            {show: $(".help-msg span")[2],
+                action: function(onComplete) {
+                    gestureAnimator.requestAnimation(
+                            75,
+                            "circle",
+                            onComplete);
+                }
+            },
             {show: $(".help-msg span")[3]},
             {
                 show: $(".help-msg span")[4],
                 interactive: false,
-                animation: function(onComplete) {
+                action: function(onComplete) {
                     var msg = $("#countdown").show();
                     msg.text("-3");
 
@@ -382,12 +397,11 @@ $(document).ready(function() {
                             }},
                         {time: 1000, action: function() {
                                 msg.text("Azione!");
+                                record = startRecord;
                             }},
-                        {time: 1000, action: function() {
-                                gestureAnimator.requestAnimation(
-                                        75,
-                                        "circle",
-                                        onComplete);
+                        {time: 3000, action: function() {
+                                record = stopRecord;
+                                onComplete();
                             }}
                     ]);
 
@@ -395,7 +409,10 @@ $(document).ready(function() {
                 }
             },
             {show: $(".help-msg span")[5]},
-            {show: $(".help-msg span")[6]}
+            {show: $(".help-msg span")[6],
+                action: function(onComplete) {
+                    clear();
+                }}
         ];
 
         var tutorial = new TutorialSequence(
@@ -418,14 +435,8 @@ $(document).ready(function() {
         $("#help-bar").hide();
         $(".test-msg > span").hide();
         $("#test-bar").show();
-        var oldRecord = record;
 
-        var startRecord = function() {
-            return true;
-        };
-        var stopRecord = function() {
-            return false;
-        };
+
 
         record = stopRecord;
 
@@ -482,8 +493,9 @@ $(document).ready(function() {
             performance.show = $(".test-msg span")[0];
             performance.interactive = false;
             performance.skipOnPrevious = true;
+            performance.time = gestureAnimator.animations[i].performance;
             performance.action = function(onComplete) {
-                recordGesture(onComplete, 2000);
+                recordGesture(onComplete, this.time);
             };
             steps.push(performance);
 
@@ -501,13 +513,13 @@ $(document).ready(function() {
 
         steps.splice(0, 0, {
             show: $(".test-msg span")[2],
-            animation: function() {
+            action: function() {
                 $("#btn-test-repeat").hide();
             }
         });
 
         steps.push({
-            show: $(".test-msg span")[gestureAnimator.animations.length + 2],
+            show: $(".test-msg span")[gestureAnimator.animations.length + 3],
             action: function() {
                 save(gestureAnimator.animations[gestureAnimator.animations.length - 1].gesture);
                 clear();

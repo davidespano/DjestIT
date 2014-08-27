@@ -51,6 +51,8 @@ and open the template in the editor.
                             <li><a id="btn-lft-crl-brk" href="#">Left curly bracket</a></li>
                             <li><a id="btn-lft-rgt-brk" href="#">Right curly bracket</a></li>
                             <li><a id="btn-lft-rgt-brk" href="#">Star</a></li>
+                            <li><a id="btn-zig-zag" href="#">Zig Zag</a></li>
+                            <li><a id="btn-zig-zag" href="#">Delete</a></li>
                         </ul>
                     </div>
                     <div class="btn-group">
@@ -149,7 +151,8 @@ and open the template in the editor.
                         </span>
                         <span>
                             <h3>Test utente</h3>
-                            <p>Bla bla</p>
+                            <p>Ti verrà ora richiesto di osservare la traiettoria 
+                            ideale di 16 gesti, che dovrai riprodurre.</p>
                         </span>
                         <span>
                             <h3>1 - Swipe verso destra: dimostrazione</h3>
@@ -208,7 +211,7 @@ and open the template in the editor.
                             </p>
                         </span>
                          <span>
-                            <h3>8 - Carte dimostrazione</h3>
+                            <h3>8 - Caret dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
                                 Premi "Continua" per eseguirlo o "Ripeti" per 
@@ -265,6 +268,14 @@ and open the template in the editor.
                         </span>
                         <span>
                             <h3>15 - Stella dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                         <span>
+                            <h3>16 - Zig zag dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
                                 Premi "Continua" per eseguirlo o "Ripeti" per 

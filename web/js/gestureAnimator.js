@@ -9,23 +9,25 @@
     gestureAnimator.config = config;
 
     var animations = [
-        {duration: 50, gesture: "right-swipe"},
-        {duration: 50, gesture: "left-swipe"},
-        {duration: 75, gesture: "triangle"},
-        {duration: 75, gesture: "x"},
-        {duration: 80, gesture: "rectangle"},
-        {duration: 75, gesture: "circle"},
-        {duration: 40, gesture: "check"},
-        {duration: 40, gesture: "caret"},
-        {duration: 40, gesture: "square-braket-left"},
-        {duration: 40, gesture: "square-braket-right"},
-        {duration: 40, gesture: "v"},
-        {duration: 40, gesture: "pigtail"},
-        {duration: 40, gesture: "curly-braket-left"},
-        {duration: 40, gesture: "curly-braket-right"},
-        {duration: 125, gesture: "star"}
+        {duration: 50, gesture: "right-swipe", performance: 1500},
+        {duration: 50, gesture: "left-swipe", performance: 1500},
+        {duration: 120, gesture: "triangle", performance: 4000},
+        {duration: 120, gesture: "x", performance: 3000},
+        {duration: 80, gesture: "rectangle", performance: 4000},
+        {duration: 120, gesture: "circle", performance: 3000},
+        {duration: 40, gesture: "check", performance: 1500},
+        {duration: 40, gesture: "caret", performance: 1500},
+        {duration: 40, gesture: "square-braket-left", performance: 2000},
+        {duration: 40, gesture: "square-braket-right", performance: 2000},
+        {duration: 40, gesture: "v", performance: 1500},
+        {duration: 40, gesture: "pigtail", performance: 2000},
+        {duration: 40, gesture: "curly-braket-left", performance: 2000},
+        {duration: 40, gesture: "curly-braket-right", performance: 2000},
+        {duration: 125, gesture: "star", performance: 5000},
+        {duration: 120, gesture: "zig-zag", performance: 4000},
+        {duration: 120, gesture: "delete", performance: 3000}
     ];
-    
+
     gestureAnimator.animations = animations;
 
 
@@ -88,6 +90,12 @@
                     break;
                 case "star":
                     _position = gestureAnimator.star;
+                    break;
+                case "zig-zag":
+                    _position = gestureAnimator.zigZag;
+                    break;
+                case "delete":
+                    _position = gestureAnimator.delete;
                     break;
             }
 
@@ -597,5 +605,71 @@
     };
 
     gestureAnimator.star = star;
+
+    var zigZag = function(i, max) {
+        var scale = 200;
+        var point = [];
+
+        var n = 1.0 * max / 5.0;
+        var l = 2 * Math.cos(Math.PI / 3);
+        var h = Math.sin(Math.PI / 3);
+        var m1 = Math.tan(Math.PI / 3);
+        var m2 = Math.tan(2 * Math.PI / 3);
+
+        var cicle = Math.floor(i / n);
+
+        if (cicle % 2 === 0) {
+
+            point[0] = -l / 2 + (i % n) * l / (2 * n);
+            point[1] = (point[0] * m1 + h) * scale + gestureAnimator.config.translateY / 2;
+            point[2] = 0;
+            point[0] = (point[0] + l * (cicle / 2 - 0.5)) * scale;
+        }
+
+        if (Math.floor(i / n) % 2 === 1) {
+            point[0] = l / (2 * n) * ((i - n) % n);
+            point[1] = (point[0] * m2 + h) * scale + gestureAnimator.config.translateY / 2;
+            point[2] = 0;
+            point[0] = (point[0] + l * ((cicle - 1) / 2 - 0.5)) * scale;
+        }
+        return point;
+    };
+
+    gestureAnimator.zigZag = zigZag;
+
+    var _delete = function(i, max) {
+        var scale = 400;
+        var point = [];
+
+        var n = 1.0 * max / 3.0;
+        var l = Math.cos(Math.PI / 4);
+
+        var m1 = Math.tan(Math.PI / 4);
+        var m2 = Math.tan(3 * Math.PI / 4);
+        if (i <= n) {
+            point[0] = -0.5 * l  + i * (l / n);
+            point[1] = (point[0] * m2 + 0.5 * l) * scale;
+            point[2] = 0;
+            point[0] = point[0] * scale;
+        }
+
+        if (i > n && i <= 2 * n) {
+            point[0] = 0.5 * l - (i - n) * (l / n);
+            point[1] = (l/2 * m2 + 0.5 * l) * scale;
+            point[2] = 0;
+            point[0] = point[0] * scale;
+        }
+
+        if (i > 2 * n && i <= 3 * n )  {
+            point[0] = -0.5 * l  + (i - 2 * n) * (l / n);
+            point[1] = (point[0] * m1 + 0.5 * l ) * scale;
+             point[2] = 0;
+            point[0] = point[0] * scale;
+        }
+
+        return point;
+    };
+
+    gestureAnimator.delete = _delete;
 
 }(window.gestureAnimator = window.gestureAnimator || {}, undefined));
