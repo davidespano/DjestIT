@@ -251,12 +251,11 @@ $(document).ready(function() {
     }
 
     function save(filename) {
+        var series = [];
+        gesturePoints.forEach(function(p) {
+            series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
+        });
         if (!filename) {
-            var series = [];
-            gesturePoints.forEach(function(p) {
-                series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
-            });
-
             filename = $("#save-name").val();
         }
         var test = {
@@ -451,11 +450,12 @@ $(document).ready(function() {
                     }}
             ]);
             timer.start();
-        };
-        
+        }
+        ;
+
 
         var steps = [];
-        var stepsPerIteration = 2;
+        var stepsPerIteration = 3;
         for (var i = 0; i < gestureAnimator.animations.length; i++) {
             // demo step
             var demo = {};
@@ -466,7 +466,7 @@ $(document).ready(function() {
             demo.index = i;
             demo.action = function(onComplete) {
                 if (this.index > 0) {
-                    save(steps[(this.index - 1) * stepsPerIteration].name);
+                    save(steps[(this.index - 1) * stepsPerIteration + 1].name);
                     clear();
                 }
                 $("#btn-test-repeat").show();
@@ -490,6 +490,7 @@ $(document).ready(function() {
             // feedback
             var feedback = {};
             feedback.show = $(".test-msg span")[1];
+            feedback.skipOnPrevious = true;
             feedback.action = function() {
                 $("#btn-test-repeat").hide();
             };
