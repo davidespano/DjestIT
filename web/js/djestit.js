@@ -74,9 +74,40 @@
      * @returns {djestit.Token}
      */
     var Token = function() {
+
     };
 
     djestit.Token = Token;
+
+    var StateSequence = function(capacity) {
+        this.init(capacity);
+        this.init = function(capacity){
+            this.capacity = capacity ? capacity : 2;
+            this.tokens = [];
+            this.index = -1;
+        };
+        
+        this._push = function(token) {
+            if (this.tokens.length > this.capacity) {
+                this.tokens.push(token);
+                this.index++;
+            } else {
+                this.index = (this.index + 1) % this.capacity;
+                this.tokens[index] = token;
+            }
+        };
+        
+        this.push = function(token){
+            this._push(token);
+        };
+
+        this.get = function(delay) {
+            var pos = Math.abs(this.index - delay) % capacity;
+            return this.tokens[pos];
+        };
+    };
+
+    djestit.StateSequence = StateSequence;
 
     /**
      * The base class for the input expression terms
@@ -156,11 +187,16 @@
      */
     var GroundTerm = function() {
         this.init();
-        this.accepts = function(token) {
+        // event filter, overridable by GroundTerm extensions (classes)
+        this._accepts = function(token) {
+            return true;
+        };
+        // event filter, overridable by specific instances
+        this.accepts = function(token){
             return true;
         };
         this.lookahead = function(token) {
-            return this.accepts(token);
+            return this._accepts(token) && this.accepts(token);
         };
         this.type = "ground";
         this.modality = undefined;
@@ -597,31 +633,31 @@
             exp = new Sequence();
             ch = json.sequence;
         }
-        
+
         if (json.gt) {
-            if(djestit._groundTerms[json.gt] !== undefined){
+            if (djestit._groundTerms[json.gt] !== undefined) {
                 exp = djestit._groundTerms[json.gt](json);
             }
         }
-        
+
         // recoursively descend into sub expressions
-        for(var i = 0; i < ch.length; i++){
+        for (var i = 0; i < ch.length; i++) {
             var subterm = expression(ch[i]);
             exp.children.push(subterm);
         }
-        
+
         if (json.iterative && json.iterative === true) {
             var it = exp;
             exp = new Iterative(it);
         }
-        
+
         return exp;
     };
-    
+
     djestit.expression = expression;
-    
+
     djestit._groundTerms = [];
-    djestit.registerGroundTerm = function(name, initFunction){
+    djestit.registerGroundTerm = function(name, initFunction) {
         this._groundTerms[name] = initFunction;
     };
 
