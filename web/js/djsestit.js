@@ -195,6 +195,7 @@
      * @extends djestit.CompositeTerm
      */
     var Sequence = function(terms) {
+        this.init();
         // setting the children property
         terms instanceof Array ? this.children = terms : this.children = [];
 
@@ -256,6 +257,7 @@
      * @extends djestit.CompositeTerm
      */
     var Iterative = function(term) {
+        this.init();
         // ensure that we set an unary operator
         term instanceof Array ? this.children = term[0] : this.children = term;
 
@@ -301,6 +303,7 @@
      * @extends djestit.CompositeTerm
      */
     var Parallel = function(terms) {
+        this.init();
         // setting the children property
         terms instanceof Array ? this.children = terms : this.children = [];
 
@@ -359,6 +362,7 @@
      * @extends djestit.CompositeTerm
      */
     var Choice = function(terms) {
+        this.init();
         // setting the children property
         terms instanceof Array ? this.children = terms : this.children = [];
 
@@ -420,11 +424,8 @@
                             return;
 
                         case _ERROR:
-                            // we have this case only if the only subterm that 
-                            // was not excluded by feedToken is in an error state.
-                            // therefore, the state must be extended to the entire
-                            // expression
-                            this.error(token);
+                            // this case is never executed, since
+                            // feedToken excludes the subterms in error state
                             return;
                     }
                 }
@@ -442,6 +443,7 @@
     djsestit.Choice = Choice;
 
     var OrderIndependence = function(terms) {
+        this.init();
         // setting the children property
         terms instanceof Array ? this.children = terms : this.children = [];
         this.reset = function() {
@@ -471,36 +473,47 @@
             this.feedToken(token);
             var allComplete = true;
             var newSequence = false;
+            var allExcluded = true;
             for (var i = 0; i < this.children.length; i++) {
                 if (!this.children[i]._once) {
-                    switch (this.children[i].state) {
-                        case _COMPLETE:
-                            this.children[i]._once = true;
-                            this.children[i]._excluded = true;
-                            newSequence = true;
-                            break;
-                        default :
-                            allComplete = false;
-                    }
-                } else {
-                    if(! this.children[i]._excluded){
-                        // a sub term was not excluded by the choice implementation
-                        // but it was not able to conclude the execution.
-                        // the error state must be extended to the entire expression.
-                        this.error(token);
+                    if (!this.children[i]._excluded) {
+                        allExcluded = false;
+                        switch (this.children[i].state) {
+                            case _COMPLETE:
+                                this.children[i]._once = true;
+                                this.children[i]._excluded = true;
+                                newSequence = true;
+                                break;
+                            case _ERROR:
+                                // this case is never executed, since
+                                // feedToken excludes the subterms in error state
+                                break;
+                            default :
+                                allComplete = false;
+                                break;
+                        }
+                    } else {
+                        allComplete = false;
                     }
                 }
             }
             if (allComplete) {
                 // we completed all sub-terms
                 this.complete(token);
+                return;
             }
-            if(newSequence){
+            if (allExcluded) {
+                // no expression was able to handle the input
+                this.error(token);
+                return;
+            }
+            if (newSequence) {
+                // execute a new sequence among those in order independence
                 for (var i = 0; i < this.children.length; i++) {
-                     if (!this.children[i]._once) {
-                         this.children[i]._excluded = false;
-                         this.children[i].reset();
-                     }
+                    if (!this.children[i]._once) {
+                        this.children[i]._excluded = false;
+                        this.children[i].reset();
+                    }
                 }
             }
         };
@@ -510,57 +523,45 @@
     djsestit.OrderIndependence = OrderIndependence;
 
     var Disabling = function(terms) {
+        this.init();
         terms instanceof Array ? this.children = terms : this.children = [];
-        var index = 0;
 
-        this.reset = function() {
-            this.state = _DEFAULT;
-            index = 0;
-            this.children.forEach(function(child) {
-                child.reset();
-            });
-        };
-
-        this.selectedIndex = function(token) {
-            if (this.children && this.children instanceof Array) {
-                for (var i = index; i < this.children.length; i++) {
-                    if (this.children[i].lookahead(token)) {
-                        return i;
+        this.fire = function(token) {
+            this.feedToken(token);
+            var allExcluded = true;
+            var min = false;
+            for (var i = 0; i < this.children.length; i++) {
+                if (!this.children[i]._excluded) {
+                    min = true;
+                    allExcluded = false;
+                    switch (this.children[i].state) {
+                        case _COMPLETE:
+                            if (i === this.children.length - 1) {
+                                // the expression is completed when the
+                                // last subterm is completed
+                                this.complete(token);
+                            }
+                            break;
+                    }
+                }else{
+                    if(min){
+                        // re-include terms with index > min for next 
+                        // disabling term selection
+                        this.children[i]._excluded = false;
+                        this.children[i].reset();
                     }
                 }
             }
-            return -1;
-        };
-
-        this.lookahead = function(token) {
-            if (this.state === _COMPLETE || this.state === _ERROR) {
-                return false;
-            }
-            return this.selectedIndex(token) !== -1;
-        };
-
-        this.fire = function(token) {
-            index = this.selectedIndex(token);
-
-            if (index !== -1) {
-                this.children[index].fire(token);
-                switch (this.children[index].state) {
-                    case _COMPLETE:
-                        this.complete(token);
-                        break;
-
-                    case _ERROR:
-                        this.error(token);
-                        break;
-                }
-            } else {
+            if(allExcluded){
                 this.error(token);
+                return;
             }
-
+            
+            
         };
 
     };
-    Disabling.prototype = new CompositeTerm();
+    Disabling.prototype = new Choice();
     djsestit.Disabling = Disabling;
 
 
