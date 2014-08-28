@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-(function(djsestit, undefined) {
+(function(djestit, undefined) {
     var _COMPLETE = 1;
     var _DEFAULT = 0;
     var _ERROR = -1;
@@ -12,18 +12,18 @@
     /**
      * Constant indicating that an expression term is completed
      */
-    djsestit.COMPLETE = _COMPLETE;
+    djestit.COMPLETE = _COMPLETE;
 
     /**
      * Constant indicating that an expression term is in the default state
      * (neither completed nor error)
      */
-    djsestit.DEFAULT = _DEFAULT;
+    djestit.DEFAULT = _DEFAULT;
 
     /**
      * Constant indicating that an expression term is in an error state
      */
-    djsestit.ERROR = _ERROR;
+    djestit.ERROR = _ERROR;
 
     /**
      * Internal representation of an event (observer pattern)
@@ -76,7 +76,7 @@
     var Token = function() {
     };
 
-    djsestit.Token = Token;
+    djestit.Token = Token;
 
     /**
      * The base class for the input expression terms
@@ -146,7 +146,7 @@
         };
 
     };
-    djsestit.Term = Term;
+    djestit.Term = Term;
 
     /**
      * Base class for input ground terms (expressions that cannot be further
@@ -166,7 +166,7 @@
         this.modality = undefined;
     };
     GroundTerm.prototype = new Term();
-    djsestit.GroundTerm = GroundTerm;
+    djestit.GroundTerm = GroundTerm;
 
     /**
      * Base class for composite expressions 
@@ -184,7 +184,7 @@
         };
     };
     CompositeTerm.prototype = new Term();
-    djsestit.CompositeTerm = CompositeTerm;
+    djestit.CompositeTerm = CompositeTerm;
 
     /**
      * A composite expression of terms connected with the sequence operator.
@@ -246,7 +246,7 @@
         };
     };
     Sequence.prototype = new CompositeTerm();
-    djsestit.Sequence = Sequence;
+    djestit.Sequence = Sequence;
 
 
     /**
@@ -292,7 +292,7 @@
         };
     };
     Iterative.prototype = new CompositeTerm();
-    djsestit.Iterative = Iterative;
+    djestit.Iterative = Iterative;
 
     /**
      * A composite expression of terms connected with the parallel operator.
@@ -342,7 +342,7 @@
         };
     };
     Parallel.prototype = new CompositeTerm();
-    djsestit.Parallel = Parallel;
+    djestit.Parallel = Parallel;
 
     /**
      * A composite expression of terms connected with the choice operator.
@@ -440,7 +440,7 @@
 
     };
     Choice.prototype = new CompositeTerm();
-    djsestit.Choice = Choice;
+    djestit.Choice = Choice;
 
     var OrderIndependence = function(terms) {
         this.init();
@@ -520,7 +520,7 @@
 
     };
     OrderIndependence.prototype = new Choice();
-    djsestit.OrderIndependence = OrderIndependence;
+    djestit.OrderIndependence = OrderIndependence;
 
     var Disabling = function(terms) {
         this.init();
@@ -543,8 +543,8 @@
                             }
                             break;
                     }
-                }else{
-                    if(min){
+                } else {
+                    if (min) {
                         // re-include terms with index > min for next 
                         // disabling term selection
                         this.children[i]._excluded = false;
@@ -552,20 +552,80 @@
                     }
                 }
             }
-            if(allExcluded){
+            if (allExcluded) {
                 this.error(token);
                 return;
             }
-            
-            
+
+
         };
 
     };
     Disabling.prototype = new Choice();
-    djsestit.Disabling = Disabling;
+    djestit.Disabling = Disabling;
 
+    /**
+     * Creates an input expression (Term) from a declarative description
+     * @param {object} json A json object describing the expression. 
+     * TODO specify json grammar
+     * @returns {Term} the expression term
+     */
+    var expression = function(json) {
+        var exp = null;
+        var ch = [];
+        if (json.choice) {
+            exp = new Choice();
+            ch = json.choice;
+        }
 
-}(window.djsestit = window.djsestit || {}, undefined));
+        if (json.disabling) {
+            exp = new Disabling();
+            ch = json.disabling;
+        }
+
+        if (json.order) {
+            exp = new OrderIndependence();
+            ch = json.order;
+        }
+
+        if (json.parallel) {
+            exp = new Parallel();
+            ch = json.parallel;
+        }
+
+        if (json.sequence) {
+            exp = new Sequence();
+            ch = json.sequence;
+        }
+        
+        if (json.gt) {
+            if(djestit._groundTerms[json.gt] !== undefined){
+                exp = djestit._groundTerms[json.gt](json);
+            }
+        }
+        
+        // recoursively descend into sub expressions
+        for(var i = 0; i < ch.length; i++){
+            var subterm = expression(ch[i]);
+            exp.children.push(subterm);
+        }
+        
+        if (json.iterative && json.iterative === true) {
+            var it = exp;
+            exp = new Iterative(it);
+        }
+        
+        return exp;
+    };
+    
+    djestit.expression = expression;
+    
+    djestit._groundTerms = [];
+    djestit.registerGroundTerm = function(name, initFunction){
+        this._groundTerms[name] = initFunction;
+    };
+
+}(window.djestit = window.djestit || {}, undefined));
 
 
 

@@ -152,7 +152,7 @@ and open the template in the editor.
                         <span>
                             <h3>Test utente</h3>
                             <p>Ti verrà ora richiesto di osservare la traiettoria 
-                            ideale di 16 gesti, che dovrai riprodurre.</p>
+                            ideale un insieme di gesti, che dovrai riprodurre.</p>
                         </span>
                         <span>
                             <h3>1 - Swipe verso destra: dimostrazione</h3>
@@ -276,6 +276,14 @@ and open the template in the editor.
                         </span>
                          <span>
                             <h3>16 - Zig zag dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>17 - Delete dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
                                 Premi "Continua" per eseguirlo o "Ripeti" per 

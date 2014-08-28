@@ -385,6 +385,7 @@ $(document).ready(function() {
                 show: $(".help-msg span")[4],
                 interactive: false,
                 action: function(onComplete) {
+                    clear();
                     var msg = $("#countdown").show();
                     msg.text("-3");
 
@@ -467,6 +468,7 @@ $(document).ready(function() {
 
         var steps = [];
         var stepsPerIteration = 3;
+        var isBack= false;
         for (var i = 0; i < gestureAnimator.animations.length; i++) {
             // demo step
             var demo = {};
@@ -476,7 +478,7 @@ $(document).ready(function() {
             demo.d = gestureAnimator.animations[i].duration;
             demo.index = i;
             demo.action = function(onComplete) {
-                if (this.index > 0) {
+                if (this.index > 0 && !isBack) {
                     save(steps[(this.index - 1) * stepsPerIteration + 1].name);
                     clear();
                 }
@@ -534,15 +536,18 @@ $(document).ready(function() {
         tutorial.next();
         $("#btn-test-prev").click(function(event) {
             event.preventDefault();
+            isBack = true;
             clear();
             tutorial.previous();
         });
         $("#btn-test-next").click(function(event) {
             event.preventDefault();
+            isBack = false;
             tutorial.next();
         });
         $("#btn-test-repeat").click(function(event) {
             event.preventDefault();
+            isBack = true;
             tutorial.repeat();
         });
     }

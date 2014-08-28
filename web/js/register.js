@@ -22,7 +22,7 @@ $(document).ready(function() {
                 $("#login-error").hide();
                 $("#password-group").removeClass("has-error");
                 $("#confirm-group").removeClass("has-error");
-                $("#password-error").hide(); 
+                $("#password-error").hide();
                 if (data.status === 0) {
 
                     $("#login-ok").show();
