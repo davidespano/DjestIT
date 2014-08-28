@@ -385,9 +385,6 @@
         };
 
         this.feedToken = function(token) {
-            var result = {};
-            result.index = -1;
-            result.count = 0;
 
             if (this.state === _COMPLETE || this.state === _ERROR) {
                 return;
@@ -395,44 +392,46 @@
 
             if (this.children && this.children instanceof Array) {
                 for (var i = 0; i < this.children.length; i++) {
-                    if (!this.children[i]._excluded &&
-                            this.children[i].lookahead(token) === true) {
-                        this.children[i].fire(token);
-                        result.index = i;
-                        result.count++;
-                    } else {
-                        // the current sub-term is not able to handle the input
-                        // sequence
-                        this.children[i]._excluded = true;
-                        this.children[i].error(token);
+                    if (!this.children[i]._excluded) {
+                        if (this.children[i].lookahead(token) === true) {
+                            this.children[i].fire(token);
+                        } else {
+                            // the current sub-term is not able to handle the input
+                            // sequence
+                            this.children[i]._excluded = true;
+                            this.children[i].error(token);
+                        }
                     }
                 }
             }
-
-
-            return result;
         };
 
         this.fire = function(token) {
-            var result = this.feedToken(token);
-            if (result.count === 0) {
+            this.feedToken(token);
+            var allExcluded = true;
+            for (var i = 0; i < this.children.length; i++) {
+                if (!this.children[i]._excluded) {
+                    allExcluded = false;
+                    switch (this.children[i].state) {
+                        case _COMPLETE:
+                            // one of the subterms is completed, then the
+                            // entire expression is completed
+                            this.complete(token);
+                            return;
+
+                        case _ERROR:
+                            // we have this case only if the only subterm that 
+                            // was not excluded by feedToken is in an error state.
+                            // therefore, the state must be extended to the entire
+                            // expression
+                            this.error(token);
+                            return;
+                    }
+                }
+            }
+            if (allExcluded) {
                 // cannot complete any of the sub-terms
                 this.error();
-                return;
-            }
-
-            if (result.count === 1 && result.index !== -1) {
-                // only one sub-term can continue the execution, 
-                // the choice has been performed
-                switch (this.children[result.index].state) {
-                    case _COMPLETE:
-                        this.complete(token);
-                        break;
-
-                    case _ERROR:
-                        this.error(token);
-                        break;
-                }
             }
 
         };
@@ -445,13 +444,12 @@
     var OrderIndependence = function(terms) {
         // setting the children property
         terms instanceof Array ? this.children = terms : this.children = [];
-        var index = -1;
         this.reset = function() {
             this.state = _DEFAULT;
-            index = -1;
             this.children.forEach(function(child) {
                 child.reset();
                 child._once = false;
+                child._excluded = false;
             });
         };
 
@@ -470,35 +468,39 @@
         };
 
         this.fire = function(token) {
-            var result = this.feedToken(token);
-
-            if (result.count === 0) {
-                // cannot complete any of the sub-terms
-                this.error();
-                return;
-            }
-
-            if (result.count === 1 && result.index !== -1) {
-                // only one sub-term can continue the execution, 
-                // the choice has been performed
-                switch (this.children[result.index].state) {
-                    case _COMPLETE:
-                        this.children[result.index]._once = true;
-                        var allComplete = true;
-                        for (var i = 0; i < this.children.length; i++) {
-                            if (!this.children[i]._once) {
-                                allComplete = false;
-                                break;
-                            }
-                        }
-                        if (allComplete) {
-                            this.complete(token);
-                        }
-                        break;
-
-                    case _ERROR:
+            this.feedToken(token);
+            var allComplete = true;
+            var newSequence = false;
+            for (var i = 0; i < this.children.length; i++) {
+                if (!this.children[i]._once) {
+                    switch (this.children[i].state) {
+                        case _COMPLETE:
+                            this.children[i]._once = true;
+                            this.children[i]._excluded = true;
+                            newSequence = true;
+                            break;
+                        default :
+                            allComplete = false;
+                    }
+                } else {
+                    if(! this.children[i]._excluded){
+                        // a sub term was not excluded by the choice implementation
+                        // but it was not able to conclude the execution.
+                        // the error state must be extended to the entire expression.
                         this.error(token);
-                        break;
+                    }
+                }
+            }
+            if (allComplete) {
+                // we completed all sub-terms
+                this.complete(token);
+            }
+            if(newSequence){
+                for (var i = 0; i < this.children.length; i++) {
+                     if (!this.children[i]._once) {
+                         this.children[i]._excluded = false;
+                         this.children[i].reset();
+                     }
                 }
             }
         };
