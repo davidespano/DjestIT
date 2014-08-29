@@ -25,7 +25,14 @@
         {duration: 40, gesture: "curly-braket-right", performance: 2000},
         {duration: 125, gesture: "star", performance: 5000},
         {duration: 120, gesture: "zig-zag", performance: 4000},
-        {duration: 120, gesture: "delete", performance: 3000}
+        {duration: 120, gesture: "delete", performance: 3000},
+        {duration: 120, gesture: "poly3Dxyz", performance: 3000},
+        {duration: 120, gesture: "poly3Dxzy", performance: 3000},
+        {duration: 120, gesture: "poly3Dyxz", performance: 3000},
+        {duration: 120, gesture: "poly3Dyzx", performance: 3000},
+        {duration: 120, gesture: "poly3Dzxy", performance: 3000},
+        {duration: 120, gesture: "poly3Dzyx", performance: 3000},
+        {duration: 300, gesture: "spiral", performance: 3000}
     ];
 
     gestureAnimator.animations = animations;
@@ -96,6 +103,27 @@
                     break;
                 case "delete":
                     _position = gestureAnimator.delete;
+                    break;
+                case "poly3Dxyz":
+                    _position = gestureAnimator.poly3Dxyz;
+                    break;
+                case "poly3Dxzy":
+                    _position = gestureAnimator.poly3Dxzy;
+                    break;
+                case "poly3Dyxz":
+                    _position = gestureAnimator.poly3Dyxz;
+                    break;
+                case "poly3Dyzx":
+                    _position = gestureAnimator.poly3Dyzx;
+                    break;
+                case "poly3Dzxy":
+                    _position = gestureAnimator.poly3Dzxy;
+                    break;
+                case "poly3Dzyx":
+                    _position = gestureAnimator.poly3Dzyx;
+                    break;
+                case "spiral":
+                    _position = gestureAnimator.spiral;
                     break;
             }
 
@@ -647,7 +675,7 @@
         var m1 = Math.tan(Math.PI / 4);
         var m2 = Math.tan(3 * Math.PI / 4);
         if (i <= n) {
-            point[0] = -0.5 * l  + i * (l / n);
+            point[0] = -0.5 * l + i * (l / n);
             point[1] = (point[0] * m2 + 0.5 * l) * scale;
             point[2] = 0;
             point[0] = point[0] * scale;
@@ -655,15 +683,15 @@
 
         if (i > n && i <= 2 * n) {
             point[0] = 0.5 * l - (i - n) * (l / n);
-            point[1] = (l/2 * m2 + 0.5 * l) * scale;
+            point[1] = (l / 2 * m2 + 0.5 * l) * scale;
             point[2] = 0;
             point[0] = point[0] * scale;
         }
 
-        if (i > 2 * n && i <= 3 * n )  {
-            point[0] = -0.5 * l  + (i - 2 * n) * (l / n);
-            point[1] = (point[0] * m1 + 0.5 * l ) * scale;
-             point[2] = 0;
+        if (i > 2 * n && i <= 3 * n) {
+            point[0] = -0.5 * l + (i - 2 * n) * (l / n);
+            point[1] = (point[0] * m1 + 0.5 * l) * scale;
+            point[2] = 0;
             point[0] = point[0] * scale;
         }
 
@@ -671,5 +699,77 @@
     };
 
     gestureAnimator.delete = _delete;
+
+    var poly3D = function(i, max, order) {
+        var scale = 8;
+        var n = 1.0 * max / 3.0;
+        var point = [];
+
+        if (i <= n) {
+            point[order[0]] = i * scale;
+            point[order[1]] = 0;
+            point[order[2]] = 0;
+        }
+        if (i > n && i <= 2 * n) {
+            point[order[0]] = n * scale;
+            point[order[1]] = (i - n) * scale;
+            point[order[2]] = 0;
+        }
+
+        if (i > 2 * n && i <= 3 * n) {
+            point[order[0]] = n * scale;
+            point[order[1]] = n * scale;
+            point[order[2]] = ((i - 2 * n)) * scale;
+        }
+
+        point[0] = point[0] - 0.5 * n * scale;
+        //point[1] = point[1] - 0.5 * n * scale;
+        point[2] = point[2] - 0.5 * n * scale;
+
+        return point;
+
+    };
+
+    var poly3Dxyz = function(i, max) {
+        return poly3D(i, max, [0, 1, 2]);
+    };
+    gestureAnimator.poly3Dxyz = poly3Dxyz;
+
+    var poly3Dxzy = function(i, max) {
+        return poly3D(i, max, [0, 2, 1]);
+    };
+    gestureAnimator.poly3Dxzy = poly3Dxzy;
+
+    var poly3Dyxz = function(i, max) {
+        return poly3D(i, max, [1, 0, 2]);
+    };
+    gestureAnimator.poly3Dyxz = poly3Dyxz;
+
+    var poly3Dyzx = function(i, max) {
+        return poly3D(i, max, [1, 2, 0]);
+    };
+    gestureAnimator.poly3Dyzx = poly3Dyzx;
+
+    var poly3Dzxy = function(i, max) {
+        return poly3D(i, max, [2, 0, 1]);
+    };
+    gestureAnimator.poly3Dzxy = poly3Dzxy;
+
+    var poly3Dzyx = function(i, max) {
+        return poly3D(i, max, [2, 1, 0]);
+    };
+    gestureAnimator.poly3Dzyx = poly3Dzyx;
+
+    var spiral = function(i, max) {
+        var r = 150;
+        var alpha = (2 * Math.PI / 75) * i;
+        var point = [];
+        point[0] = Math.cos(alpha) * r;
+        point[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY;
+        point[2] = - i * 4;
+        return point;
+    };
+    gestureAnimator.spiral = spiral;
+
 
 }(window.gestureAnimator = window.gestureAnimator || {}, undefined));

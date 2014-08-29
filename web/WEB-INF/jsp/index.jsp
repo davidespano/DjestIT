@@ -52,7 +52,14 @@ and open the template in the editor.
                             <li><a id="btn-lft-rgt-brk" href="#">Right curly bracket</a></li>
                             <li><a id="btn-lft-rgt-brk" href="#">Star</a></li>
                             <li><a id="btn-zig-zag" href="#">Zig Zag</a></li>
-                            <li><a id="btn-zig-zag" href="#">Delete</a></li>
+                            <li><a id="btn-delete" href="#">Delete</a></li>
+                            <li><a id="btn-3Dp1" href="#">3D Polyline (x, y, z)</a></li>
+                            <li><a id="btn-3Dp2" href="#">3D Polyline (x, z, y)</a></li>
+                            <li><a id="btn-3Dp3" href="#">3D Polyline (y, x, z)</a></li>
+                            <li><a id="btn-3Dp4" href="#">3D Polyline (y, z, x)</a></li>
+                            <li><a id="btn-3Dp5" href="#">3D Polyline (z, x, y)</a></li>
+                            <li><a id="btn-3Dp6" href="#">3D Polyline (z, y, x)</a></li>
+                            <li><a id="btn-spiral" href="#">Spiral</a></li>
                         </ul>
                     </div>
                     <div class="btn-group">
