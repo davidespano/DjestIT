@@ -32,7 +32,9 @@
         {duration: 120, gesture: "poly3Dyzx", performance: 3000},
         {duration: 120, gesture: "poly3Dzxy", performance: 3000},
         {duration: 120, gesture: "poly3Dzyx", performance: 3000},
-        {duration: 300, gesture: "spiral", performance: 3000}
+        {duration: 120, gesture: "arc3Dright", performance: 3000},
+        {duration: 120, gesture: "arc3Dleft", performance: 3000},
+        {duration: 300, gesture: "spiral", performance: 6000}
     ];
 
     gestureAnimator.animations = animations;
@@ -124,6 +126,12 @@
                     break;
                 case "spiral":
                     _position = gestureAnimator.spiral;
+                    break;
+                case "arc3Dright":
+                    _position = gestureAnimator.arc3DRight;
+                    break;
+                case "arc3Dleft":
+                    _position = gestureAnimator.arc3DLeft;
                     break;
             }
 
@@ -766,10 +774,44 @@
         var point = [];
         point[0] = Math.cos(alpha) * r;
         point[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY;
-        point[2] = - i * 4;
+        point[2] = -i * 4;
         return point;
     };
     gestureAnimator.spiral = spiral;
+
+    var arc3DRight = function(i, max) {
+        var r = 300;
+        var alpha = Math.PI - (Math.PI / max) * i;
+        var p1 = [];
+        var point = [];
+        p1[0] = Math.cos(alpha) * r;
+        p1[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY - 0.5 * r;
+        p1[2] = 0;
+
+        // point rotation
+        point[0] = 0.707 * p1[0] + 0.707 * p1[2];
+        point[1] = p1[1];
+        point[2] = -0.707 * p1[0] + 0.707 * p1[2];
+        return point;
+    };
+    gestureAnimator.arc3DRight = arc3DRight;
+
+    var arc3DLeft = function(i, max) {
+        var r = 300;
+        var alpha = (Math.PI / max) * i;
+        var p1 = [];
+        var point = [];
+        p1[0] = Math.cos(alpha) * r;
+        p1[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY - 0.5 * r;
+        p1[2] = 0;
+
+        // point rotation
+        point[0] = 0.707 * p1[0] + 0.707 * p1[2];
+        point[1] = p1[1];
+        point[2] = -0.707 * p1[0] + 0.707 * p1[2];
+        return point;
+    };
+    gestureAnimator.arc3DLeft = arc3DLeft;
 
 
 }(window.gestureAnimator = window.gestureAnimator || {}, undefined));

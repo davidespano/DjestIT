@@ -59,7 +59,10 @@ and open the template in the editor.
                             <li><a id="btn-3Dp4" href="#">3D Polyline (y, z, x)</a></li>
                             <li><a id="btn-3Dp5" href="#">3D Polyline (z, x, y)</a></li>
                             <li><a id="btn-3Dp6" href="#">3D Polyline (z, y, x)</a></li>
+                            <li><a id="btn-3DarcRight" href="#">Right 3D arc</a></li>
+                            <li><a id="btn-3DarcRight" href="#">Left 3D arc</a></li>
                             <li><a id="btn-spiral" href="#">Spiral</a></li>
+
                         </ul>
                     </div>
                     <div class="btn-group">
@@ -159,7 +162,7 @@ and open the template in the editor.
                         <span>
                             <h3>Test utente</h3>
                             <p>Ti verrà ora richiesto di osservare la traiettoria 
-                            ideale un insieme di gesti, che dovrai riprodurre.</p>
+                                ideale un insieme di gesti, che dovrai riprodurre.</p>
                         </span>
                         <span>
                             <h3>1 - Swipe verso destra: dimostrazione</h3>
@@ -217,7 +220,7 @@ and open the template in the editor.
                                 rivedere la traiettoria.
                             </p>
                         </span>
-                         <span>
+                        <span>
                             <h3>8 - Caret dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
@@ -281,7 +284,7 @@ and open the template in the editor.
                                 rivedere la traiettoria.
                             </p>
                         </span>
-                         <span>
+                        <span>
                             <h3>16 - Zig zag dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
@@ -291,6 +294,78 @@ and open the template in the editor.
                         </span>
                         <span>
                             <h3>17 - Delete dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                         <span>
+                            <h3>18 - 3D Polyline (X, Y, Z) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                         <span>
+                            <h3>19 - 3D Polyline (X, Z, Y) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                         <span>
+                           <h3>20 - 3D Polyline (Y, X, Z) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>21 - 3D Polyline (Y, Z, X) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>22 - 3D Polyline (Z, X, Y) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>23 - 3D Polyline (Z, Y, X) dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>24 - Arco 3D destra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>25 - Arco 3D sinistra dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                           <h3>25 - Spirale 3D dimostrazione</h3>
                             <p>
                                 Guarda attentantamente la traiettoria del gesto.
                                 Premi "Continua" per eseguirlo o "Ripeti" per 
