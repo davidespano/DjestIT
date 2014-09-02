@@ -105,10 +105,12 @@
         };
 
         this.getById = function(delay, id) {
-            var pos = Math.abs(this.t_index[id] - delay) % capacity;
+            var pos = Math.abs(this.t_index[id] - delay) % this.capacity;
             return touches[id] [pos];
         };
     };
+
+    TouchStateSequence.prototype = new djestit.StateSequence();
 
     djestit.TouchStateSequence = TouchStateSequence;
 
@@ -135,12 +137,17 @@
 
     var TouchSensor = function(element, root, capacity) {
         this.element = element;
-        this.root = root;
+        if (root instanceof djestit.Term) {
+            this.root = root;
+        }else{
+            this.root = djestit.expression(root);
+        }
         this.sequence = new TouchStateSequence(capacity);
         this.touchToEvent = [];
         this.eventToTouch = [];
         // we do not use zero as touch identifier
         this.touchToEvent[0] = -1;
+        var self = this;
 
         this.generateToken = function(type, touch) {
             var token = new TouchToken(touch, type);
@@ -155,11 +162,13 @@
                     break;
                 case _TOUCHEND:
                     token.id = this.eventToTouch[touch.identifier];
-                    delete eventToTouch[touch.identifier];
-                    touchToEvent[token.id] = null;
+                    delete this.eventToTouch[touch.identifier];
+                    this.touchToEvent[token.id] = null;
                     break;
             }
             this.sequence.push(token);
+            token.sequence = this.sequence;
+            return token;
         };
 
         this.firstId = function(id) {
@@ -172,17 +181,50 @@
             return this.touchToEvent.length - 1;
         };
 
-        this.touchHandler = function(event) {
+        this._raiseTouchEvent = function(event, name) {
 
+            event.preventDefault();
+            event.stopPropagation();
+            if (!event.currentTarget === event.target) {
+                return;
+            }
+            for (var i = 0; i < event.changedTouches.length; i++) {
+                var touch = event.changedTouches[i];
+                var token = self.generateToken(name, touch);
+                self.root.fire(token);
+            }
         };
+
+        this._onTouchStart = function(event) {
+
+            self._raiseTouchEvent(event, _TOUCHSTART);
+        };
+
+        this._onTouchMove = function(event) {
+            self._raiseTouchEvent(event, _TOUCHMOVE);
+        };
+
+        this._onTouchEnd = function(event) {
+            self._raiseTouchEvent(event, _TOUCHEND);
+        };
+
+
 
         this.element.addEventListener(
                 "touchstart",
-                this.touchHandler,
+                this._onTouchStart,
                 false);
         this.element.addEventListener(
                 "touchmove",
-                this.touchHandler,
+                this._onTouchMove,
+                false);
+        this.element.addEventListener(
+                "touchend",
+                this._onTouchEnd,
+                false);
+        this.element.addEventListener(
+                "touchcancel",
+                this._onTouchEnd,
                 false);
     };
 

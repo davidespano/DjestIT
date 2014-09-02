@@ -62,7 +62,7 @@
          * @param {object} evt the event arguments
          * @returns {undefined}
          */
-        this.trigger = function(evt) {
+        this.trigger = function(evt, token) {
             this.callback.forEach(function(l) {
                 l(evt);
             });
@@ -80,7 +80,7 @@
     djestit.Token = Token;
 
     var StateSequence = function(capacity) {
-        this.init(capacity);
+        
         this.init = function(capacity){
             this.capacity = capacity ? capacity : 2;
             this.tokens = [];
@@ -93,7 +93,7 @@
                 this.index++;
             } else {
                 this.index = (this.index + 1) % this.capacity;
-                this.tokens[index] = token;
+                this.tokens[this.index] = token;
             }
         };
         
@@ -102,9 +102,11 @@
         };
 
         this.get = function(delay) {
-            var pos = Math.abs(this.index - delay) % capacity;
+            var pos = Math.abs(this.index - delay) % this.capacity;
             return this.tokens[pos];
         };
+        
+        this.init(capacity);
     };
 
     djestit.StateSequence = StateSequence;
@@ -416,7 +418,7 @@
             }
             if (this.children && this.children instanceof Array) {
                 for (var i = 0; i < this.children.length; i++) {
-                    if (!children[i]._excluded && this.children[i].lookahead(token) === true) {
+                    if (!this.children[i]._excluded && this.children[i].lookahead(token) === true) {
                         return true;
                     }
                 }
@@ -639,6 +641,14 @@
                 exp = djestit._groundTerms[json.gt](json);
             }
         }
+        
+        if(json.complete){
+            exp.onComplete.add(json.complete);
+        }
+        
+        if(json.error){
+            exp.onError.add(json.error);
+        }
 
         // recoursively descend into sub expressions
         for (var i = 0; i < ch.length; i++) {
@@ -660,6 +670,34 @@
     djestit.registerGroundTerm = function(name, initFunction) {
         this._groundTerms[name] = initFunction;
     };
+    
+    var _select = function(selector, json){
+        if(window.JSONSelect){
+            return window.JSONSelect.match(selector, json);
+        }else{
+            console.log("In order to use the json selection capabilies, you must \
+            use the JSONSelect library http://jsonselect.org/");
+            return null;
+        }
+    };
+    djestit._select = _select;
+    
+    var _attachHandler = function(selector, expression, event, f){
+        var  selection = djestit._select(selector, expression);
+        for(var i = 0; i<selection.length; i++){
+            selection[i][event] = f;
+        }
+    };
+    djestit._attachHandler = _attachHandler;
+    
+    djestit.onComplete = function(selector, expression, f){
+        djestit._attachHandler(selector, expression, "complete", f);
+    };
+    
+    djestit.onError = function(selector, expression, f){
+        djestit._attachHandler(selector, expression, "error", f);
+    };
+    
 
 }(window.djestit = window.djestit || {}, undefined));
 

@@ -51,6 +51,11 @@ public class RecordController {
     public String register() {
         return "register";
     }
+    
+    @RequestMapping(value = "/test/touch.html")
+    public String touch() {
+        return "touch";
+    }
 
     @RequestMapping(value = "register.json", method = RequestMethod.POST)
     public @ResponseBody
