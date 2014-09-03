@@ -54,8 +54,8 @@ $(document).ready(function() {
                 ]},
             {disabling: [
                     {parallel: [
-                            {gt: "touch.move", tid: 1, iterative: true, id:"pinch.move1"},
-                            {gt: "touch.move", tid: 2, iterative: true}
+                            {gt: "touch.move", tid: 1, id:"pinch.move1"},
+                            {gt: "touch.move", tid: 2,}
                         ], iterative: true},
                     {order: [
                             {gt: "touch.end", tid: 1},
