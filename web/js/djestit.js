@@ -220,6 +220,7 @@
                 child.reset();
             });
         };
+        
     };
     CompositeTerm.prototype = new Term();
     djestit.CompositeTerm = CompositeTerm;

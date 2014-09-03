@@ -92,21 +92,26 @@
                     this.t_index[token.id] = 0;
                 case _TOUCHMOVE:
                 case _TOUCHEND:
-                    if (this.touches[token.id].length > this.capacity) {
+                    if (this.touches[token.id].length < this.capacity) {
                         this.touches[token.id].push(token);
-                        this.t_index[token.id]++;
                     } else {
-                        this.t_index[token.id] = (this.t_index[token.id] + 1) % this.capacity;
-                        this.touches[token.id] = token;
+                        this.touches[token.id][this.t_index[token.id]] = token;
                     }
+                    this.t_index[token.id] = (this.t_index[token.id] + 1) % this.capacity;
                     break;
 
             }
+            
         };
 
         this.getById = function(delay, id) {
-            var pos = Math.abs(this.t_index[id] - delay) % this.capacity;
-            return touches[id] [pos];
+            var pos = 0;
+            if(this.touches[id].length < this.capacity){
+                pos = this.t_index[id] - delay -1;
+            }else{
+                pos =(this.t_index[id] - delay - 1  + this.capacity) % this.capacity;
+            }
+            return this.touches[id] [pos];
         };
     };
 
@@ -139,7 +144,7 @@
         this.element = element;
         if (root instanceof djestit.Term) {
             this.root = root;
-        }else{
+        } else {
             this.root = djestit.expression(root);
         }
         this.sequence = new TouchStateSequence(capacity);
@@ -155,6 +160,7 @@
                 case _TOUCHSTART:
                     var touchId = this.firstId(touch.identifier);
                     this.eventToTouch[touch.identifier] = touchId;
+                    this.touchToEvent[touchId] = [touch.identifier];
                     token.id = touchId;
                     break;
                 case _TOUCHMOVE:
@@ -166,6 +172,7 @@
                     this.touchToEvent[token.id] = null;
                     break;
             }
+            
             this.sequence.push(token);
             token.sequence = this.sequence;
             return token;
