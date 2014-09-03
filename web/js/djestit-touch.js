@@ -123,13 +123,13 @@
         if (json.gt) {
             switch (json.gt) {
                 case "touch.start":
-                    return new djestit.TouchStart(json.id);
+                    return new djestit.TouchStart(json.tid);
                     break;
                 case "touch.move":
-                    return new djestit.TouchMove(json.id);
+                    return new djestit.TouchMove(json.tid);
                     break;
                 case "touch.end":
-                    return new djestit.TouchEnd(json.id);
+                    return new djestit.TouchEnd(json.tid);
                     break;
             }
         }

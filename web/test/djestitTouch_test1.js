@@ -35,10 +35,10 @@ $(document).ready(function() {
 
     var pan = {
         sequence: [
-            {gt: "touch.start", id: 1},
+            {gt: "touch.start", tid: 1},
             {disabling: [
-                    {gt: "touch.move", id: 1, iterative: true},
-                    {gt: "touch.end", id: 1}
+                    {gt: "touch.move", tid: 1, iterative: true},
+                    {gt: "touch.end", tid: 1}
                 ]}
         ]
 
@@ -49,54 +49,19 @@ $(document).ready(function() {
     var pinch = {
         sequence: [
             {order: [
-                    {gt: "touch.start", id: 1},
-                    {gt: "touch.start", id: 2}
+                    {gt: "touch.start", tid: 1},
+                    {gt: "touch.start", tid: 2}
                 ]},
             {disabling: [
                     {parallel: [
-                            {gt: "touch.move", id: 1, iterative: true,
-                                complete: function(args) {
-                                    console.log("move 1 in parallel");
-
-                                    var old1 = args.token.sequence.getById(1, 1);
-                                    var old2 = args.token.sequence.getById(1, 2);
-
-                                    var curr1 = args.token.sequence.getById(0, 1);
-                                    var curr2 = args.token.sequence.getById(0, 2);
-
-                                    if (old1 && old2 && curr1 && curr2) {
-                                        var oldDist = Math.sqrt(
-                                                Math.pow(old1.clientX - old2.clientX, 2) +
-                                                Math.pow(old1.clientY - old2.clientY, 2));
-                                        var currDist = Math.sqrt(
-                                                Math.pow(curr1.clientX - curr2.clientX, 2) +
-                                                Math.pow(curr1.clientY - curr2.clientY, 2));
-
-
-                                        var amount = paintCanvas.scale <= 1 ? 0.005 : 0.005;
-                                        if (currDist > oldDist) {
-                                            // zoom in
-                                            
-                                            paintCanvas.zoom(paintCanvas.scale + amount);
-                                            //console.log("zoom In " + paintCanvas.scale);
-                                        } else {
-                                            // zoom out
-                                           
-                                            paintCanvas.zoom(paintCanvas.scale - amount);
-                                            //console.log("zoom Out " + paintCanvas.scale);
-                                        }                          
-                                    }
-                                }},
-                            {gt: "touch.move", id: 2, iterative: true}
+                            {gt: "touch.move", tid: 1, iterative: true, id:"pinch.move1"},
+                            {gt: "touch.move", tid: 2, iterative: true}
                         ], iterative: true},
                     {order: [
-                            {gt: "touch.end", id: 1},
-                            {gt: "touch.end", id: 2}
+                            {gt: "touch.end", tid: 1},
+                            {gt: "touch.end", tid: 2}
                         ]}
-                ],
-                complete: function(){
-                    console.log("disabling complete");
-                }
+                ]
             }
         ]
     };
@@ -131,7 +96,39 @@ $(document).ready(function() {
                 paintCanvas.paint();
             });
 
+    djestit.onComplete(
+            ":has(:root > .id:val(\"pinch.move1\"))",
+            pinch,
+            function(args) {
+                console.log("move 1 in parallel");
 
+                var old1 = args.token.sequence.getById(1, 1);
+                var old2 = args.token.sequence.getById(1, 2);
+
+                var curr1 = args.token.sequence.getById(0, 1);
+                var curr2 = args.token.sequence.getById(0, 2);
+
+                if (old1 && old2 && curr1 && curr2) {
+                    var oldDist = Math.sqrt(
+                            Math.pow(old1.clientX - old2.clientX, 2) +
+                            Math.pow(old1.clientY - old2.clientY, 2));
+                    var currDist = Math.sqrt(
+                            Math.pow(curr1.clientX - curr2.clientX, 2) +
+                            Math.pow(curr1.clientY - curr2.clientY, 2));
+
+
+                    var amount = paintCanvas.scale <= 1 ? 0.005 : 0.005;
+                    if (currDist > oldDist) {
+                        // zoom in
+                        paintCanvas.zoom(paintCanvas.scale + amount);
+                    } else {
+                        // zoom out
+                        paintCanvas.zoom(paintCanvas.scale - amount);
+                        
+                    }
+                }
+            }
+    );
 
     new djestit.TouchSensor($("#area").get(0), input, 3);
 

@@ -106,7 +106,6 @@ QUnit.test("Parallel operator 1", function(assert) {
     parallel.fire(tokenA);
     parallel.fire(tokenA);
     parallel.fire(tokenB);
-    parallel.fire(tokenA);
 
     assert.ok(djestit.COMPLETE === parallel.state, "Passed!");
 });
