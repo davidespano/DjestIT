@@ -202,7 +202,8 @@ public class RecordController {
             msg.setError("password", "Invalid username or password");
             return gson.toJson(msg);
         } else {
-            File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
+            File gestureFolder = new File(servletContext.getRealPath("/") + 
+                    String.format("%sgesture%s%s", File.pathSeparator, File.pathSeparator, name));
             if (!gestureFolder.exists()) {
                 gestureFolder.mkdirs();
             }

@@ -6,10 +6,149 @@
 
 var config = {
     titleHeight: 0,
-    translateY: 200
+    translateY: 200,
+    container: "#container"
 };
 
-$(document).ready(function() {
+(function (gesturePlayground, undefined) {
+
+    gesturePlayground._sensors = [];
+    gesturePlayground._sensors = function (name, descriptor) {
+        this._sensors[name] = descriptor;
+    };
+
+    var getSensorDescriptor = function (name) {
+        return this._sensors[name];
+    };
+    gesturePlayground.getSensorDescriptor = getSensorDescriptor;
+
+    var Playground = function () {
+        var container;
+        var camera, controls, scene, renderer, pointVis, help, config;
+        var gesturePoints = [];
+        var self = this;
+
+        this.init = function (conf) {
+            config = {};
+            config.titleHeight = conf.titleHeight ? conf.titleHeight : 0;
+            config.translateY = conf.translateY ? conf.translateY : "#container";
+            config.height = conf.height ? conf.height : window.innerHeight;
+            config.width = conf.width ? conf.width : window.innerWidth;
+            config.sensors = conf.sensors ? conf.sensors : [];
+
+
+            camera = new THREE.PerspectiveCamera(55, config.width / config.height, 3, 2000);
+            camera.position.fromArray([0, 50, 650]);
+            camera.lookAt(new THREE.Vector3(0, 200, 600));
+
+            $(config.container).height(config.height - config.titleHeight);
+            controls = new THREE.TrackballControls(camera, $(config.container)[0]);
+
+            controls.rotateSpeed = 1.0;
+            controls.zoomSpeed = 1.2;
+            controls.panSpeed = 0.8;
+
+            controls.noZoom = false;
+            controls.noPan = false;
+
+            controls.staticMoving = true;
+            controls.dynamicDampingFactor = 0.3;
+
+            controls.keys = [65, 83, 68];
+
+            controls.addEventListener('change', render);
+
+            controls.handleResize();
+            // world
+
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0xffffff);
+
+            // lights
+            var light = new THREE.DirectionalLight(0xffffff);
+            light.position.set(1, 1, 1);
+            scene.add(light);
+
+            // renderer
+
+            renderer = new THREE.WebGLRenderer({antialias: false});
+            renderer.setClearColor(scene.fog.color, 1);
+            renderer.setSize($("#container").width(), $("#container").height());
+
+            container = document.getElementById('container');
+            container.appendChild(renderer.domElement);
+
+            config.sensors.forEach(function (name) {
+                var descriptor = gesturePlayground.getSensorDescriptor(name);
+                if (descriptor && descriptor.constructor) {
+                    var feedback = new descriptor.constructor();
+                    feedback.onUpdate(self.render);
+                    feedback.mesh().translateY(-config.translateY);
+                    scene.add(feedback.mesh());
+                }
+            });
+
+            pointVis = new THREE.Object3D();
+            pointVis.translateY(-config.translateY);
+            scene.add(pointVis);
+
+            help = new THREE.Object3D();
+            help.translateY(-config.translateY);
+            scene.add(help);
+
+            window.addEventListener('resize', self.onWindowResize, false);
+            self.render();
+        };
+
+        this.onWindowResize = function () {
+            $(config.container).height(config.height - config.titleHeight);
+            renderer.setSize($(config.container).width(), $(config.container).height());
+            camera.aspect = $(config.container).width() / $(config.container).height();
+            camera.updateProjectionMatrix();
+            controls.handleResize();
+            self.render();
+
+        };
+
+        this.render = function () {
+            renderer.render(scene, camera);
+        };
+
+        this.animate = function () {
+
+            requestAnimationFrame(animate);
+            controls.update();
+        };
+
+        this.clear = function () {
+            gesturePoints.forEach(function (point) {
+                pointVis.remove(point);
+            });
+
+            gesturePoints = [];
+            self.render();
+        };
+
+        this.addPoints = function (points, color) {
+            points.forEach(function (p) {
+                var point = new THREE.Mesh(new THREE.SphereGeometry(2),
+                        new THREE.MeshPhongMaterial());
+                point.material.color.setHex(color);
+                point.position.setX(p[0]);
+                point.position.setY(p[1]);
+                point.position.setZ(p[2]);
+                point._timestamp = p[3];
+                gesturePoints.push(point);
+                pointVis.add(point);
+            });
+            self.render();
+        };
+    };
+    gesturePlayground.Playground = Playground;
+
+}(window.gesturePlayground = window.gesturePlayground || {}, undefined));
+
+$(document).ready(function () {
     // TODO: insert these variabiles into a single object
     var container;
     var camera, controls, scene, renderer, hands, pointVis, help, record;
@@ -24,10 +163,10 @@ $(document).ready(function() {
     user_test();
     //startTest();
 
-
+    var playground = new gesturePlayground.Playground();
 
     Leap.loop({background: true}, {
-        hand: function(hand) {
+        hand: function (hand) {
 
             hands.updateHand(hand);
             if (record && record(hand)) {
@@ -45,136 +184,38 @@ $(document).ready(function() {
             // handEntry provides handFound/handLost events.
             .use('handHold')
             .use('handEntry')
-            .on('handFound', function(hand) {
+            .on('handFound', function (hand) {
                 hands.newHand(hand);
             })
-            .on('handLost', function(hand) {
+            .on('handLost', function (hand) {
                 hands.lostHand(hand);
             })
 
             .connect();
 
-    function init() {
-
-        //camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-        camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 3, 2000);
-        camera.position.fromArray([0, 50, 650]);
-        camera.lookAt(new THREE.Vector3(0, 200, 600));
-
-        $("#container").height(window.innerHeight - config.titleHeight);
-        controls = new THREE.TrackballControls(camera, $("#container")[0]);
-
-        controls.rotateSpeed = 1.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-
-        controls.noZoom = false;
-        controls.noPan = false;
-
-        controls.staticMoving = true;
-        controls.dynamicDampingFactor = 0.3;
-
-        controls.keys = [65, 83, 68];
-
-        controls.addEventListener('change', render);
-
-        controls.handleResize();
-        // world
-
-        scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0xffffff);
 
 
 
-        // lights
-
-        light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(1, 1, 1);
-        scene.add(light);
-
-        // renderer
-
-        renderer = new THREE.WebGLRenderer({antialias: false});
-        renderer.setClearColor(scene.fog.color, 1);
-        renderer.setSize($("#container").width(), $("#container").height());
-
-        container = document.getElementById('container');
-        container.appendChild(renderer.domElement);
 
 
-        /*var geometry = new THREE.PlaneGeometry(1000, 700);
-         
-         var material = new THREE.MeshBasicMaterial({color: 0xcccccc, side: THREE.DoubleSide, opacity: .4, transparent: true});
-         var plane = new THREE.Mesh(geometry, material);
-         plane.position.set(0, 0, 0);
-         scene.add(plane);*/
-
-        hands = new HandMesh();
-        hands.onUpdate(render);
-        hands.mesh().translateY(-config.translateY);
-        scene.add(hands.mesh());
-
-        pointVis = new THREE.Object3D();
-        pointVis.translateY(-config.translateY);
-        scene.add(pointVis);
-
-        help = new THREE.Object3D();
-        help.translateY(-config.translateY);
-        scene.add(help);
-
-        window.addEventListener('resize', onWindowResize, false);
-
-        //
-//        record = function(hand) {
-//            hand.indexFinger.bones[3].nextJoint[2] < 0;
-//        };
-        render();
-
-    }
-
-    function onWindowResize() {
 
 
-        $("#container").height(window.innerHeight - config.titleHeight);
-        renderer.setSize($("#container").width(), $("#container").height());
 
-        camera.aspect = $("#container").width() / $("#container").height();
-        camera.updateProjectionMatrix();
-
-
-        controls.handleResize();
-
-        render();
-
-    }
-
-    function animate() {
-
-        requestAnimationFrame(animate);
-        controls.update();
-
-    }
-
-    function render() {
-
-        renderer.render(scene, camera);
-
-    }
 
     function ui() {
-        $("#btn-clear").click(function(event) {
+        $("#btn-clear").click(function (event) {
             event.preventDefault();
             clear();
         });
 
-        $("#btn-reset").click(function(event) {
+        $("#btn-reset").click(function (event) {
             event.preventDefault();
             controls.reset();
             render();
         });
 
         $("#btn-load")
-                .click(function(event) {
+                .click(function (event) {
                     $.ajax({
                         url: "file.json",
                         type: 'GET',
@@ -182,13 +223,13 @@ $(document).ready(function() {
                         contentType: 'application/json',
                         mimeType: 'application/json',
                         data: {id: "#"},
-                        success: function(data) {
+                        success: function (data) {
                             var list = $("#file-list");
                             list.empty();
                             var template = $("<li><a href=\"#\"></a><ul></ul></li>");
                             template.addClass("folder-close");
                             template.on("click", "a", folderNode);
-                            data.forEach(function(file) {
+                            data.forEach(function (file) {
                                 var fileElement = template.clone(true);
                                 fileElement.children().first().text(file.text);
                                 fileElement.attr("data-path", file.id);
@@ -208,22 +249,22 @@ $(document).ready(function() {
 
 
 
-        $("#gesture-menu li a").click(function(event) {
+        $("#gesture-menu li a").click(function (event) {
             var index = $(this).parent().prevAll().length;
             gestureAnimator.requestAnimation(
                     gestureAnimator.animations[index].duration,
                     gestureAnimator.animations[index].gesture);
         });
 
-        $("#btn-save").click(function() {
+        $("#btn-save").click(function () {
             save();
         });
 
-        $("#btn-load-confirm").click(function() {
+        $("#btn-load-confirm").click(function () {
             load();
         });
 
-        $("#btn-logout").click(function() {
+        $("#btn-logout").click(function () {
             $.ajax({
                 url: "logout.json",
                 type: 'GET',
@@ -231,7 +272,7 @@ $(document).ready(function() {
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 data: {},
-                success: function(data) {
+                success: function (data) {
                     if (data.status === 0) {
                         location.reload();
                     }
@@ -241,18 +282,11 @@ $(document).ready(function() {
 
     }
 
-    function clear() {
-        gesturePoints.forEach(function(point) {
-            pointVis.remove(point);
-        });
 
-        gesturePoints = [];
-        renderer.render(scene, camera);
-    }
 
     function save(filename) {
         var series = [];
-        gesturePoints.forEach(function(p) {
+        gesturePoints.forEach(function (p) {
             series.push([p.position.x, p.position.y, p.position.z, p._timestamp]);
         });
         if (!filename) {
@@ -269,7 +303,7 @@ $(document).ready(function() {
             contentType: 'application/json',
             mimeType: 'application/json',
             data: JSON.stringify(test),
-            success: function(data) {
+            success: function (data) {
                 $("#save-form").modal("hide");
 
             }
@@ -279,7 +313,7 @@ $(document).ready(function() {
 
 
     function load() {
-        $(".file-selected").each(function(sel) {
+        $(".file-selected").each(function (sel) {
             var path = $(this).attr("data-path");
             $.ajax({
                 url: "load.json",
@@ -287,20 +321,9 @@ $(document).ready(function() {
                 data: {
                     name: path
                 },
-                success: function(data) {
+                success: function (data) {
                     var color = Math.random() * 0xFFFFFF << 0;
-                    data.points.forEach(function(p) {
-                        var point = new THREE.Mesh(new THREE.SphereGeometry(2),
-                                new THREE.MeshPhongMaterial());
-                        point.material.color.setHex(color);
-                        point.position.setX(p[0]);
-                        point.position.setY(p[1]);
-                        point.position.setZ(p[2]);
-                        point._timestamp = p[3];
-                        gesturePoints.push(point);
-                        pointVis.add(point);
-                    });
-                    render();
+                    playground.addPoints(data.points, color);
                 }
             });
         });
@@ -327,12 +350,12 @@ $(document).ready(function() {
                 contentType: 'application/json',
                 mimeType: 'application/json',
                 data: {"id": id},
-                success: function(data) {
+                success: function (data) {
                     list.empty();
                     var template = $("<li><a href=\"#\"></a></li>");
                     template.addClass("file");
                     template.on("click", "a", fileSelect);
-                    data.forEach(function(file) {
+                    data.forEach(function (file) {
                         var fileElement = template.clone(true);
                         fileElement.children().first().text(file.text);
                         fileElement.attr("data-path", file.id);
@@ -358,22 +381,22 @@ $(document).ready(function() {
 
 
     // user-test related functionalities
-    var startRecord = function() {
+    var startRecord = function () {
         return true;
     };
-    var stopRecord = function() {
+    var stopRecord = function () {
         return false;
     };
 
     function user_test() {
         $(".help-msg > span").hide();
-        
-        
+
+
         var actions = [
             {show: $(".help-msg span")[0]},
             {show: $(".help-msg span")[1]},
             {show: $(".help-msg span")[2],
-                action: function(onComplete) {
+                action: function (onComplete) {
                     gestureAnimator.requestAnimation(
                             75,
                             "circle",
@@ -384,23 +407,23 @@ $(document).ready(function() {
             {
                 show: $(".help-msg span")[4],
                 interactive: false,
-                action: function(onComplete) {
+                action: function (onComplete) {
                     clear();
                     var msg = $("#countdown").show();
                     msg.text("-3");
 
                     var timer = new TimerManager([
-                        {time: 1000, action: function() {
+                        {time: 1000, action: function () {
                                 msg.text("-2");
                             }},
-                        {time: 1000, action: function() {
+                        {time: 1000, action: function () {
                                 msg.text("-1");
                             }},
-                        {time: 1000, action: function() {
+                        {time: 1000, action: function () {
                                 msg.text("Azione!");
                                 record = startRecord;
                             }},
-                        {time: 3000, action: function() {
+                        {time: 3000, action: function () {
                                 record = stopRecord;
                                 onComplete();
                             }}
@@ -411,7 +434,7 @@ $(document).ready(function() {
             },
             {show: $(".help-msg span")[5]},
             {show: $(".help-msg span")[6],
-                action: function(onComplete) {
+                action: function (onComplete) {
                     clear();
                 }}
         ];
@@ -422,11 +445,11 @@ $(document).ready(function() {
                 $("#btn-tutorial-prev"),
                 startTest);
         tutorial.next();
-        $("#btn-tutorial-prev").click(function(event) {
+        $("#btn-tutorial-prev").click(function (event) {
             event.preventDefault();
             tutorial.previous();
         });
-        $("#btn-tutorial-next").click(function(event) {
+        $("#btn-tutorial-next").click(function (event) {
             event.preventDefault();
             tutorial.next();
         });
@@ -446,17 +469,17 @@ $(document).ready(function() {
             var msg = $("#test-count").show();
             msg.text("-3");
             var timer = new TimerManager([
-                {time: 1000, action: function() {
+                {time: 1000, action: function () {
                         msg.text("-2");
                     }},
-                {time: 1000, action: function() {
+                {time: 1000, action: function () {
                         msg.text("-1");
                     }},
-                {time: 1000, action: function() {
+                {time: 1000, action: function () {
                         msg.text("Azione !");
                         record = startRecord;
                     }},
-                {time: duration, action: function() {
+                {time: duration, action: function () {
                         record = stopRecord;
                         onComplete();
                     }}
@@ -468,7 +491,7 @@ $(document).ready(function() {
 
         var steps = [];
         var stepsPerIteration = 3;
-        var isBack= false;
+        var isBack = false;
         for (var i = 0; i < gestureAnimator.animations.length; i++) {
             // demo step
             var demo = {};
@@ -477,7 +500,7 @@ $(document).ready(function() {
             demo.name = gestureAnimator.animations[i].gesture;
             demo.d = gestureAnimator.animations[i].duration;
             demo.index = i;
-            demo.action = function(onComplete) {
+            demo.action = function (onComplete) {
                 if (this.index > 0 && !isBack) {
                     save(steps[(this.index - 1) * stepsPerIteration + 1].name);
                     clear();
@@ -496,7 +519,7 @@ $(document).ready(function() {
             performance.interactive = false;
             performance.skipOnPrevious = true;
             performance.time = gestureAnimator.animations[i].performance;
-            performance.action = function(onComplete) {
+            performance.action = function (onComplete) {
                 recordGesture(onComplete, this.time);
             };
             steps.push(performance);
@@ -505,7 +528,7 @@ $(document).ready(function() {
             var feedback = {};
             feedback.show = $(".test-msg span")[1];
             feedback.skipOnPrevious = true;
-            feedback.action = function() {
+            feedback.action = function () {
                 $("#btn-test-repeat").hide();
             };
             steps.push(feedback);
@@ -515,14 +538,14 @@ $(document).ready(function() {
 
         steps.splice(0, 0, {
             show: $(".test-msg span")[2],
-            action: function() {
+            action: function () {
                 $("#btn-test-repeat").hide();
             }
         });
 
         steps.push({
             show: $(".test-msg span")[gestureAnimator.animations.length + 3],
-            action: function() {
+            action: function () {
                 save(gestureAnimator.animations[gestureAnimator.animations.length - 1].gesture);
                 clear();
             }
@@ -534,18 +557,18 @@ $(document).ready(function() {
                 $("#btn-test-prev"),
                 normalEditor);
         tutorial.next();
-        $("#btn-test-prev").click(function(event) {
+        $("#btn-test-prev").click(function (event) {
             event.preventDefault();
             isBack = true;
             clear();
             tutorial.previous();
         });
-        $("#btn-test-next").click(function(event) {
+        $("#btn-test-next").click(function (event) {
             event.preventDefault();
             isBack = false;
             tutorial.next();
         });
-        $("#btn-test-repeat").click(function(event) {
+        $("#btn-test-repeat").click(function (event) {
             event.preventDefault();
             isBack = true;
             tutorial.repeat();
@@ -558,3 +581,6 @@ $(document).ready(function() {
     }
 
 });
+
+
+
