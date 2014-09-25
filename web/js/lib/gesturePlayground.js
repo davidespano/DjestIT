@@ -129,7 +129,7 @@ var config = {
             self.render();
         };
 
-        this.addPoints = function (points, color) {
+        this.visualizeGesture = function (points, color) {
             points.forEach(function (p) {
                 var point = new THREE.Mesh(new THREE.SphereGeometry(2),
                         new THREE.MeshPhongMaterial());
@@ -142,6 +142,10 @@ var config = {
                 pointVis.add(point);
             });
             self.render();
+        };
+        
+        this.addGesturePoint = function(point){
+            
         };
     };
     gesturePlayground.Playground = Playground;
@@ -323,7 +327,7 @@ $(document).ready(function () {
                 },
                 success: function (data) {
                     var color = Math.random() * 0xFFFFFF << 0;
-                    playground.addPoints(data.points, color);
+                    playground.visualizeGesture(data.points, color);
                 }
             });
         });
