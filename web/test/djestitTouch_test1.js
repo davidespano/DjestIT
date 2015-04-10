@@ -48,7 +48,7 @@ $(document).ready(function() {
 
     var pinch = {
         sequence: [
-            {order: [
+            {anyOrder: [
                     {gt: "touch.start", tid: 1},
                     {gt: "touch.start", tid: 2}
                 ]},
@@ -57,7 +57,7 @@ $(document).ready(function() {
                             {gt: "touch.move", tid: 1, id:"pinch.move1"},
                             {gt: "touch.move", tid: 2,}
                         ], iterative: true},
-                    {order: [
+                    {anyOrder: [
                             {gt: "touch.end", tid: 1},
                             {gt: "touch.end", tid: 2}
                         ]}
@@ -65,6 +65,34 @@ $(document).ready(function() {
             }
         ]
     };
+    
+    var pointing = { 
+        choice :[
+            {disabling:[
+                    {gt: "mouse.move", iterative : true},
+                    {gt: "mouse.rightButton"}
+            ]},
+            {choice :[
+                {disabling:[
+                    {gt: "leap.handLeft.index.4", iterative: true},
+                    {gt: "leap.handLeft.screenTap"}
+                ]},
+                {disabling:[
+                    {gt: "leap.handRight.index.4", iterative: true},
+                    {gt: "leap.handRight.screenTap"}
+                ]}
+            ]},
+            {choice :[
+                {disabling:[
+                    {gt: "leap.handLeft.index.4", iterative: true},
+                    {gt: "leap.handLeft.screenTap"}
+                ]},
+                {disabling:[
+                    {gt: "leap.handRight.index.4", iterative: true},
+                    {gt: "leap.handRight.screenTap"}
+                ]}
+            ]}
+        ]};
 
     var input = {
         choice: [
@@ -203,5 +231,4 @@ function PaintCanvas(conf) {
     };
 
     this.init(conf);
-}
-;
+};

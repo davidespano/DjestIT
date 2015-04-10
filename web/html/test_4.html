@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Leap Canvas</title>
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../css/icett.css">
+        <link rel="stylesheet" href="../css/login.css">
+        <script type="text/javascript" src="../js/lib/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="../js/lib/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../js/login.js"></script>
+        <style>
+            #stripes{
+                height:0px;
+                width: 100%;
+                border-top: 3px solid #9e1616;
+                border-bottom: 3px solid #3d3f7c;
+                clear: both;
+            }
+
+            h1{
+                font-size: 14pt;
+            }
+
+            #logo {
+                height: 36px;
+                padding-left: 36px;
+                background-size: 36px 36px;
+                padding-top: 25px;
+                margin-bottom: 15px;
+                font-family: verdana;
+                color: #3d3f7c;
+                font-size: 14px;
+                background-image: url(../img/logo.png);
+                background-position: top left;
+                background-repeat: no-repeat;
+                float: left;
+            }
+
+            img.resize{
+                width:100%; /* you can use % */
+                height: auto;
+                padding-top:10px;
+                padding-bottom: 10px;
+            }
+        </style>
+    <body>
+        <header>
+            <div id='logo'></div>
+            <div id='title'>
+                <h1>Mouse-Catching</h1>
+                <p>Web page segmentation</p>
+            </div>
+
+
+            <div id='stripes'></div>
+        </header>
+        <div id="main">
+
+
+            <form role="form" id="login-form">
+
+                <h3>Step 1: Screenshot</h3>
+                <p>Take a screenshot of the current web page</p>
+                <button  type="submit" class="btn btn-primary btn-center"><span class="glyphicon glyphicon-screenshot">&nbsp;</span>Screenshot</button>
+
+            </form>
+
+            <form role="form" id="login-form">
+
+                <h3>Step 2: Analysis</h3>
+                <p>Find the content areas in the current page...</p>
+                <img class="resize" src="img/4_7-walk-4.png" alt="screen"/>
+                <button type="submit" class="btn btn-primary btn-center"><span class="glyphicon glyphicon-upload">&nbsp;</span>Analyse</button>
+
+                <p>&nbsp;</p>
+
+                <p>... or take another screenshot</p>
+                <button  type="submit" class="btn btn-default btn-center"><span class="glyphicon glyphicon-screenshot">&nbsp;</span>Screenshot</button>
+            </form>
+
+            <form role="form" id="login-form">
+
+                <h3>Complete!</h3>
+                <p>The page segmentation process is completed.
+                    You can show or hide the segmentation results with the buttons below...
+                </p>
+                <div class="btn-group" style="width:100%; " role="group" aria-label="...">
+                    <button type="button" style="width:50%; " class="btn btn-primary"><span class="glyphicon glyphicon-eye-open">&nbsp;</span>Show</button>
+                    <button type="button" style="width:50%; " class="btn btn-default"><span class="glyphicon glyphicon-eye-close">&nbsp;</span>Hide</button>
+                </div>
+              
+
+                <p>&nbsp;</p>
+
+                <p>... or restart the procedure for another analysis</p>
+                <button  type="submit" class="btn btn-default btn-center"><span class="glyphicon glyphicon-repeat">&nbsp;</span>Restart</button>
+            </form>
+            
+             <p>&nbsp;</p>
+        </div>
+    </body>
+</html>

@@ -622,9 +622,9 @@
             ch = json.disabling;
         }
 
-        if (json.order) {
+        if (json.anyOrder) {
             exp = new OrderIndependence();
-            ch = json.order;
+            ch = json.anyOrder;
         }
 
         if (json.parallel) {
