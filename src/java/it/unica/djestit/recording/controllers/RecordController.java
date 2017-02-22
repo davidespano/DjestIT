@@ -42,7 +42,7 @@ public class RecordController {
         if (session.getAttribute(RecordController.user) == null) {
             return "login";
         } else {
-            return "index";
+            return "index-arc";
         }
 
     }
@@ -109,7 +109,7 @@ public class RecordController {
             msg.setStatus(1);
         } else {
             String name = session.getAttribute(RecordController.user).toString();
-            File gestureFolder = new File(servletContext.getRealPath("/gestures/" + name));
+            File gestureFolder = getGestureFolder(name);
             if (!gestureFolder.exists()) {
                 gestureFolder.mkdirs();
             }
@@ -134,14 +134,14 @@ public class RecordController {
             path = "";
         }
         // gesture
-        File base = new File(servletContext.getRealPath("/gestures"));
-        File folder = new File(servletContext.getRealPath("/gestures/" + path));
+        File base = new File(servletContext.getRealPath("/gesture"));
+        File folder = new File(servletContext.getRealPath("/gesture/" + path));
         if (folder.exists()) {
             File[] listOfFiles;
             // hide other users' data for the default role
             if(usr.getRole() == User.DEFAULT && path.length() == 0){
                 listOfFiles = new File[1];
-                listOfFiles[0] = new File(servletContext.getRealPath("/gestures/" + username));
+                listOfFiles[0] = getGestureFolder(username);
             }else{
                 listOfFiles = folder.listFiles();
             }
@@ -168,7 +168,7 @@ public class RecordController {
     public @ResponseBody
     String load(
             @RequestParam(value = "name", required = true) String name) {
-        File gestureFile = new File(servletContext.getRealPath("/gestures/" + name));
+        File gestureFile = new File(servletContext.getRealPath("/gesture/" + name));
         if (gestureFile.exists()) {
             Gesture gesture = new Gesture();
             gesture.fromCSV(gestureFile.getAbsolutePath());
@@ -202,8 +202,7 @@ public class RecordController {
             msg.setError("password", "Invalid username or password");
             return gson.toJson(msg);
         } else {
-            File gestureFolder = new File(servletContext.getRealPath("/") + 
-                    String.format("%sgesture%s%s", File.pathSeparator, File.pathSeparator, name));
+            File gestureFolder = getGestureFolder(name);
             if (!gestureFolder.exists()) {
                 gestureFolder.mkdirs();
             }
@@ -211,6 +210,12 @@ public class RecordController {
             session.setAttribute(RecordController.user, name);
         }
         return gson.toJson(msg);
+    }
+
+    private File getGestureFolder(String name) {
+        File gestureFolder = new File(servletContext.getRealPath("/") +
+                String.format("%sgesture%s%s", File.separator, File.separator, name));
+        return gestureFolder;
     }
 
     @RequestMapping(value = "logout.json", method = RequestMethod.GET, produces = "application/json; charset=utf-8")

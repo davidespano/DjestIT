@@ -8,7 +8,7 @@
     var config;
     gestureAnimator.config = config;
 
-    var animations = [
+    /*var animations = [
         {duration: 50, gesture: "right-swipe", performance: 1500},
         {duration: 50, gesture: "left-swipe", performance: 1500},
         {duration: 120, gesture: "triangle", performance: 4000},
@@ -35,7 +35,18 @@
         {duration: 120, gesture: "arc3Dright", performance: 3000},
         {duration: 120, gesture: "arc3Dleft", performance: 3000},
         {duration: 300, gesture: "spiral", performance: 6000}
-    ];
+    ];*/
+    
+    var animations = [
+        {duration: 20, gesture: "arc1CounterClockWise", performance: 1500},
+        {duration: 20, gesture: "arc2CounterClockWise", performance: 1500},
+        {duration: 20, gesture: "arc3CounterClockWise", performance: 1500},
+        {duration: 20, gesture: "arc4CounterClockWise", performance: 1500},
+        {duration: 20, gesture: "arc1ClockWise", performance: 1500},
+        {duration: 20, gesture: "arc2ClockWise", performance: 1500},
+        {duration: 20, gesture: "arc3ClockWise", performance: 1500},
+        {duration: 20, gesture: "arc4ClockWise", performance: 1500}
+    ]
 
     gestureAnimator.animations = animations;
 
@@ -133,6 +144,30 @@
                 case "arc3Dleft":
                     _position = gestureAnimator.arc3DLeft;
                     break;
+                case "arc1CounterClockWise":
+                    _position = gestureAnimator.arc1CounterClockWise;
+                    break;
+                case "arc2CounterClockWise":
+                    _position = gestureAnimator.arc2CounterClockWise;
+                    break;
+                case "arc3CounterClockWise":
+                    _position = gestureAnimator.arc3CounterClockWise;
+                    break;
+                case "arc4CounterClockWise":
+                    _position = gestureAnimator.arc4CounterClockWise;
+                    break;
+                 case "arc1ClockWise":
+                    _position = gestureAnimator.arc1ClockWise;
+                    break;
+                case "arc2ClockWise":
+                    _position = gestureAnimator.arc2ClockWise;
+                    break;
+                case "arc3ClockWise":
+                    _position = gestureAnimator.arc3ClockWise;
+                    break;
+                case "arc4ClockWise":
+                    _position = gestureAnimator.arc4ClockWise;
+                    break;
             }
 
             var _complete = onComplete;
@@ -174,6 +209,70 @@
     gestureAnimator.requestAnimation = requestAnimation;
 
 
+    
+    var arc = function(i, offset, dir){
+        var r = 150;
+        var alpha = dir *(2 * Math.PI / 75) * i;
+        alpha += offset;
+        var point = [];
+        point[0] = Math.cos(alpha) * r;
+        point[1] = Math.sin(alpha) * r + gestureAnimator.config.translateY;
+        point[2] = 0;
+        return point;
+    };
+    
+    var arc1CounterClockWise = function(i){
+        return arc(i, 0, 1);
+    };
+    
+    gestureAnimator.arc1CounterClockWise = arc1CounterClockWise;
+    
+    var arc2CounterClockWise = function(i){
+        return arc(i, Math.PI /2, 1);
+    };
+    
+    gestureAnimator.arc2CounterClockWise = arc2CounterClockWise;
+    
+    var arc3CounterClockWise = function(i){
+        return arc(i, Math.PI, 1);
+    };
+    
+    gestureAnimator.arc3CounterClockWise = arc3CounterClockWise;
+    
+    var arc4CounterClockWise = function(i){
+        return arc(i, 1.5 * Math.PI,1);
+    };
+    
+    gestureAnimator.arc4CounterClockWise = arc4CounterClockWise;
+    
+    var arc1ClockWise = function(i){
+        return arc(i, Math.PI /2, -1);
+       
+    };
+    
+    gestureAnimator.arc1ClockWise = arc1ClockWise;
+    
+    var arc2ClockWise = function(i){
+         return arc(i, 0, -1);
+    };
+    
+    gestureAnimator.arc2ClockWise = arc2ClockWise;
+    
+    var arc3ClockWise = function(i){
+        return arc(i, 1.5 * Math.PI, -1);
+    };
+    
+    gestureAnimator.arc3ClockWise = arc3ClockWise;
+    
+    var arc4ClockWise = function(i){
+        
+        return arc(i, Math.PI, -1);
+    };
+    
+    gestureAnimator.arc4ClockWise = arc4ClockWise;
+    
+    
+    
 
     var circle = function(i) {
         var r = 150;

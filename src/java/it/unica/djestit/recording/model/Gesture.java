@@ -68,7 +68,7 @@ public class Gesture implements Serializable {
         try (PrintWriter writer = new PrintWriter(new FileWriter(new File(filename)))) {
             if (points != null) {
                 for (double[] point : points) {
-                    String line = String.format(Locale.ROOT, "%f %f %f %.0f",
+                    String line = String.format(Locale.ROOT, "%f,%f,%f,%.0f",
                             point[0], point[1], point[2], point[3]);
                     writer.println(line);
                 }
