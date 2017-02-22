@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>DistrFlix</title>
+        <!-- Bootstrap -->
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/bootstrap-theme.css.map" rel="stylesheet">
+        <link href="../../css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="../../css/bootstrap-slider.css" rel="stylesheet">
+        <link href="../../css/bootstrap-sidebar.css" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <script type="text/javascript" src="../../js/lib/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="../../js/lib/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../../js/lib/bootstrap-slider.min.js"></script>
+
+        <script type='text/javascript'>
+            $(document).ready(function () {
+                console.log("ciao");
+                $('#ex1').slider({
+                    formatter: function (value) {
+                        return 'Current value: ' + value;
+                    }
+                });
+                
+                $("#distr-client").click(function (e){
+                    e.preventDefault();
+                    $("#wrapper").toggleClass("toggled");
+                    if($("#wrapper").hasClass("toggled")){
+                        $(this).children("span")
+                                .removeClass("glyphicon-arrow-right")
+                                .addClass("glyphicon-arrow-left");
+                        
+                    }else{
+                        $(this).children("span")
+                                .removeClass("glyphicon-arrow-left")
+                                .addClass("glyphicon-arrow-right");
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <div id="sidebar-content">
+                <h1>Device Panel</h1>
+                <p>Share the access to this website with your other personal devices</p>
+                <button class="btn-device btn btn-success">
+                    <img class="btn-device" src="img/laptop-white.png" alt="laptop">
+                    <span class="btn-device-label">
+                       
+                        Davide Air &nbsp; &nbsp;
+                        
+                    </span>
+                    <span class="glyphicon glyphicon-map-marker">&nbsp;</span>
+                </button>
+                <button class="btn-device btn btn-success">
+                    <img class="btn-device" src="img/smartphone-white.png" alt="laptop">
+                    <span class="btn-device-label"> Nexus 5</span>
+                    <span class="glyphicon glyphicon-pencil">&nbsp;</span>
+                </button>
+                <button class="btn-device btn btn-default">
+                    <img class="btn-device" src="img/tv.png" alt="laptop">
+                    <span class="btn-device-label"> Samsung TV</span>
+                    <span class="glyphicon glyphicon-share">&nbsp;</span>
+                </button>
+                <button class="btn-device btn btn-default">
+                    <img class="btn-device" src="img/watch.png" alt="laptop">
+                    <span class="btn-device-label"> Gear S </span>
+                    <span class="glyphicon glyphicon-share">&nbsp;</span>
+                </button>
+                <br/>
+                <br/>
+                <a class="sidebar" href="#">Add a new device...</a>
+                 <br/>
+                </div>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <h1 class="highlight">DistrFlix <small>A distributable video player</small></h1>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="active"><a href="#" >Videos</a></li>
+                            <li><a href="#">Favorites</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!--<div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" 
+                                        src="http://www.youtube.com/embed/-hP8rrvc_t4?autoplay=0&showinfo=0&controls=0" 
+                                        frameborder="0" allowfullscreen ></iframe>
+                            </div>-->
+                            <div class="selected-panel">
+                            <div class="controls-table ">
+                                <div class="controls panel">
+                                    <button type="button" class="btn btn-danger play"><span class="glyphicon glyphicon-play"></span></button>
+                                    <button class="slider" id="ex1" data-slider-id='ex1Slider' data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"> </button>
+                                    <button type="button" class="btn btn-default volume"><span class="glyphicon glyphicon-volume-down"></span></button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 panel selected-panel">
+                            <h3 class="highlight"> Game of Phones </h3>
+                            <p><i>Game of Phones</i> roughly follows the three storylines of <i>A Song of Apple and Google</i>.<sup id="cite_ref-6" class="reference"><a href="#cite_note-6"><span>[</span>6<span>]</span></a></sup> Set in the fictional Seven Kingdoms of Westeros, the series chronicles the violent dynastic struggles among the realm's noble families for control of the Iron Throne. As the series opens, additional threats emerge in the icy North and in the eastern continent of Essos.<sup id="cite_ref-gotfactsheet_2-1" class="reference"><a href="#cite_note-gotfactsheet-2"><span>[</span>2<span>]</span></a></sup></p>
+                            <p>The novels and their adaptation derive aspects of their settings, characters and plot from various events of European history.<sup id="cite_ref-The_Guardian_March_24.2C_2013_7-0" class="reference"><a href="#cite_note-The_Guardian_March_24.2C_2013-7"><span>[</span>7<span>]</span></a></sup> A principal inspiration for the novels is the English <a href="/wiki/Wars_of_the_Roses" title="Wars of the Roses">Wars of the Roses</a><sup id="cite_ref-8" class="reference"><a href="#cite_note-8"><span>[</span>8<span>]</span></a></sup> (1455–85) between the houses of <a href="/wiki/House_of_Lancaster" title="House of Lancaster">Lancaster</a> and <a href="/wiki/House_of_York" title="House of York">York</a>, reflected in Martin's houses of <a href="/wiki/Lannister" title="Lannister" class="mw-redirect">Lannister</a> and <a href="/wiki/Characters_in_A_Song_of_Ice_and_Fire#House_Stark" title="Characters in A Song of Ice and Fire" class="mw-redirect">Stark</a>. Most of Westeros, with its castles and knightly tournaments, is reminiscent of <a href="/wiki/High_Medieval" title="High Medieval" class="mw-redirect">High Medieval</a> Western Europe. The scheming Cersei, for instance, calls to mind <a href="/wiki/Isabella_of_France" title="Isabella of France">Isabella</a>, the "she-wolf of France" (1295–1358).<sup id="cite_ref-The_Guardian_March_24.2C_2013_7-1" class="reference"><a href="#cite_note-The_Guardian_March_24.2C_2013-7"><span>[</span>7<span>]</span></a></sup> She and her family, as depicted in <a href="/wiki/Maurice_Druon" title="Maurice Druon">Maurice Druon</a>'s historical novel series <i><a href="/wiki/The_Accursed_Kings" title="The Accursed Kings">The Accursed Kings</a></i>, in particular, inspired Martin.<sup id="cite_ref-9" class="reference"><a href="#cite_note-9"><span>[</span>9<span>]</span></a></sup> Other historical inspirations for elements of the series include <a href="/wiki/Hadrian%27s_Wall" title="Hadrian's Wall">Hadrian's Wall</a> (which became Martin's great Wall), the legend of <a href="/wiki/Atlantis" title="Atlantis">Atlantis</a> (ancient <a href="/wiki/Valyria" title="Valyria" class="mw-redirect">Valyria</a>), Byzantine "<a href="/wiki/Greek_fire" title="Greek fire">Greek fire</a>" ("wildfire"), Icelandic <a href="/wiki/Saga" title="Saga">sagas</a> of the <a href="/wiki/Viking_Age" title="Viking Age">Viking Age</a> (the <a href="/wiki/Ironborn" title="Ironborn" class="mw-redirect">Ironborn</a>) and the <a href="/wiki/Mongol_invasions_and_conquests" title="Mongol invasions and conquests">Mongol hordes</a> (the <a href="/wiki/Dothraki_Sea" title="Dothraki Sea" class="mw-redirect">Dothraki</a>), as well as elements from the <a href="/wiki/Hundred_Years%27_War" title="Hundred Years' War">Hundred Years' War</a> (1337–1453) and the <a href="/wiki/Italian_Renaissance" title="Italian Renaissance">Italian Renaissance</a> (c. 1400–1500).<sup id="cite_ref-The_Guardian_March_24.2C_2013_7-2" class="reference"><a href="#cite_note-The_Guardian_March_24.2C_2013-7"><span>[</span>7<span>]</span></a></sup> The series' great popularity has in part been attributed to Martin's skill at fusing these disparate elements into a seamless whole that appears credible on its own terms as an alternative history.<sup id="cite_ref-The_Guardian_March_24.2C_2013_7-3" class="reference"><a href="#cite_note-The_Guardian_March_24.2C_2013-7"><span>[</span>7<span>]</span></a></sup></p>
+                            <p>"<i><a href="/wiki/The_Sopranos" title="The Sopranos">The Sopranos</a></i> in <a href="/wiki/Middle-earth" title="Middle-earth">Middle-earth</a>" is the tagline <a href="/wiki/Showrunner" title="Showrunner">showrunner</a> David Benioff jokingly suggested for <i>Game of Thrones</i>, referring to its intrigue-filled plot and dark tone combined with a fantasy setting that incorporates some magic.<sup id="cite_ref-10" class="reference"><a href="#cite_note-10"><span>[</span>10<span>]</span></a></sup> In a 2012 study, the series was listed second out of 40 recent U.S. TV drama series by deaths per episode, with an average of 14.<sup id="cite_ref-11" class="reference"><a href="#cite_note-11"><span>[</span>11<span>]</span></a></sup><sup id="cite_ref-12" class="reference"><a href="#cite_note-12"><span>[</span>12<span>]</span></a></sup></p>
+                        </div>
+                    </div>
+                    <a href="../../../../../Downloads/7WBkENC6DG/index.html"></a>
+                </div>
+            </div> 
+        </div>
+        <a href="#menu-toggle" id="distr-client" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span></a>
+    </body>
+</html>

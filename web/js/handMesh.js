@@ -52,28 +52,28 @@ function HandMesh() {
         var length;
         var material = new THREE.MeshPhongMaterial();
         material.color.setHex(0xffffff);
-        for (var i = 0, len = points.length - 1; i < len; i++) {
-
-            var border = new THREE.CylinderGeometry(5, 5, 1);
-            border.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / -2));
-            var line = new THREE.Mesh(border, material);
-            line.position = points[i].clone();
-            line.lookAt(points[ 1 + i ]);
-            length = points[i].distanceTo(points[1 + i]);
-            line.scale.set(1, 1, length);
-            line.translateZ(0.5 * length);
-            _palmMeshes[hand.id].push(line);
-            _baseObject.add(line);
-        }
+//        for (var i = 0, len = points.length - 1; i < len; i++) {
+//
+//            var border = new THREE.CylinderGeometry(5, 5, 1);
+//            border.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / -2));
+//            var line = new THREE.Mesh(border, material);
+//            line.position = points[i].clone();
+//            line.lookAt(points[ 1 + i ]);
+//            length = points[i].distanceTo(points[1 + i]);
+//            line.scale.set(1, 1, length);
+//            line.translateZ(0.5 * length);
+//            //_palmMeshes[hand.id].push(line);
+//            //_baseObject.add(line);
+//        }
         var pinkyCarp = new THREE.Mesh(new THREE.SphereGeometry(8),
                 new THREE.MeshPhongMaterial()
                 );
         pinkyCarp.material.color.setHex(0x0088ce);
 
-        _baseObject.add(palmMesh);
-        _baseObject.add(pinkyCarp);
-        _palmMeshes[hand.id].push(palmMesh);
-        _palmMeshes[hand.id].push(pinkyCarp);
+//        _baseObject.add(palmMesh);
+//        _baseObject.add(pinkyCarp);
+//        _palmMeshes[hand.id].push(palmMesh);
+//        _palmMeshes[hand.id].push(pinkyCarp);
 
 
         hand.fingers.forEach(function(finger) {

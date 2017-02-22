@@ -1,0 +1,2025 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="http://www.facebook.com/2008/fbml"
+      xmlns:mashupeditor_dev="http://ogp.me/ns/apps/mashupeditor_dev#">
+    <head>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>-->
+		<meta http-equiv="Content-Type"/>
+		<meta charset="UTF-8" />
+        <title>Mashup Editor -HIIS lab- davide</title>
+
+        <!-- 
+            *******************************************************************
+                Fogli di stile
+            *******************************************************************
+        -->
+        <link href="css/rating/css/stylesheet.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href="css/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <link href="css/jMenu.jquery.css" rel="stylesheet" type="text/css" media="screen" />
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+
+        <link rel="stylesheet" href="css/main.css">
+        
+        <script type="text/javascript">
+  
+	var map;
+	var geocoder;
+	var  userMarker;
+	var infowindowBl = new google.maps.InfoWindow();
+	var bounds;
+
+	
+        function checkSelections()
+        {
+            var spWidgets = widgetsSelectionDescription.split('|');
+            
+            for(var cnt = 0; cnt < spWidgets.length; ++cnt)
+            {
+
+                var sp = spWidgets[cnt].split('#');
+                
+                if(sp.length > 6)
+                {
+                
+                    var resp = '';
+                    
+                    findSimilarSelection(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5], sp[6], sp[7], sp[8], sp[9], sp[10], sp[11]);
+                    
+                    
+                        var request = new XMLHttpRequest();  
+                        request.open('GET', 'http://grimilde.isti.cnr.it/' + 'MashupEditor/CommandServlet?cmd=getTargetWidgetType&widget_id=' + sp[0], false);   
+                        request.send(null);  
+      
+                        if (request.status === 200) {  
+                            resp = request.responseText;
+                            //alert(resp);  
+                        }  
+                    
+                        if(resp != '')
+                            highlightSelectedElements( resp );
+                    
+
+                        if(resp == 'map')
+                            codeAddresses();
+
+
+                }
+
+            }
+                        
+            
+        }
+        
+        
+        
+        function updateTargetServices()
+        {
+            
+        }
+        
+        
+	function initializeMap() {
+	
+            var map_status_js = 'null';
+            var map_target_js = 'null';
+        
+        
+            if(map_status_js == 'null' || map_status_js == 'off') return;
+        
+                // @Ghiani. Codice per inizializzare la mappa
+		//alert('initializing...');
+		
+                //alert('From Main.jsp... widgetsSelectionDescription: ' + widgetsSelectionDescription);
+                
+                
+                
+                //var sp = widgetsSelectionDescription.split('#');
+                
+                //findSimilarSelection(sp[0], sp[1], sp[2], sp[3], sp[4], sp[5], sp[6], sp[7], sp[8], sp[9], sp[10]);
+                //highlightSelectedElements('refreshMap');
+                
+		var latlng = new google.maps.LatLng(41.892916, 12.482520);
+		bounds = new google.maps.LatLngBounds ();
+                
+		var myOptions = {
+			zoom: 5,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP, 
+			//mapTypeId: google.maps.MapTypeId.TERRAIN, 
+			  
+			panControl: true,
+			panControlOptions: {
+				//position: google.maps.ControlPosition.CENTER_BOTTOM,
+				position: google.maps.ControlPosition.BOTTOM_CENTER,
+			
+			}
+		  
+		};
+		
+		map = new google.maps.Map(document.getElementById("map-canvas"),
+			myOptions);
+		geocoder = new google.maps.Geocoder();
+	  
+		var marker_user_img='media/marker_user.png';
+	  
+		userMarker = new google.maps.Marker({
+			position: latlng, 
+			map: map,
+			icon:marker_user_img
+		});
+	  
+		map.streetViewControl=false;
+ 
+ 
+ 
+                // @Ghiani. Codice per altre inizializzazioni
+ 
+ 
+                // Ottenere stato dei widget (es.: selezioni precedentemente effettuate) e annotare/evidenziare le parti rilevanti dei widget aperti:
+                // ...
+ 
+                ////
+
+
+                // @Ghiani, 06/05/2015: aggiunto hiding della form nel caso in cui la mappa sia atata un target per un paste.
+    
+                if(map_target_js == 'true')
+                {
+                    document.getElementById('map-form').style.display = 'none';
+                }
+                
+
+	}
+        
+        
+        
+        function codeAddress(address, showDescr)
+        {
+
+	
+    
+            /*geocoder.geocode
+            (
+                    {
+                        'address': address},
+                        function(results, status)
+                        {
+	
+                            if (status == google.maps.GeocoderStatus.OK)
+                            {
+                                map.setCenter(results[0].geometry.location);
+
+                                userMarker.setPosition(results[0].geometry.location);
+                                map.setZoom(7);
+
+                                var lat =  results[0].geometry.location.lat();
+                                var lng = results[0].geometry.location.lng();
+
+
+                                
+                                geocoder.geocode
+                                ({'address': address},
+
+                                function (results, status)
+                                {
+                                  if (status == google.maps.GeocoderStatus.OK) {
+                                        createSimpleMarker(results[0]);
+                                  } else { 
+                                        alert("geocode of "+ address +" failed:"+status);
+                                  }
+                                }
+                                );
+
+
+                            }
+                            else
+                            {
+                                    //alert("Error - We haven't found any place with the name " + address);
+                            }
+                }
+            );*/
+        
+        
+            
+    //var address = document.getElementById("gadres").value;
+    
+	
+	
+	geocoder.geocode( { 'address': address}, function(results, status) {
+	
+            if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+
+                    //userMarker.setPosition(results[0].geometry.location);
+                    map.setZoom(12);
+			  
+                    var placeLoc = results[0].geometry.location;
+                    var marker = new google.maps.Marker({
+                      map: map,
+                      position: results[0].geometry.location,
+
+                    });
+
+                    google.maps.event.addListener
+                    (marker, 'click',
+                        function() {
+                            infowindowBl.setContent(/*address*/results[0].formatted_address);
+                            infowindowBl.open(map, this);
+                        }
+                    );
+
+
+                    bounds.extend(results[0].geometry.location);
+
+                    if(showDescr)
+                    {
+                        infowindowBl.setContent(/*address*/results[0].formatted_address);
+                        infowindowBl.open(map, marker);
+                    }
+			
+		}
+		else
+                {
+                    //alert("geocode of " + address + " failed: " + status);
+
+                    if(status == "OVER_QUERY_LIMIT")
+                    {
+                        pausecomp(200);
+                        codeAddress(address);
+                    }
+
+		}
+            });
+	
+            pausecomp(50);
+        
+        }
+        
+        function createSimpleMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location,
+     
+        });
+        
+              /*var request =  {
+          reference: place.reference
+        };
+        var service = new google.maps.places.PlacesService(map);
+        google.maps.event.addListener(marker,'click',function(){
+        service.getDetails(request, function(place, status) {
+            
+           infowindowBl.setContent('<div align="left"><b>'+place.name+ '</b>'+'<br />'  + place.formatted_address+'<br />' + place.international_phone_number + '<br />'+' <a target="_blank" href="'+place.website+'">'+ place.website +'</a></div>');
+                 infowindowBl.open(map,marker);
+          
+        });
+ 
+    });*/
+      }
+        
+        
+        
+        </script>
+        
+        
+        
+        
+        
+        
+
+
+        <!-- 
+           *******************************************************************
+               Fogli di javascript
+           *******************************************************************
+        -->
+        <script type="text/javascript"  src="js/jquery.js"></script>
+        <script type="text/javascript"  src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery-utils.js"></script>
+        <script type="text/javascript"  src="js/jMenu.jquery.js"></script>
+        <script type="text/javascript" src="js/jsTreeManage.js"></script>
+        <script type="text/javascript" src="lib/jquery.jstree.js"></script>
+        <script type="text/javascript" src="js/menuUi.js"></script>
+        <script type="text/javascript" src="js/draw_utils.js"></script>
+        <script type="text/javascript" src="fb/fb.js"></script>
+        
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    
+    
+        
+        var mapQueryParam = 'null';
+        
+        var sharedProject = false;
+        var projectRate = 0.0;
+        
+        var fb_pn = 'davide';
+        var fb_a = 'zulio';
+        var fb_d ='';
+        var p_id = '1431971662225';
+        var tags = new Array();
+        var hiddenSearch = new Array();
+        
+    
+        
+            var selectedFile;
+            var selectedWidget;
+            var selectedMashup;
+            var selectedMashup_p_id;
+        
+            //indica se c'e' un progetto aperto'
+            var openProject = true;
+   
+            var canRecord = openProject && false;
+        
+            var recording = false;
+            
+            var playing = false;
+            // gestione delle finestre per la selezione dei componenti 
+            // reset dei flag di disponibilita' tra una ricarcarica e l'altra 
+            var winFlags = new Array();
+            var projectFlags = new Array();
+    
+            winFlags[0] = false;
+            projectFlags[0] = false;
+            
+            if(projectFlags[0]){
+                winFlags[0] = true;
+            }
+    
+            winFlags[1] = false;
+            projectFlags[1] = false;
+            
+            if(projectFlags[1]){
+                winFlags[1] = true;
+            }
+    
+            winFlags[2] = false;
+            projectFlags[2] = false;
+            
+            if(projectFlags[2]){
+                winFlags[2] = true;
+            }
+    
+            winFlags[3] = false;
+            projectFlags[3] = false;
+            
+            if(projectFlags[3]){
+                winFlags[3] = true;
+            }
+    
+            winFlags[4] = false;
+            projectFlags[4] = false;
+            
+            if(projectFlags[4]){
+                winFlags[4] = true;
+            }
+    
+            winFlags[5] = false;
+            projectFlags[5] = false;
+            
+            if(projectFlags[5]){
+                winFlags[5] = true;
+            }
+    
+            winFlags[6] = false;
+            projectFlags[6] = false;
+            
+            if(projectFlags[6]){
+                winFlags[6] = true;
+            }
+    
+            winFlags[7] = false;
+            projectFlags[7] = false;
+            
+            if(projectFlags[7]){
+                winFlags[7] = true;
+            }
+    
+            winFlags[8] = false;
+            projectFlags[8] = false;
+            
+            if(projectFlags[8]){
+                winFlags[8] = true;
+            }
+    
+            winFlags[9] = false;
+            projectFlags[9] = false;
+            
+            if(projectFlags[9]){
+                winFlags[9] = true;
+            }
+    
+    
+    
+            hiddenSearch[0] = '';
+    
+            hiddenSearch[1] = '';
+    
+            hiddenSearch[2] = '';
+    
+            hiddenSearch[3] = '';
+    
+            hiddenSearch[4] = '';
+    
+            hiddenSearch[5] = '';
+    
+            hiddenSearch[6] = '';
+    
+            hiddenSearch[7] = '';
+    
+            hiddenSearch[8] = '';
+    
+            hiddenSearch[9] = '';
+    
+               
+		
+			   
+        // aggiornamento delle variabili condivise con le finestre di selezione
+        for(var i = 0; i < winFlags.length; i++){
+			
+		
+            if(winFlags[i]){
+                var cur_win = window.open('', i);
+                //alert(openWindowsHTML);
+                if(cur_win.location == 'about:blank'){
+                    if(!projectFlags[i]){
+                        command("winFlag", {"w": i, "v" : false}, null);
+                        winFlags[i] = false;
+                    }
+                    cur_win.close();
+                } else {
+                       
+
+					
+					 
+                    cur_win.mashupWindow = window;
+                            
+                    // inizializza la selezione dei componenti
+                    cur_win.onload = function(){
+                        cur_win.setMashup("grimilde.isti.cnr.it", "mashup;170", window, i);
+						
+						//alert('1');
+                    }
+
+                    var _onload = function(){
+                        // loop per attivare la selezione dei componenti
+                        // quando si cambia pagina durante la 
+                        // navigazione
+                        if(cur_win.closed == true){
+                            command("winFlag", {"w": i, "v" : false}, null);
+                            winFlags[i] = false;
+                        }
+                        setTimeout(function(){
+
+                            if(cur_win.closed == true){
+                                command("winFlag", {"w": i, "v" : false}, null);
+                                winFlags[i] = false;
+                            } else {
+							
+							/*
+							// @Ghiani, 15/02/2013
+							if(curr_win.title != null)
+							{
+								openWindowsHTML += '<div>win[' + i + ']: ' + curr_win.title + '</div>';
+								alert(openWindowsHTML);
+							}*/
+							
+                                cur_win.setMashup("grimilde.isti.cnr.it", "mashup;170", window, i); //@Ghiani, 14/02/2013: aggiunto il parametro "i" alla chiamata
+								
+								//alert('2');
+                            }
+
+                            cur_win.onunload = _onload;
+                        }, 2000);
+                    }
+
+                    cur_win.onunload = _onload;
+                }
+            }// fine if
+        } // end for  
+        $(document).ready(function() {
+            // creazione del menu'
+            $("#jMenu").jMenu({
+                openClick : true,
+                ulWidth : '200',
+                effects : {
+                    effectSpeedOpen : 300,
+                    effectSpeedClose : 300,
+                    effectTypeOpen : 'slide',
+                    effectTypeClose : 'slide',
+                    effectOpen : 'linear',
+                    effectClose : 'linear'
+                },
+                TimeBeforeOpening : 100,
+                TimeBeforeClosing : 400,
+                animatedText : false,
+                paddingLeft: 1
+                
+            });
+        
+        
+            // construct the setting panel
+            //    $("#accordion").accordion({ collapsible: true, autoHeight: false, active: false });
+            // set row and column sliders
+            //$("#column_slider").slider({max: 10 , min: 1});
+
+            //var select = $( "#cols" );
+            //var slider = $("#column_slider" ).slider({
+            //    min: 1,
+            //    max: 6,
+            //    range: "min",
+            //    value: 2,
+            //    slide: function( event, ui ) {
+            //        select[ 0 ].selectedIndex = ui.value -1;
+            //        command("setCols", {"cols" : (ui.value )}, null);
+            //    }
+            //});
+            //$( "#cols" ).change(function() {
+            //    slider.slider( "option", "value", this.selectedIndex + 1);
+            //    command("setCols", {"cols" : (this.selectedIndex +1 )}, null);
+            //});
+            // save settings button
+            //$( "#save_setting").button();      
+            
+            //creazione della UI
+            
+            createProjectMenu(openProject);
+            createWidgetMenu(openProject);
+            createConnectionMenu(canRecord);
+            
+            
+    
+    
+            // grid creation
+            $( ".column" ).sortable({
+                connectWith: ".column",
+                placeholder: "ui-sortable-placeholder",
+                handle: ".portlet-header",
+                update: function(event, ui){
+                    var s = $(this).sortable("serialize");
+                    var col = $(this).attr('id');
+                    resize();
+                    command("sort", {"col": col, "par": s}, null);
+                },
+                receive: function(event, ui){
+                    var c1_s = $(this).sortable("serialize");
+                    var c2_s = ui.sender.sortable("serialize");
+                    var send_id = ui.sender.attr('id');
+                    var rec_id = $(this).attr('id');
+                    resize();
+                    command("chcol", {"s": send_id, "r" : rec_id, "so": c2_s, "ro": c1_s}, null);
+                }
+            });
+
+            $(".portlet").resizable({
+                    
+                resize: function(event, ui){
+                    var _this = $(this);
+                    var colSize = _this.parents(".column:first").attr("width");
+                    var _iframe = _this.children(".portlet-content");
+                    resize();
+                    /*_iframe.height(ui.size.height-60);
+                    _iframe.width(ui.size.width-15);*/
+                    
+                    _iframe.height(ui.size.height-40);
+                    _iframe.width(ui.size.width-20);
+        
+                    //@Ghiani, 30/09/2013: commentato per migliorare prestazioni
+                    command("resize", {"id":_this.attr("id") , "width": ui.size.width, "height" : ui.size.height})
+                }
+            });
+
+            $( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+            .find( ".portlet-header" )
+            .addClass( "ui-widget-web-header ui-corner-all" )
+            .prepend( "<span class='ui-icon ui-icon-close'></span><span class='ui-icon ui-icon-minusthick'></span><span class='ui-icon ui-icon-note'></span><span class='ui-icon ui-icon-link'></span>")
+            .end()
+            .find( ".portlet-content" );
+            /*$( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+            .find( ".portlet-header" )
+            .addClass( "ui-widget-web-header ui-corner-all" )
+            .prepend( "<span class='ui-icon ui-icon-close'></span><span class='ui-icon ui-icon-minusthick'></span><span class='ui-icon ui-icon-note'></span><span class='ui-icon ui-icon-link'></span><span class='ui-icon ui-icon-pin-s'></span><span class='ui-icon ui-icon-extlink'></span>")
+            .end()
+            .find( ".portlet-content" );*/
+
+            $( ".portlet-header .ui-icon-minusthick" ).click(function() {
+                $( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );
+                $( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+            });
+
+            $( ".portlet-header .ui-icon-close" ).click(function() {
+                var portlet =  $( this ).parents( ".portlet:first" );
+                var p_id = portlet.attr("id");
+                var col_id = $(this).parents(".column").attr("id");
+                command("close", { "col": col_id, "id": p_id }, null);
+                portlet.hide();
+            });
+
+            $( ".portlet-header .ui-icon-pencil" ).click(function() {
+                var id = $( this ).parents( ".portlet:first" ).attr('id');
+                chooseRelevantParameters(id);
+            });
+            
+            //@ZULIO 26/03/2012 Aggiungi il widget alla libreria utente
+            $( ".portlet-header .ui-icon-note" ).click(function() {
+                var id = $( this ).parents( ".portlet:first" ).attr('id');
+                var title = $( this ).attr('title');
+                
+                // mode local per aggiungere un widget alla propria libreria
+                addWidgetToLibrary(id, title, 'local'); 
+                
+            });
+            
+            //@ZULIO 13/04/2012 Aggiungi il widget al repository condiviso
+            $( ".portlet-header .ui-icon-link" ).click(function() {
+                var id = $( this ).parents( ".portlet:first" ).attr('id');
+                var title = $( this ).attr('title');
+                
+                // mode share, per aggiungere un widget al repository condiviso
+                addWidgetToLibrary(id, title, 'share'); 
+                
+            });
+
+            // set placeholder handlers and icons
+            $(".content_placeholder").button({
+                icons:{ primary: "ui-icon-pencil"}
+            });
+
+
+            //@Ghiani 28/06/2013 Abilitazione interazione con la mappa. SPERIMENTALE
+            /*$( ".portlet-header .ui-icon-pin-s" ).click(function() {
+                
+                //var f_widget_id = $("#f_widget_id");
+                
+                var widget_name = $(this).parent().parent().attr("id");
+                
+                
+                
+                
+                enablePicking(widget_name, 'address');
+                
+                
+                
+            });*/
+            
+            //@Ghiani 03/10/2013 Abilitazione estrazione di testo generico (per successivo binding automatico con altro servizio/widget)
+            /*$( ".portlet-header .ui-icon-extlink" ).click(function() {
+                
+                var widget_name = $(this).parent().parent().attr("id");
+
+                enablePicking(widget_name, 'text');
+
+            });*/
+            
+
+            resize();
+
+            setTimeout("deviceUpdate()", 60000);
+
+            //part depending on loaded widgets
+            
+    
+
+        });
+
+        var user="mashup";
+        var type1 = "desktop";
+        var type2 ="mashup";
+        var pass="guest";
+        var devId1= user + ";1";
+        var devId2= user + ";2";
+             
+        var widgetsSelectionDescription = 'not defined'
+
+        // @Ghiani, 09/10/2013: variabile che descrive lo stato dei widget in funzione di precedenti selezioni:
+        // per ogni widget e` codificato il suo identificatore e una struttura che descrive la selezione (tagname-siblingIndex-class-depth iniziali e finali);
+        
+        
+        widgetsSelectionDescription = "|";
+        
+        //alert('widgetsSelectionDescription: ' + widgetsSelectionDescription);
+ 
+                
+        function chooseRelevantParameters(id){
+            //alert(id);
+            $( "#conn-form-" + id  ).dialog( "open" );
+        }
+
+
+        function deviceUpdate(){
+                
+            sendMashupUpdate(user, type1, pass, devId1, null);
+            sendMashupUpdate(user, type2, pass, devId2, null);
+            setTimeout("deviceUpdate()", 60000);
+        }
+
+		
+		
+		//// @Ghiani, 15/02/2013
+		
+		var win_ptr_arr = new Array(10);
+		var max_win = 10;
+		var win_ptr_cnt = 0;
+		
+		var timerTriggered = false;
+		
+		triggerUpdateTimer();
+		
+		function triggerUpdateTimer()
+		{
+			if(timerTriggered == false)
+			{
+		
+				doUpdate();	
+		
+				
+				timerTriggered = true;
+			}
+		
+		}
+		
+		
+		function doUpdate()
+		{
+			var el = document.getElementById('pageslist_div');
+		
+		
+			//alert('loop');
+		
+			var windowsDescr = '';
+			windowsDescr += '<p>';
+			//var checkBoxesCnt = 0;
+			
+			var cnt = 0;
+			
+			for(cnt=0; cnt <win_ptr_cnt; ++cnt)
+			{
+				if(win_ptr_arr[cnt].closed == false)
+				{
+			
+					var wintitle = win_ptr_arr[cnt].document.title;
+					if(wintitle.length > 40) wintitle = wintitle.substring(0, 40) + '...';
+				
+					/*windowsDescr +=	'<p>' +
+										'<p>' +
+											'<input type="button" value="enable" onclick="javascript:win_ptr_arr[' + cnt + '].setMashup(\'grimilde.isti.cnr.it\',  \'mashup;170\', window, ' + cnt + ');"/>&nbsp:&nbsp;' + wintitle +
+										'</p>' +
+									'</p>';
+						*/
+						
+					var checkedStatus = '';
+						
+					win_ptr_arr[cnt].ownerWin = window;
+						
+					//alert(win_ptr_arr[cnt].document.partialMigrationEnabled);
+						
+					if(win_ptr_arr[cnt].partialMigrationEnabled)
+					{
+						checkedStatus = 'checked="checked"';
+					}
+
+					windowsDescr +=	'<p>' +
+										'<p>' +
+											'<input ' + checkedStatus + ' id="enablecheck_' + /*checkBoxesCnt*/cnt + '" type="checkbox" onclick="javascript:switchEnable(' /*+ 'enablecheck_' + checkBoxesCnt + ','*/ + '\'grimilde.isti.cnr.it\',  \'mashup;170\', window, ' + cnt + ');"/>&nbsp;&nbsp;' + wintitle +
+										'</p>' +
+									'</p>';	
+
+					//++checkBoxesCnt;
+				}
+				
+				
+			}
+			if(cnt == 0)
+			{
+				windowsDescr = '(no pages open)';
+			}
+			
+			windowsDescr += '</p>';
+
+			
+			
+			//alert('windows=' + win_ptr_cnt + '  ' + windowsDescr);
+			
+			
+			
+			if(el != null)
+			{
+				el.innerHTML = '';
+				el.innerHTML = windowsDescr;
+			}
+			else
+			{
+			//	alert('l\'elemento è nullo');
+			}
+			
+		
+			setTimeout("doUpdate()", 7000);
+		}
+		
+		
+		function refreshWinReference(win)
+		{
+			
+			//var refContained = false;
+			for(var cnt = 0; cnt < win_ptr_cnt; ++cnt)
+			{
+				if(win_ptr_arr[cnt] == win)
+				{
+					return;
+					//refContained = true;
+					//break;
+				}
+			}
+			
+			
+			
+			win_ptr_arr[win_ptr_cnt] = win;
+			win_ptr_cnt++;
+		}
+		
+		
+		function switchEnable(/*checkBoxId, */targetIp, devId, win, winIndex)
+		{
+		
+			
+			
+			var checkBox = document.getElementById('enablecheck_' + winIndex);
+		
+			//alert('attr. checked: ' + checkBox.hasAttribute('checked') + '  ' + 'selected: ' + checkBox.selected + '  ' + 'partialMigrationEnabled: ' + win_ptr_arr[winIndex].partialMigrationEnabled);
+		
+			if(/*checkBox.selected == 'true'*/ /*checkBox.hasAttribute('checked')*/win_ptr_arr[winIndex].partialMigrationEnabled )
+			{
+				win_ptr_arr[winIndex].disablePartialMigration();
+				//checkBox.selected = 'false';
+				checkBox.removeAttribute('checked');
+				
+			}
+			else /*if(checkBox.selected == 'false')*/
+			{
+				win_ptr_arr[winIndex].enablePartialMigration();//setMashup(targetIp, devId, win, winIndex);
+				
+                                win_ptr_arr[winIndex].disableLinks(); // @Ghiani, 14/05/2015: utile per il test utente, cosi` i link nella pagina della selezione non sono cliccabili e non creano problemi agli utenti (non ci sono navigazioni involontarie).
+                                
+				if(win_ptr_arr[winIndex].mashupFlag == false)  win_ptr_arr[winIndex].setMashup(targetIp, devId, win, winIndex);
+				
+				//checkBox.selected = 'true';
+				checkBox.setAttribute('checked', 'checked');
+				
+				//var bodyEl = win_ptr_arr[winIndex].document.getElementsByTagName('body')[0];
+				//bodyEl.innerHTML = bodyEl.innerHTML + '<div>bottone<input type="button" value="enablePartial" onclick="javascript:refreshOwnerWin();"></div>';
+			
+				win_ptr_arr[winIndex].startMashupReferenceRefreshLoop();
+			
+			}
+			
+		}
+		
+		
+		
+		///////////
+		
+		
+		
+        function browseForNewWidget(url){
+
+			// @Ghiani
+			triggerUpdateTimer();
+			
+
+			var index = newWinId();
+            if(index == -1){
+                alert("Too many selection window opened. Please close one of them and retry.");
+                return;
+            }
+            $("#new_id").val(index);
+            
+            var proxy_url = "http://grimilde.isti.cnr.it/mig/redirect/Proxy?migpar=0F"+ index +"T"+url;
+            var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes";
+            var new_win = window.open(proxy_url, index, strWindowFeatures);
+                
+				
+				// @Ghiani, 18/02/2013: removed the automatic enabling of selection in order to let the user explicitly define when to do it.  MODIFICATION CANCELLED
+            new_win.onfocus = function(){
+                new_win.setMashup("grimilde.isti.cnr.it", "mashup;170", window, index);
+				
+				//alert('onload enabling!');
+            }
+
+			
+			// @Ghiani	
+			new_win.ownerWin = window;
+			win_ptr_arr[win_ptr_cnt] = new_win;
+			win_ptr_cnt++;
+				
+			
+            var _onload = function(){
+                if(new_win.closed == true){
+                    command("winFlag", {"w": index, "v" : false}, null);
+                    winFlags[index] = false;
+                }
+                setTimeout(function(){
+                            
+                    if(new_win.closed == true){
+                        command("winFlag", {"w": index, "v" : false}, null);
+                        winFlags[index] = false;
+                    } else {
+                        new_win.setMashup("grimilde.isti.cnr.it", "mashup;170", window, index);
+                    
+						//alert('auto-disable...');
+					}
+                            
+                    new_win.onunload = _onload;
+                }, 2000);
+            }
+
+            new_win.onunload = _onload;
+              
+                
+        }
+
+        function newWinId(){
+            for(var i=0; i< winFlags.length; i++){
+                if(!winFlags[i]){
+                    winFlags[i] = true;
+                    command("winFlag", {"w": i, "v" : true}, null);
+                    // console.log("LIBERO IDX: " + i);
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        function migrationCallback(url, currDoc){
+            
+            // @Ghiani, 13/05/2014: FIXME, questo funziona solo con pagine che risultano da chiamate GET: se la pagina corrente risulta invece dalla submit
+            // di una form con method=POST, questa strategia non funziona (la URL corrente sara` infatti la action della form, cioe` l'indirizzo di base
+            // del proxy senza alcun parametro).
+            
+            //alert(escape(url));
+            
+            //alert('url corrente: ' + url + '   url del proxy: ' + domain);
+            
+            var probablyPost = false;
+            
+            if(  url == (domain + '/mig/redirect/Proxy') || url == (secureDomain + '/mig/redirect/Proxy')   )
+            {
+                probablyPost = true;
+            }
+            
+            if( !probablyPost ) // La form ha metodo 'get'
+            {
+                var migUrlIndex = ("" + url).lastIndexOf("migpar=") + 4;
+                var noProxyUrl = ("" + url).substring(migUrlIndex + 7);
+                command("new_widget_url", {"url": noProxyUrl, "isPost": 'false'}, null);
+            }
+            // Ci sono parametri nel payload: la form ha metodo 'post'. FIXME: la stringa url corrisponde all'indirizzo del proxy. Bisognerebbe tentare di 
+            // recuperare l'indirizzo della pagina (un po' tricky, visto che e` il risultato di una post...)
+            else
+            {
+                //alert(currDoc);
+                
+                var extractedUrl = currDoc.getElementById('mig_currurl').textContent;
+                        
+                //alert('POST method detected!  Extracted original page url: ' + extractedUrl);
+                
+                command("new_widget_url", {"url": extractedUrl, "isPost": 'true'}, null);
+            }
+            
+            $( "#new-form" ).dialog( "open" );
+        }
+
+        function updateConnection(iframeid){
+            //alert('prova');
+            //alert(genericDomain);
+            //alert(iframeid);
+            
+            sendLogMsg('add', 'RUN MASHUP');
+            
+    
+        }
+        
+        function updateLink(iframeid, href){
+            //alert('href:' + href + ' id:' +iframeid);
+    
+        }
+
+        function resize(){
+            var cols = $(".column");
+            for(var i = 0; i < cols.length; i++){
+                var col = $(cols[i]);
+                    
+                var portlets = col.children(".portlet");
+                   
+                var cur_h = 0;
+                var prev_h = 0;
+                var h = 0;
+                cur_h = 0;
+                if( i == 0){
+                    var p = $(portlets[h]);
+                    p.css("margin-top", 0 );
+                } else {
+                    var p_col = $(cols[i-1]);
+                    var prev_portlets = p_col.children(".portlet");
+                    for(var j = 0; j < prev_portlets.length; j++){
+                        var pp = $(prev_portlets[j]);
+                        
+                        if(pp.width() > p_col.width()){
+                            // collision detected
+                            var p = null;
+                            var pp_height = pp.height();
+                            while (cur_h <= prev_h && h < portlets.length){
+                                p = $(portlets[h]);
+                                cur_h += p.height();
+                                h++;
+                            }
+                            var p_height = 0;
+                            if(p != null){
+                                p_height = p.height();
+                            }
+                            if(cur_h > prev_h){
+                                p.css("margin-top", cur_h - prev_h - p_height + pp.height()  +  h  * 17);
+                                
+                            }
+                        } else {
+                            // no collision
+                            while (cur_h <= prev_h && h < portlets.length){
+                                var p = $(portlets[h]);
+                                cur_h += p.height();
+                                h++;
+                                p.css("margin-top", 0 );
+                            }
+                        }
+                        prev_h += pp.height();
+                        
+                    }
+                }
+            }
+
+           
+        }
+                
+        // function for registering actions
+        function toggleRecordButton(){
+            if(openProject){
+                if(!recording){
+                    
+                    // @Ghiani, 06/05/2015: rendo visibile la form del widget mappa, che poteva essere stata eventualmente nascosta, ed azzero il flag
+                    // del paste sull'input della mappa.
+                    if(document.getElementById('map-form') != null)
+                        document.getElementById('map-form').style.display = 'block';
+                    
+                
+                    command("resetIsMapInputPasteTarget", {"void" : "void"}, null);
+                                
+                    sendLogMsg('add', 'START RECORDING');
+                    
+                    
+                    
+                    recording = true;
+                
+                    // mostro tutti i div di ricerca
+                    for(var i = 0; i < hiddenSearch.length; i++){
+                        if(hiddenSearch[i] != ""){
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).removeClass("widgetQueryDisplayNone");
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).addClass("widgetQueryDisplay");
+                        }
+                    }
+                
+                    $("#record2").removeClass("_off");
+                    $("#record2").addClass("_on");
+                    $("#record2").attr('title', 'Stop recording ');
+                    $("#record-message").css("display", "block");
+               
+                    command("record", {"v" : true}, null);
+                    
+                    
+                    // @Ghiani, 09/10/2013: abilitazione "picking" su tutti i widget
+
+                    var openWidgets = [];
+                    
+                    openWidgets = getOpenWidgets();
+
+                    for(var i = 0; i < openWidgets.length; ++i)
+                    {
+                        enablePicking( openWidgets[i].id );
+                    }
+                    ////
+                    
+                    
+                    
+                
+                } else {
+                    
+                    
+                    
+                    recording = false;
+                    $("#record2").removeClass("_on");
+                    $("#record2").addClass("_off");
+                    $("#record2").attr('title', 'Start recording ');
+                    $("#record-message").css("display", "none");
+                
+                 
+                    $("#hidden-cmd").val('record');
+                    $("#hidden-v").val('false');
+                    if(p_id){
+                        $("#hidden-form").attr('action', /*secureDomain*//*domain*/genericDomain + 'MashupEditor/CommandServlet?p_id='+p_id );
+                    }
+                    $("#hidden-form").submit();
+                    
+                    sendLogMsg('add', 'STOP RECORDING');
+                    
+                    // @Ghiani, 09/10/2013: disabilitazione "picking" su tutti i widget
+                    /*var openWidgets = [];
+                    
+                    openWidgets = getOpenWidgets();
+
+                    for(var i = 0; i < openWidgets.length; ++i)
+                    {
+                        disablePicking( openWidgets[i].id );
+                    }
+                    
+                    // FIXME: L'event type dovra` essere acquisito dal server! (Il server dovrebbe estrarlo in base all'ultimo "incolla": se l'incolla e`
+                    // stato fatto su un widget di tipo mappa, allora l'evento e` di tipo 'refreshMap', altrimenti e` di tipo 'refreshGenericService'.
+                    var type = 'refreshMap';
+                    
+                    highlightSelectedElements(type);
+                    */
+                    ////
+                    
+                    
+                    
+                    
+                }
+            }else {
+                showOpenProjectMessage();
+            }
+        }
+     
+     
+     
+        function getOpenWidgets()
+        {
+            var openWidgets = [];
+            var openWidgetsCnt = 0;
+                    
+            for(var i = 0; i < 10; ++i)
+            {
+                if( document.getElementById( 'widget_' + i) != null && document.getElementById( 'widget_' + i) != 'undefined')
+                {
+                    openWidgets[openWidgetsCnt++] = document.getElementById( 'widget_' + i);
+                }        
+            }
+            
+            return openWidgets;
+        }
+     
+     
+        // function for registering actions
+        function togglePlayButton(){
+            if(openProject){
+                if(!
+                playing){
+                    sendLogMsg('add', 'START PLAYING');
+                    
+                    playing = true;
+                
+                    // mostro tutti i div di ricerca
+                    for(var i = 0; i < hiddenSearch.length; i++){
+                        if(hiddenSearch[i] != ""){
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).removeClass("widgetQueryDisplayNone");
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).addClass("widgetQueryDisplay");
+                        }
+                    }
+            
+                    $("#play2").removeClass("_play_off");
+                    $("#play2").addClass("_play_on");
+                    $("#play2").attr('title', 'Stop playing ');
+                    $("#accordion").accordion("activate", 2);
+                    $("#play-message").css("display", "block");
+                    drawStaticLines();
+                } else {
+                    playing = false;
+                
+                    sendLogMsg('add', 'STOP PLAYING');
+                
+                    // ripristino  i div di ricerca nascosti
+                    for(var i = 0; i < hiddenSearch.length; i++){
+                        if(hiddenSearch[i] != ""){
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).removeClass("widgetQueryDisplay");
+                            $("#widget_"+ i+ " #"+ hiddenSearch[i]).addClass("widgetQueryDisplayNone");
+                        }
+                    }
+                
+                    $("#play2").removeClass("_play_on");
+                    $("#play2").addClass("_play_off");
+                    $("#play2").attr('title', 'Start playing');
+                    $("#play-message").css("display", "none");
+                    deleteStaticLines();
+                }
+            }else {
+                showOpenProjectMessage();
+            }
+        }
+    
+</script>
+        <script type="text/javascript" src="http://grimilde.isti.cnr.it/mig/migjs/webmig_utils.js" ></script>
+        <script type="text/javascript" src="js/jquery.raty.min.js"></script>
+
+        <!-- 
+                  *******************************************************************
+                      Facebook
+                  *******************************************************************
+        -->
+        <meta property="fb:app_id" content="430797806945778"/>
+
+        
+        <meta property="og:type" content="mashupeditor_dev:mashup" /> 
+        <meta property="og:title" content="davide" /> 
+        <meta property="og:image" content="http://grimilde.isti.cnr.it/MashupEditor/images/logo1p_bg_200.png" /> 
+        <meta property="og:description" content="" /> 
+        <meta property="og:url" content="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225">
+
+        
+
+
+    </head>
+    <body class="normal" onload="javascript: initializeMap();  checkSelections(); updateTargetServices(); checkArticleElements(); checkElementsInvisibility();">
+        <div id="fb-root"></div>
+        <script type="text/javascript">
+            
+            
+            genericDomain = 'http://grimilde.isti.cnr.it/';
+            
+            window.fbAsyncInit = function (){
+                FB.init({appId: '430797806945778', status: true, cookie: true, xfbml: true});
+                
+                FB.Event.subscribe('auth.logout', function (response){
+                    fb_logout(response);
+                });
+                
+                FB.Event.subscribe('edge.create',
+                function(response) {
+                    fb_add_like(response);
+                }  );
+                FB.Event.subscribe('edge.remove',
+                function(response) {
+                    fb_remove_like(response);
+                }  );
+                
+                FB.Event.subscribe('comment.create',
+                function(response) {
+                    fb_add_comment(response);
+                }  );
+                FB.Event.subscribe('comment.remove',
+                function(response) {
+                    fb_remove_comment(response);
+                }  );
+            };
+            (function() {
+                var e = document.createElement('script');
+                e.type = 'text/javascript';
+                e.src = document.location.protocol + '//connect.facebook.net/it_IT/all.js#xfbml=1&appId=430797806945778';
+                e.async = true;
+                document.getElementById('fb-root').appendChild(e);
+            }()); 
+			
+			
+			
+		
+
+			
+			
+			
+			// @Ghiani, 15/02/2013
+			
+		/*	function refreshwinlist()
+			{
+				//alert(win_ptr_cnt);
+				
+				var windowsDescr = '';
+				for(var cnt=0; cnt <win_ptr_cnt; ++cnt)
+				{
+					windowsDescr += win_ptr_arr[cnt].location.href + '##';
+				}
+				
+				alert('windows=' + win_ptr_cnt + '  ' + windowsDescr);
+				
+				var el = document.getElementById('textualInfo_div');
+				
+				if(el != null)
+				{
+					el.innerText += windowsDescr;
+				}
+				else
+				{
+					alert('l\'elemento è nullo');
+				}
+			}
+			*/
+			
+			
+			</script> 
+
+        <div id="wrapper">
+            <div id="header-wrapper"> 
+                <div id="header">
+                    <div id="logo">
+                        <h1 class="normal"><a class="normal" href="#"><span>Mashup</span>Editor</a></h1>
+                    </div>
+                    <div id="menu">
+                        <ul class="normal">
+                            <li class="current_page_item normal"><a href="#">Home</a></li>
+                            <li class="normal"><a  class="normal" href="#">About</a></li>
+                            <li class="normal" ><a class="normal" href="mailto:giuliano.pintori@isti.cnr.it">Contact</a></li>
+
+                            
+                            <li class="normal" >
+                                <a class="normal" 
+                                   href="CommandServlet?cmd=logout">Logout (zulio)</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- end #header -->
+            <div id="page">
+                <ul id="jMenu">
+                    <li><a class="fNiv">Projects</a>
+                        <ul>
+                            <li class="arrow"></li>
+                            <li><a id="newMashupMenuItem" title="New Mashup" onclick='newMashup(); return false;'>New Project</a></li>
+                            <li><a id="loadMashupMenuItem" title="Load Mashup" onclick='loadMashup(); return false;'>Load Project</a></li>
+                            <li><a id="saveMashupMenuItem" title="Save Mashup" onclick='saveMashup(); return false;'>Save Project</a></li>
+                            <li><a id="closeMashupMenuItem" title="Close Mashup" onclick='closeMashup(); return false;'>Close Project</a></li>
+                            <li><a id="deleteMashupMenuItem" title="Delete Mashup" onclick='deleteMashup(); return false;'>Delete Project</a></li>
+                            <li><a id="clearMashupMenuItem" title="Clear Mashup" onclick='clearMashup(); return false;'>Clear Project</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="fNiv">Widgets</a>
+                        <ul>
+                            <li class="arrow"></li>
+                            <li><a id="newWidgetFromWebMenuItem" title="Create Widget from WEB" onclick='showNewWidgetFromWebDialog(); return false;'>Create Widget from WEB</a>  </li>
+                            <li><a id="newWidgetFromLibraryMenuItem" title="Load Widget from my Library" onclick='showWidgetLibrary(); return false;'>Load Widget from Library</a>  </li>
+                            <li><a id="newWidgetFromRepositoryMenuItem" title="Load Widget from Repository" onclick='openWidgetRepositorySearchForm(); return false;'>Load Widget from Repository</a></li>
+                            <li><a id="newWidgetFromRepositoryMenuItem" title="Show/Hide Map Widget" onclick='showHideMap(); return false;'>Show/Hide Map Widget</a></li>
+                            <!--<li><a id="newWidgetFromRepositoryMenuItem" title="Add Map Widget" onclick='addMap(); return false;'>Add Map Widget</a></li>-->
+                        
+                        </ul>
+                    </li>
+                    <li><a class="fNiv">Composition</a>
+                        <ul>
+                            <li class="arrow"></li>
+                            <li><a id="recordMenuItem" title="Record" onclick='toggleRecordButton(); return false;'>Record</a> </li> 
+                            <li><a id="playMenuItem" title="Play" onclick='togglePlayButton(); return false;'>Play</a></li>
+                            <li><a id="showHelpRecordDialogMenuItem" title="How it works" onclick='showHelpRecordDialog(); return false;'>How it works</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="fNiv">Share</a>
+                        <ul>
+                            <li class="arrow"></li>
+                            <li><a id="searchMashupMenuItem" title="Search Mashup" onclick='openMashupRepositorySearchForm(); return false;'>Search Project</a></li>
+                            <li><a id="shareMashupMenuItem" title="Share Mashup" onclick='openRepositoryShareForm(); return false;'>Share Project</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div id="action-res-div">
+                    <p>
+                        <span>
+                            Msg
+                        </span>
+                    </p>
+                </div>
+                 
+                <div style="clear: both;"> &nbsp; </div>
+                <div id="infoDiv">
+                    <h2 class="normal" >Project Info</h2>
+                    <div id="projectInfo_div">
+                        <div id="textualInfo_div">
+                            <p>
+                                <span>
+                                    Project: 
+                                </span>
+                                davide
+                            </p>
+                            <p> 
+                                <span>
+                                    Author:
+                                </span>
+                                zulio
+                            </p> 
+                            <p>
+                                <span>
+                                    Description:
+                                </span> 
+                                
+								
+								
+
+                            </p>
+							
+							<p>
+								
+									<span>
+										Active pages:
+									</span>
+									<p id="pageslist_div">(no pages open)</p>
+									<!--<= " windowsHTML: " +  openWindowsHTML>-->
+								
+							</p>
+							
+                        </div>
+						
+						
+                        <div id="rating_div">
+                            <div id="smcb_div">
+                                <button id="showMashupCommentsButton" title="Show Project Comments" style="font-size: 0.9em;">Comments</button>
+                            </div>
+                            <div id="rating_stars"></div>
+                        </div>
+                    </div>
+					
+                                
+					
+                    <div id="fb_actions_div">
+                        <div id="fb_share_div">
+                            <a id="fb_shareMashup" class="fb_shareMashup"title="Share this Mashup on Facebook" 
+                               onclick='postProjectOnFB(); return false;'></a>
+                        </div>
+                        <div id="fb_like_div">
+                            <fb:like href="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" 
+                                     send="true" width="450" show_faces="false"></fb:like>
+                        </div>
+                    </div>
+                </div>
+				
+				
+                
+                
+
+
+
+
+
+
+<!-- div per la navigazione nel web per creare i widget-->
+<div id="newFromWeb-form" title="Create new widget from WEB">
+    <p class="normal">Add a web page part to your mashup browsing the web and selecting the
+        piece you are interested in. 
+    </p>
+    <span style="display: inline-block; width: 70px"><label for="new_url">URL: </label></span>
+    <input type="text" name="new_url" id="new_url" value="http://" class="text ui-widget-content ui-corner-all" style ="width: 600px; height:25px;"/>
+    <!-- <button id="new">Browse</button><br/> -->
+</div>
+
+<!-- div per il display delle informazioni del funzionamento delle connessioni-->
+<div id="record-help-dialog" class="normal" title="Widget connection help">
+    <p>
+        You can connect widgets from different applications 
+        simply recording your actions. In order to start the 
+        connection you have to press the "Record" button and
+        type words, cut and paste text, press buttons on your
+        application and so on. <br/>
+        When you finish, press the stop button
+        and enjoy!
+    </p>
+
+</div>
+
+<!-- div per il display delle informazioni del funzionamento delle connessioni-->
+<div id="action-res-dialog" class="normal" title="Alert">
+    <p id="p-message">
+        Default message
+    </p>
+
+</div>
+
+<!--  form per l'inserimento dei parametri del widget dopo la navigazione -->
+<div id="new-form" title="Create new widget">
+    <p class="validateTips normal">Please enter the new widget information.</p>
+    <form id="new-form-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet" method="post">
+        <input type="hidden" name="cmd" value="new_widget" />
+        <input type="hidden" name="new_id" id="new_id" value=""/>
+        <span style="display: inline-block; width: 70px"><label for="new_name">Title</label></span>
+        <input type="text" name="new_name" id="new_name" value="" class="text ui-widget-content ui-corner-all" /><br/>
+    </form>
+</div>
+
+<!-- form per la ricerca nella libreria-->
+<div id="widget-library-dialog" title="Add Widget">
+    <div id="widget-library-list-tree" class="jstree"></div>
+    <form id="widget-from-library-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" method="post">
+        <input type="hidden" name="cmd" value="newWidgetFromLibrary" />
+        <input type="hidden" name="new_id" id="wfl_new_id" value=""/>
+        <input type="hidden" name="widgetName" id="wfl_widget_name" value=""/>
+    </form>
+</div>
+
+<!-- Form per la creazione di un nuovo mashup project -->
+<div id="new-project-form" title="Create new mashup project">
+    <p class="validateTips normal">Please enter the new mashup project name.</p>
+    <form id="new-project-form-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet" method="post">
+        <input type="hidden" name="cmd" value="newMashup" />
+        <span style="display: inline-block; width: 140px"><label for="new_project_name">Project Name</label></span>
+        <input type="text" name="new_project_name" id="new_project_name" value="" class="text ui-widget-content ui-corner-all" /><br/>
+        <span style="display: inline-block; width: 140px"><label for="new_project_description">Project Description</label></span>
+        <input type="text" name="new_project_description" id="new_project_description" value="" class="text ui-widget-content ui-corner-all" /><br/>
+    </form>
+</div>
+
+<!-- Form del caricamento dei mashup dalla directory utente -->
+<div id="load-mashup-dialog" title="Open Mashup">
+    <form id="load-mashup-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet" method="post">
+        <input type="hidden" name="cmd" value="loadMashup" />
+        <input type="hidden" name="projectName" id="lp_project_name" value=""/>
+        <div id="file-list-tree" class="jstree"></div>
+    </form>
+</div>
+
+<!-- Form della ricerca dei mashup nel repository-->
+<div id="searchMashupFromRep-div" title="Search Mashup From Repository">
+    <span style="display: inline-block; width: 80px"><label for="f_mashup_search_select">Search For:</label></span>
+    <select id="f_mashup_search_select" name="f_mashup_search_select" 
+            class="select ui-widget-content ui-corner-all" style ="width: 150px; height:25px;">
+        <option id="f_mashup_search_select_author" value="Author" selected="true">Author</option>
+        <option id="f_mashup_search_select_name" value="Mashup Name">Mashup Name</option>
+        <option id="f_mashup_search_select_tag" value="Tag">Tag</option>
+    </select> 
+    <button id="f_mashup_search" title="Search">Search</button>
+    <br/>
+    <span style="display: inline-block; width: 80px"><label for="f_mashup_search_text">Search:</label></span>
+    <input type="text" name="f_mashup_search_text" id="f_mashup_search_text" value="" class="text ui-widget-content ui-corner-all" /><br/>
+    <form id="searchMashupFromRep-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet" method="post">
+        <input type="hidden" name="cmd" value="loadMashupProjectFromRepository" />
+        <input type="hidden" name="f_mashup_name" id="pfr_project_name" value=""/>
+        <input type="hidden" name="f_mashup_id" id="pfr_project_id" value=""/>
+        <div id="mashupSearchFromRep-tree" class="jstree"></div>
+    </form>
+</div>
+
+<div id="searchWidgetFromRep-div" title="Search Widget From Repository">
+    <span style="display: inline-block; width: 80px"><label for="f_widget_search_select">Search For:</label></span>
+    <select id="f_widget_search_select" name="f_widget_search_select" 
+            class="select ui-widget-content ui-corner-all" style ="width: 150px; height:25px;">
+        <option id="f_widget_search_select_author" value="Author" selected="true">Author</option>
+        <option id="f_widget_search_select_name" value="Widget Name">Widget Name</option>
+        <option id="f_widget_search_select_tag" value="Tag">Tag</option>
+    </select> 
+    <button id="f_widget_search" title="Search">Search</button>
+    <br/>
+    <span style="display: inline-block; width: 80px"><label for="f_widget_search_text">Search:</label></span>
+    <input type="text" name="f_widget_search_text" id="f_widget_search_text" value="" class="text ui-widget-content ui-corner-all" /><br/>
+    <form id="searchWidgetFromRep-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" method="post">
+        <input type="hidden" name="cmd" value="loadMashupDescriptorFromRepository" />
+        <input type="hidden" name="new_id" id="wfr_new_id" value=""/>
+        <input type="hidden" name="f_widget_name" id="wfr_widget_name" value=""/>
+        <div id="widgetSearchFromRep-tree" class="jstree"></div>
+    </form>
+</div>
+
+<!-- Form per la condivisione del mashup nel repository -->
+<div id="shareMashupToRep-div" title="Share Mashup To Repository">
+
+    <span style="display: inline-block; width: 130px">
+        <label for="f_mashup_share_name">Mashup Name:</label>
+    </span>
+    <input type="text" id="f_mashup_share_name" name="f_mashup_share_name" value="" 
+           class="text ui-widget-content ui-corner-all" style ="width: 220px; height:25px;"/>
+    <br/>
+    <span style="display: inline-block; width: 130px"><label for="f_mashup_share_description">Description:</label></span>
+    <input type="text" name="f_mashup_share_description" id="f_mashup_share_description" value="" 
+           class="text ui-widget-content ui-corner-all" style ="width: 220px; height:25px;"/>
+
+    <div id="fb_create_div">
+        <span>
+            <label for="f_mashup_create_action">Publish the news on your Facebook:</label>
+        </span>
+        <input type="checkbox" id="f_mashup_create_action" name="f_mashup_create_action" value="" 
+               class="fb_create_checkbox"/>
+    </div>
+    <br/>
+    <span style="display: inline-block; width: 130px">
+        <label for="f_mashup_share_tag">Add Tag:</label> </span>
+    <input type="text" id="f_mashup_share_tag" name="f_mashup_share_tag" value="" 
+           class="text ui-widget-content ui-corner-all" style ="width: 100px; height:25px;"/>
+    <button id="f_mashup_add_tag" title="Add Tag">Add Tag</button>
+    <div id="f_mashup_share_tag_list_container" class="tag_div_list_container">
+        <span>
+            Tag List
+        </span>
+        <div id="f_mashup_share_tag_list" class="tag_div_list">
+        </div>
+    </div>
+    <form id="shareMashupToRep-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" method="post">  
+        <input type="hidden" name="f_mashup_share_tags" id="f_mashup_share_tags_hidden" value=""/>
+        <input type="hidden" name="f_mashup_share_name" id="f_mashup_share_name_hidden" value=""/>
+        <input type="hidden" name="f_mashup_share_description" id="f_mashup_share_description_hidden" value=""/>
+        <input type="hidden" name="cmd" value="addMashupProjectToRepository" />
+    </form>
+</div>
+
+<!-- Form per l'aggiunta di un widget alla libreria utente -->
+<div id="add-widget-info-form" title="Add Widget Info">
+    <p class="validateTips normal">Please enter the widget info</p>
+
+
+    <span style="display: inline-block; width: 130px " >
+        <label for="f_widget_name">Widget Name:</label></span>
+    <input type="text" name="f_widget_name" id="f_widget_name" value="" class="text ui-widget-content ui-corner-all"style ="width: 220px; height:25px;" />
+
+    <br/>
+    <span style="display: inline-block; width: 130px">
+        <label for="f_widget_description">Description:</label>  </span>
+    <input type="text" name="f_widget_description" id="f_widget_description" value="" class="text ui-widget-content ui-corner-all" style ="width: 220px; height:25px;"/>
+
+
+    <span style="display: inline-block; width: 130px">
+        <label for="f_widget_tags">Add Tag:</label> </span>
+    <input type="text" name="f_widget_tags" id="f_widget_tags" value="" class="text ui-widget-content ui-corner-all" style ="width: 100px; height:25px;"/>
+    <button id="f_widget_add_tag" title="Add Tag" style="margin:6px;">Add Tag</button>
+    <div id="f_widget_tag_list_container" class="tag_div_list_container">
+        <span>
+            Tag List
+        </span>
+        <div id="f_widget_tag_list" class="tag_div_list"></div>
+    </div>
+    <form id="add-widget-info-form-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" method="post">
+        <input type="hidden" name="f_widget_id" id="f_widget_id" value=""/>
+        <input type="hidden" name="f_mode" id="f_mode" value=""/>
+        <input type="hidden" name="f_widget_tags" id="f_widget_tags_hidden" value=""/>
+        <input type="hidden" name="f_widget_name" id="f_widget_name_hidden" value=""/>
+        <input type="hidden" name="f_widget_description" id="f_widget_description_hidden" value=""/>
+        <input type="hidden" name="cmd" value="shareWidget" />
+    </form>
+</div>
+
+<div id="hidden-form-div" style="display: none;">
+    <form id="hidden-form" action="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet" method="post">
+        <input type="hidden" name="cmd" value="" id="hidden-cmd" />
+        <input type="hidden" name="v" value="" id="hidden-v" />
+        <input type="hidden" name="par" value="" id="hidden-par" />
+    </form>
+</div>
+
+
+
+<div id="mashup-comments-div" title="Project Comments">
+    <div id="add_comment_div">
+        <span style="display: inline-block; width: 100px">
+            <label for="f_project_comment">Comment:</label> </span>
+        <input type="text" name="f_project_comment" id="f_project_comment" value=""
+               class="text ui-widget-content ui-corner-all" style ="width: 300px; height:25px;"/>
+        <button id="f_project_add_comment" title="Add Comment" style="margin:6px;">Add</button>
+
+    </div>
+    <div id="show_comments_div"></div>
+</div>
+        
+        
+<!--  @Ghiani, 25/09/2013: box della notifica di caricamento (attesa) -->
+<div id="loading-conn" title="Please wait">
+    <p class="validateTips normal">Loading widget(s) content...</p>
+    
+    <div align="center"><img src="images/loading.gif"></div>
+
+</div>
+                <div style="clear: both;"> &nbsp; </div>
+                <div id="mashupGrid">
+                    <h2 class="normal" >Composite Application  </h2><br>
+                    <div id="record-message" class="normal">
+                        <p>Now recording ...
+                            <button id="record2" class="off" title="Record actions">
+                            </button>
+                        </p>
+                    </div>
+
+                    <div>
+                    <div>
+                        <!--<div>
+                            
+                            <input id="showHideMapButton"  type="button" value="Show Map" onclick="javascript:showHideMap();" />
+                        </div>-->
+                        <div>
+                            <!--<iframe id="mapframe" hidden="hidden" width="480" height="340" src="https://urano.isti.cnr.it/mig/redirect/Proxy?migpar=0F9Thttps://maps.google.it/?q=Via+Moruzzi+1,+Pisa,PI,&output=embed">
+                            </iframe>-->
+                            <!--<iframe id="mapframe" hidden="hidden" width="480" height="340" src="https://maps.google.it/?q=Via+Moruzzi+1,+Pisa,PI,&output=embed">
+                            </iframe>-->
+                            
+                            
+                        </div>
+                    
+                        <!--<div id="map-container"  hidden="hidden"  >
+                            <input id="map-text" type="text"/>
+                            <input id="map-button" type="button" value="Go" size="80"/>
+                            <div id="map-canvas" >Mappa</div>
+                        </div>-->
+                    </div>
+                    <script type="text/javascript">
+                        
+                        function showHideMap()
+                        {
+                            var mapframe = document.getElementById('map-container');
+                            //var mapButton = document.getElementById("showHideMapButton");
+                            
+                            if( mapframe != null && mapframe.getAttribute('hidden') == null)
+                            {
+                                
+                            
+                                //mapButton.value = "Show Map";
+                                
+                                mapframe.setAttribute('hidden', 'hidden');
+                                
+                                command("switchMap", {"map_status": 'off'}, null);
+                                
+                                sendLogMsg('add', 'HIDE MAP WIDGET');
+                                
+                            }
+                            else
+                            {
+                                //mapButton.value = "Hide Map";
+
+                                //initialize();
+
+                                command('new_widget_url', {'url': 'map_url'}, triggerNewMapWidget);
+                                command("switchMap", {"map_status": 'on'}, null);
+
+                                sendLogMsg('add', 'SHOW MAP WIDGET');
+
+
+                                initializeMap();
+
+                                mapframe.removeAttribute('hidden');
+                                //command("switchMap", {"map_status": 'on'}, null);
+                               
+                               
+                               //command('new_widget_url', {'url': 'map_url'}, triggerNewMapWidget);
+                            }
+                            
+                            var wPath = '';
+                            
+                            //command('new_widget_url', {'url': 'map_url'}, triggerNewMapWidget);
+
+                            
+                            
+                        }
+
+
+                        function triggerNewMapWidget()
+                        {
+                            command('new_widget', {'new_name': 'map_widget', 'new_id': '9', 'newWidgetPath': 'void'}, refreshPage);
+                        }
+                        
+                        
+                        // @Ghiani, 07/10/2013: forzatura refresh della pagina in caso di aggiunta del widget di tipo mappa. Non sono riuscito
+                        // a fare in altro modo.
+                        function refreshPage()
+                        {
+                            window.location = 'http://grimilde.isti.cnr.it/' + 'MashupEditor/CommandServlet';
+                        }
+    
+                        
+                        function updateMapAddress()
+                        {
+                            
+                            var newAddr = 'https://maps.google.it/?q=' + ('' + window.getSelection()).replace(' ', '+') + '&output=embed';
+                            
+                            window.document.getElementById('mapframe').src = newAddr;
+                            
+                        }
+                        
+                        
+                        function navigateAddress(input_id)
+                        {
+                            var inputField = document.getElementById(input_id);
+                            
+                            codeAddress(inputField.value, false);
+                            
+                        }
+                        
+                        function navigateTo(location)
+                        {
+                            
+                            codeAddress(location, false);
+                            
+                        }
+                        
+                        
+                        // @Ghiani, 30/04/2015: verifico se c'e` da inizializzare la mappa con una query
+                        if(mapQueryParam != '')
+                        {
+                            
+                            checkGeocoder();
+                        }
+                        
+                        
+                        function checkGeocoder()
+                        {
+                            // verifico se l'oggetto geocoder e` inizializzato, altrimenti aspetto un po'.
+                            if(geocoder)
+                            {
+                                navigateTo(mapQueryParam);
+                            }
+                            else
+                            {
+                                var myTimer = setTimeout('checkGeocoder()', 100);
+                            }
+                        }
+                        
+                        
+                        // @Ghiani, 30/04/2015: hack per evitare che gli elementi 'article' abbiano altezza al 100% (utile specialmente con BBC)
+                        
+                        function checkArticleElements()
+                        {
+                            var articles = document.getElementsByTagName('article');
+                            for(var cnt = 0; cnt < articles.length; ++cnt)
+                            {
+                                articles[cnt].style.height = 'auto';
+                            }
+                        }
+                        
+                        
+                        // @Ghiani, 07/05/2015: prendo la lista di elementi originariamente invisibili. Controllo la visibilita` di tutti gli elementi 
+                        // attuali e, se un elemento e` invisibile ma non lo era prima, allora lo rendo visibile.
+                        // Faccio questa cosa per tutti i widget.
+                        
+                        var encSplit;
+                        
+                        function checkElementsInvisibility()
+                        {
+                            var allDivs = document.getElementsByTagName('div');
+                            
+                            
+                            
+                            for(var cnt = 0; cnt < allDivs.length; ++cnt)
+                            {
+                                if(allDivs[cnt].getAttribute('class') != null)
+                                {
+                                    if(allDivs[cnt].getAttribute('class') == 'innerframe')
+                                    {
+                                        var currWidg = allDivs[cnt];
+                                        
+                                        var encInvisibilityElement = getFirstElementWithAttributeMatch(currWidg, 'div', 'name', 'mig_invisibility');//currWidg.getElementsByTagName('mig_invisibility')[0];
+                                        
+                                        if(encInvisibilityElement == null) return;
+                                        
+                                        var encInvisibilityText = encInvisibilityElement.innerHTML;
+                                        
+                                        if(encInvisibilityText != '')
+                                        {
+                                            encSplit = encInvisibilityText.split('*');
+                                            
+                                            var widgetElements = currWidg.getElementsByTagName('*');
+                                            
+                                            for(var wElCnt = 0; wElCnt < widgetElements.length; ++wElCnt)
+                                            {
+
+                                                if(     window.getComputedStyle(widgetElements[wElCnt]).display == 'none' &&
+                                                        wasElementInvisible(widgetElements[wElCnt].id) == false &&
+                                                        widgetElements[wElCnt].getAttribute('name') != 'mig_invisibility' &&
+                                                        widgetElements[wElCnt].tagName.toLowerCase() != 'style' &&
+                                                        widgetElements[wElCnt].tagName.toLowerCase() != 'script' &&
+                                                        
+                                                        widgetElements[wElCnt].tagName.toLowerCase() != 'p'       // @Ghiani, FIXME! non generale
+                                                    )
+                                                {
+                                                    widgetElements[wElCnt].style.display = 'inherit';
+                                                }
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            
+                        }
+                       
+                       
+                        function getFirstElementWithAttributeMatch(startEl, elName, attName, attValue)
+                        {
+                            var list = startEl.getElementsByTagName(elName);
+                            
+                            
+                            for(var cnt = 0; cnt < list.length; ++cnt)
+                            {
+                                if(list[cnt].getAttribute(attName) != null && list[cnt].getAttribute(attName) == attValue)
+                                {
+                                    return list[cnt];
+                                }
+            
+                            }
+                            return null;
+                        }
+                       
+                       
+                        function wasElementInvisible(elementId)
+                        {
+                            var invisible = false;
+                            
+                            // @Ghiani, ATTENZIONE, il contatore si ferma a -1 per evitare di prendere un elemento vuoto derivante dallo splitting di '*'
+                            // (la stringa che codifica l'elenco di elementi invisibili ha '*' come separatori).
+                            
+                            for(var cnt = 0; cnt < encSplit.length -1; ++cnt) 
+                            {
+                                if(elementId == encSplit[cnt])
+                                {
+                                    
+                                    invisible = true;
+                                    break;
+                                }
+                                
+                            }
+                            
+                            return invisible;
+                        }
+                        
+                    </script>
+                </div>
+                    
+                    
+                        
+                    
+                    <div id="play-message" class="normal">
+                        <p>Now playing ...
+                            <button id="play2" class="off" title="Play actions">
+                            </button>
+                        </p>
+                    </div>
+                    
+                    <div id="column_0" class="column" style="width: 750; float: left; min-height: 10px;" >
+                        
+                    </div>
+                    
+                    <div id="column_1" class="column" style="width: 750; float: left; min-height: 10px;" >
+                        
+                    </div>
+                    
+                </div>
+                
+                
+                
+                
+                <div style="clear: both"></div>
+
+                <div id="outputDiv">
+
+                </div>
+                
+                <!--<div id="fb_comments_div">
+                    <fb:comments href="http://grimilde.isti.cnr.it/MashupEditor/CommandServlet?p_id=1431971662225" 
+                                 num_posts="2" width="470"></fb:comments>
+                </div>-->
+                
+                <div id="lines_div">
+
+                </div>
+                <div id="image_src_div" style="display: none;">
+                    <img src="http://grimilde.isti.cnr.it/MashupEditor/images/logo1p_bg_200.png" style="display: none;" />
+                </div>
+            </div>
+            <!-- end #page -->
+        </div>
+        <!--<div id="footer" style="clear: both; margin-top: 10px;">-->
+        <!--<div id="footer" style="clear: both; margin-top: -30px;">-->
+        <div id="footer" style="clear: both; margin-top: 25%;">
+            <p class="normal">HIIS lab ISTI CNR. Design by <a class="normal" href="http://www.freecsstemplates.org/"> CSS Templates</a>.</p>
+        </div>
+    <canvas id="mycanvas">
+
+    </canvas>
+    <!--<h2>Log</h2>
+    <div id="output">-->
+
+</div>
+
+<!-- end #footer -->
+
+</body>
+</html>

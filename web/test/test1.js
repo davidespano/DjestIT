@@ -376,4 +376,14 @@ QUnit.test("Touch sequence", function(assert) {
 
 });
 
+QUnit.test("Touch sequence", function(assert) {
+    var line = new djestit.Line2D(
+            new djestit.Point2D(2, 1), 
+            new djestit.Point2D(20, 1), 3);
+    line.init();
+    assert.ok(line.check(2,2) === djestit.PathInside);
+    assert.ok(line.check(15,2) === djestit.PathInside);
+    assert.ok(line.check(25,2) === djestit.PathOutside);
+});
+
 

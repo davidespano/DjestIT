@@ -1,0 +1,264 @@
+/* bootstrap 3 helpers */
+
+.navbar-form input, .form-inline input {
+    width:auto;
+}
+
+/* end */
+
+/* custom theme */
+
+header {
+    min-height:230px;
+    margin-bottom:5px;
+}
+
+@media (min-width: 979px) {
+    #sidebar.affix-top {
+        position: static;
+    }
+
+    #sidebar.affix {
+        position: fixed;
+        top: 0;
+        width:21.2%;
+    }
+}
+
+.affix,.affix-top {
+    position:static;
+}
+
+/* theme */
+
+body {
+    color:#828282;
+    background-color:#eee;
+}
+
+#page-content-wrapper a, #page-content-wrapper a:hover {
+   color: #d9534f;
+    border: 0px solid black;
+}
+
+.highlight-bk {
+    background-color:#ff3333;
+    padding:1px;
+    width:100%;
+}
+
+.highlight {
+    color:#ff3333;
+}
+
+h3.highlight  {
+    padding-top:13px;
+    padding-bottom:14px;
+    border-bottom:2px solid #ff3333;
+}
+
+.navbar {
+    background-color:#ff3333;
+    color:#ffffff;
+    border:0;
+    border-radius:0;
+}
+.navbar-nav > li > a {
+    color:#fff;
+    padding-left:20px;
+    padding-right:20px;
+
+}
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
+    color:#666666; 
+}
+
+.navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color:transparent;
+}
+.navbar-nav > .open > a, .navbar-nav > .open > a:hover, .navbar-nav > .open > a:focus {
+    color: #f0f0f0;
+    background-color:transparent;
+    opacity:.9;
+    border-color:#ff3333;
+}
+
+.nav .open > a {
+    border-color:#777777;
+    border-width:0;
+}
+
+.accordion-group {
+    border-width:0;
+}
+
+.dropdown-menu {
+    min-width: 250px;
+}
+
+.accordion-heading .accordion-toggle, .accordion-inner, .nav-stacked li > a {
+    padding-left:1px;
+}
+
+.caret {
+    color:#fff;
+}
+
+.navbar-toggle {
+    color:#fff;
+    border-width:0;
+}
+
+.navbar-toggle:hover {
+    background-color:#fff;
+}
+
+.panel {
+    padding-left:27px;
+    padding-right:27px;
+}
+
+.controls{
+    margin-top: 20px;
+}
+
+
+.controls-table{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: table;
+    width: 100%;
+}
+.controls{
+    display: table-row;
+    width: 100%;
+}
+
+#ex1Slider{
+    display: table-cell;
+    width: 100%;
+}
+
+.play, .volume{
+    display: table-cell;
+    width: 50px;
+    margin:10px;
+}
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    
+}
+
+#sidebar-content {
+    color: #428bca;
+}
+
+#ex1Slider .slider-handle {
+    background: #d9534f;
+}
+
+#ex1Slider .slider-selection{
+
+    background: #d9534f;
+
+}
+
+h1{
+    font-size: 1.7em;
+    margin-right: 10px;
+}
+
+body { padding-top: 70px; }
+
+
+.highlight{
+    color: #d9534f;
+}
+
+
+#distr-client{
+    position:fixed;
+    left: 5px;
+    bottom: 5px;
+    z-index: 1000;
+}
+
+.btn-device{
+    width: 230px;
+    margin-bottom: 10px;
+}
+
+img.btn-device{
+    height: 32px;
+    width: 32px;
+}
+
+#sidebar-content:before{
+    position: relative;
+    top: 1px;
+    height: 0px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.5em;
+    line-height: 1;
+    color: #428bca;
+    -webkit-font-smoothing: antialiased;
+    padding-left:90%;
+    padding-top: 5px;
+    content: "\e163";
+}
+
+#sidebar-content{
+    padding-left:10px;
+    padding-right: 5px;
+    border: 2px solid #428bca;
+    border-radius: 6px;
+    margin-left: 3px;
+}
+
+.sidebar:link:visited{
+    
+    color: #428bca;
+}
+
+.btn-device.btn-success span{
+    display: inline-block;
+    color: white;
+}
+.btn-device-label{
+    display: inline-block;
+    width: 155px;
+}
+
+.selected-panel1:before{
+    position: relative;
+    top: 1px;
+    height: 0px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.5em;
+    line-height: 1;
+    color: green;
+    -webkit-font-smoothing: antialiased;
+    content: "\e089";
+    padding-left:95%;
+    padding-top: 5px;
+}
+
+.selected-panel1{
+
+    border: 3px solid green;
+    border-radius: 10px;
+}
+/* end theme */

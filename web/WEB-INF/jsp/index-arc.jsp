@@ -178,6 +178,38 @@ and open the template in the editor.
                             </p>
                         </span>
                         <span>
+                            <h3>1 - Arco 1 senso orario dimostrazione</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>2 - Arco 2 senso orario</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>3 - Arco 3 senso orario</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
+                            <h3>4 - Arco 4 senso orario</h3>
+                            <p>
+                                Guarda attentantamente la traiettoria del gesto.
+                                Premi "Continua" per eseguirlo o "Ripeti" per 
+                                rivedere la traiettoria.
+                            </p>
+                        </span>
+                        <span>
                             <h3>Test terminato</h3>
                             <p>
                                 Ti ringraziamo per aver partecipato
