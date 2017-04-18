@@ -42,7 +42,7 @@ public class RecordController {
         if (session.getAttribute(RecordController.user) == null) {
             return "login";
         } else {
-            return "index-arc";
+            return "index-iciap";
         }
 
     }

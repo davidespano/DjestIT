@@ -37,7 +37,7 @@
         {duration: 300, gesture: "spiral", performance: 6000}
     ];*/
     
-    var animations = [
+    /*var animations = [
         {duration: 20, gesture: "arc1CounterClockWise", performance: 1500},
         {duration: 20, gesture: "arc2CounterClockWise", performance: 1500},
         {duration: 20, gesture: "arc3CounterClockWise", performance: 1500},
@@ -46,7 +46,18 @@
         {duration: 20, gesture: "arc2ClockWise", performance: 1500},
         {duration: 20, gesture: "arc3ClockWise", performance: 1500},
         {duration: 20, gesture: "arc4ClockWise", performance: 1500}
-    ]
+    ]*/
+    
+    var animations = [
+        {duration: 40, gesture: "v", performance: 1500},
+        {duration: 40, gesture: "caret", performance: 1500},
+        {duration: 40, gesture: "square-braket-left", performance: 2000},
+        {duration: 40, gesture: "square-braket-right", performance: 2000},
+        {duration: 120, gesture: "x", performance: 3000},
+        {duration: 120, gesture: "delete", performance: 3000},
+        {duration: 120, gesture: "triangle", performance: 4000},
+        {duration: 80, gesture: "rectangle", performance: 4000}
+    ];
 
     gestureAnimator.animations = animations;
 
